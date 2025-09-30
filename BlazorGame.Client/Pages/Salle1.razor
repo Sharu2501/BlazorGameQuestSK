@@ -1,0 +1,22 @@
+@page "/salle1"
+@inject NavigationManager Navigation
+
+<h3>Salle 1</h3>
+<p>Un gobelin apparaît. Que faites-vous ?</p>
+
+<button @onclick="Combattre">Combattre</button>
+<button @onclick="Fuir">Fuir</button>
+<button @onclick="Fouiller">Fouiller</button>
+
+<p>@message</p>
+
+@code {
+    private string message = "Choisissez une action.";
+
+    private void Combattre() => message = "Vous attaquez le gobelin.";
+    private void Fuir() => message = "Vous fuyez la salle.";
+    private void Fouiller() { 
+        message = "Vous fouillez la salle.";
+        Navigation.NavigateTo("/salle2");
+    }
+}

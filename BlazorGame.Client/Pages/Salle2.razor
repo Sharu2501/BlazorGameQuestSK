@@ -1,0 +1,20 @@
+@page "/salle2"
+@inject NavigationManager Navigation
+
+<h3>Salle 2</h3>
+<p>Un coffre mystérieux</p>
+
+<button @onclick="Ouvrir">Ouvrir</button>
+<button @onclick="Ignorer">Ignorer</button>
+
+<p>@message</p>
+
+@code {
+    private string message = "Choisissez une action.";
+
+    private void Ouvrir() => message = "Vous ouvrez le coffre.";
+    private void Ignorer() {
+        message = "Vous ignorez le coffre et passez à la salle suivante.";
+        Navigation.NavigateTo("/salle3");
+    } 
+}

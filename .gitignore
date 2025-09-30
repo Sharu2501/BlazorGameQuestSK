@@ -1,0 +1,44 @@
+# Ignore build output directories
+**/bin/
+**/obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore NuGet packages
+*.nupkg
+packages/
+
+# Ignore build results
+*.dll
+*.exe
+*.app
+*.log
+
+# Ignore publish output
+publish/
+out/
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore Rider IDE files
+.idea/
+*.sln.iml
+
+# Ignore Mac system files
+.DS_Store
+
+# Ignore Windows system files
+Thumbs.db
+
+# Existing rules
+BlazorGameClient/bin/
+BlazorGameClient/obj/
