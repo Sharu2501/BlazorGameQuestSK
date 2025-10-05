@@ -2,7 +2,9 @@ namespace SharedModels
 {
     public class Salle
     {
-        public string Description { get; set; } = "Une salle vide";
-        public int Difficulté { get; set; } = 1;
+        public int Id { get; set; }
+        public string Nom { get; set; } = null!;
+        public int Niveau { get; set; }
+        public string Description { get; set; } = null!;
     }
 }

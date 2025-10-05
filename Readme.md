@@ -2,7 +2,7 @@
 
 ## Structure
 - **BlazorGame.Client** : Application Blazor WebAssembly.
-- **AuthenticationServices** : Future API d’authentification.
+- **AuthenticationServices** : API d’authentification.
 - **SharedModels** : Classes partagées.
 - **BlazorGame.Tests** : Tests unitaires avec xUnit.
 

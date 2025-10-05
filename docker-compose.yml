@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: blazorgame-postgres
+    environment:
+      POSTGRES_DB: blazorgame
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: BlazorGameSK
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  authenticationservices:
+    build:
+      context: .
+      dockerfile: ./AuthenticationServices/Dockerfile
+    container_name: authenticationservices
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=blazorgame;Username=postgres;Password=BlazorGameSK"
+      Keycloak__Authority: "http://keycloak:8080/realms/BlazorGame"
+      Keycloak__Audience: "authenticationservices-api"
+    depends_on:
+      - postgres
+      - keycloak
+    ports:
+      - "5001:80"
+
+  blazorgameclient:
+    build:
+      context: .
+      dockerfile: ./BlazorGame.Client/Dockerfile
+    container_name: blazorgame-client
+    depends_on:
+      - authenticationservices
+    ports:
+      - "5000:80"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1.1
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
