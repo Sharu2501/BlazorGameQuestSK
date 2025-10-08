@@ -1,5 +1,114 @@
 ﻿@page "/"
-@layout EmptyLayout
-<PageTitle>Connexion - BlazorGame</PageTitle>
+@inject NavigationManager NavigationManager
 
-<LoginForm />
+<div class="home-container">
+    <div class="home-overlay"></div>
+    <div class="home-content">
+        <h1>⚔️ BlazorGameQuest SK ⚔️</h1>
+        <p>Prêt à affronter des monstres terrifiants ?</p>
+        <img src="images/logo.png" alt="Logo" class="home-logo" />
+        <button class="start-button" @onclick="StartAdventure">
+            Commencer une nouvelle aventure
+        </button>
+    </div>
+</div>
+
+<style>
+@@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    }
+
+    .page, .main, .content {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    .home-container {
+        position: relative;
+        height: 100vh;
+        background-image: url("images/aventure.jpg");
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+    }
+
+    .home-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 1;
+    }
+
+    .home-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .home-content h1 {
+        font-size: 3rem;
+        text-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+        font-family: 'Press Start 2P', cursive;
+        color: #ffffffca;
+        text-shadow:
+            0 0 8px #ffffffca,
+            0 0 20px #ffffffca,
+            0 0 40px rgba(255, 251, 247, 0.6);
+        letter-spacing: 2px;    
+    }
+
+    .start-button {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 0.6rem 1.2rem; 
+        border-radius: 12px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .start-button:hover {
+        background: rgba(255, 255, 255, 0.35);
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .home-logo {
+        height: 300px;
+        width: auto;
+        margin: 1rem 0;
+        padding: 6px;
+    }
+</style>
+
+@code {
+    private void StartAdventure()
+    {
+        Console.WriteLine("Nouvelle aventure lancée !");
+        NavigationManager.NavigateTo("/LoginForm");
+    }
+}
