@@ -2,15 +2,15 @@ namespace SharedModels
 {
     public class Player
     {
-        private int PlayerId { get; set; }
-        private int Level { get; set; }
-        private string Username { get; set; }
-        private int HighScore { get; set; }
+        public int PlayerId { get; set; }
+        public int Level { get; set; }
+        public string Username { get; set; }
+        public int HighScore { get; set; }
 
-        private int ExperiencePoints { get; set; }
-        private int LevelCap { get; set; }
-        private PlayerActionEnum Action { get; set; }
-        private int Gold { get; set; }
+        public int ExperiencePoints { get; set; }
+        public int LevelCap { get; set; }
+        public PlayerActionEnum Action { get; set; }
+        public int Gold { get; set; }
 
         public Player()
         {

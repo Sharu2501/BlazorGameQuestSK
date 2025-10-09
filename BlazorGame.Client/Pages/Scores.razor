@@ -1,0 +1,221 @@
+@page "/scores"
+@using SharedModels
+@inject NavigationManager NavigationManager
+
+<div class="scores-page-container">
+    <div class="background-overlay"></div>
+    <div class="scores-container">
+        <img src="images/logo.png" alt="Logo" class="scores-logo" />
+        <h3>Mes Scores et Historique</h3>
+
+        @if (HighScores == null || GameHistories == null)
+        {
+            <p>Chargement...</p>
+        }
+        else
+        {
+            <section class="scores-section">
+                <h4>Mes Meilleurs Scores</h4>
+                @if (HighScores.Count == 0)
+                {
+                    <p>Aucun score enregistré.</p>
+                }
+                else
+                {
+                    <table class="scores-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Score</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var score in HighScores.OrderByDescending(s => s.Score))
+                            {
+                                <tr>
+                                    <td>@score.Id</td>
+                                    <td>@score.Score</td>
+                                    <td>@score.DateAchieved.ToString("dd/MM/yyyy HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </section>
+
+            <section class="history-section">
+                <h4>Historique des Parties</h4>
+                @if (GameHistories.Count == 0)
+                {
+                    <p>Aucune partie jouée pour le moment.</p>
+                }
+                else
+                {
+                    @foreach (var history in GameHistories.OrderByDescending(h => h.DatePlayed))
+                    {
+                        <div class="history-card">
+                            <p><strong>Date :</strong> @history.DatePlayed.ToString("dd/MM/yyyy HH:mm")</p>
+                            <p><strong>Donjons complétés :</strong> @history.CompletedDungeons.Count</p>
+                            <ul>
+                                @foreach (var dungeon in history.CompletedDungeons)
+                                {
+                                    <li>@dungeon.Name - @dungeon.Description</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                }
+            </section>
+        }
+    </div>
+</div>
+
+<style scoped>
+@@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    font-family: 'Press Start 2P', cursive;
+    background-image: url("images/aventure.jpg");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    overflow: auto;
+}
+
+.background-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 0;
+}
+
+.scores-page-container {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 2rem;
+    z-index: 1;
+}
+
+.scores-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 90%;
+    max-width: 800px;
+    text-align: center;
+    z-index: 2;
+}
+
+.scores-logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 1rem;
+}
+
+.scores-container h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.7);
+    margin-bottom: 1rem;
+}
+
+.scores-section, .history-section {
+    background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 12px;
+    color: white;
+    width: 100%;
+}
+
+.scores-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+}
+
+.scores-table th, .scores-table td {
+    border: 1px solid #fff;
+    padding: 0.4rem;
+    text-align: center;
+}
+
+.history-card {
+    border: 1px solid #fff;
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+    background-color: rgba(255,255,255,0.05);
+    text-align: left;
+}
+
+ul {
+    margin: 0.3rem 0 0 1rem;
+    padding: 0;
+    list-style: disc;
+}
+
+.scores-container button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
+    backdrop-filter: blur(10px);
+    margin-top: 1rem;
+}
+
+.scores-container button:hover {
+    background: rgba(255,255,255,0.35);
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
+</style>
+
+@code {
+    private List<HighScore> HighScores = new();
+    private List<GameHistory> GameHistories = new();
+
+    protected override void OnInitialized()
+    {
+        var player = new Player { Username = "Joueur1" };
+
+        HighScores = new List<HighScore>
+        {
+            new HighScore(1, player, 1200),
+            new HighScore(2, player, 950),
+            new HighScore(3, player, 1500)
+        };
+
+        GameHistories = new List<GameHistory>
+        {
+            new GameHistory(1, player, new List<Dungeon>
+            {
+                new Dungeon { Name = "Donjon de Feu", Description = "Un donjon brûlant." },
+                new Dungeon { Name = "Donjon de Glace", Description = "Un donjon gelé." }
+            }),
+            new GameHistory(2, player, new List<Dungeon>
+            {
+                new Dungeon { Name = "Forêt Maudite", Description = "Le fantôme de la forêt." }
+            })
+        };
+    }
+}

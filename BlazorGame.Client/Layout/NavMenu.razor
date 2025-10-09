@@ -1,37 +1,151 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="">
-            <img src="images/logo.png" alt="Logo" class="navbar-logo me-2" />
-            <span>BlazorGameQuest SK</span>
-        </a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿<div class="top-bar">
+    <div class="navbar-brand @@(NavigationManager.Uri.EndsWith("/") ? "active-page" : "")">
+        <img src="images/logo.png" alt="Logo" class="navbar-logo" />
+        <span>BlazorGameQuest SK</span>
     </div>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="room1">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Salle 1
-            </NavLink>
-        </div>
+<div class="side-menu">
+    <nav>
+        <NavLink href="/" class="menu-item" Match="NavLinkMatch.All">
+            <i class="bi bi-controller"></i>
+            <span>Nouvelle partie</span>
+        </NavLink>
+
+        <NavLink href="scores" class="menu-item" Match="NavLinkMatch.All">
+            <i class="bi bi-bar-chart-fill"></i>
+            <span>Scores</span>
+        </NavLink>
+
+        <NavLink href="logout" class="menu-item" Match="NavLinkMatch.All">
+            <i class="bi bi-door-closed-fill"></i>
+            <span>Déconnexion</span>
+        </NavLink>
     </nav>
 </div>
 
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
+<style scoped>
+    .top-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background-color: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        padding: 0 1.5rem;
+        color: white;
+        z-index: 1000;
+        backdrop-filter: blur(8px);
     }
-}
+
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: filter 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Logo sombre + animation si active */
+    .navbar-brand.active-page {
+        filter: brightness(0.6);
+        animation: pulse 1.5s infinite alternate;
+    }
+
+    @@keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .navbar-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .side-menu {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        height: calc(100vh - 60px);
+        width: 60px;
+        background-color: rgba(60, 59, 59, 0.189);
+        backdrop-filter: blur(4px);
+        overflow-x: visible;
+        transition: width 0.3s ease, background-color 0.3s ease;
+        z-index: 999;
+    }
+
+    .side-menu:hover {
+        width: auto;
+        background-color: rgba(0,0,0,0.2);
+        backdrop-filter: blur(4px);
+    }
+
+    .side-menu nav {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 0;
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.6rem 1rem;
+        color: white;
+        text-decoration: none;
+        white-space: nowrap;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: background 0.3s ease, color 0.3s ease;
+        border-radius: 6px;
+    }
+
+    /* Hover pour les autres liens */
+    .menu-item:hover:not(.active),
+    .menu-item.active {
+        background-color: #7e25257b;
+        color: #fff;
+    }
+
+    .side-menu span {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .side-menu:hover span {
+        opacity: 1;
+    }
+
+    .main-content {
+        margin-left: 60px;
+        margin-top: 60px;
+        transition: margin-left 0.3s ease;
+        padding: 1rem;
+        color: white;
+    }
+
+    .side-menu:hover ~ .main-content {
+        margin-left: max-content;
+    }
+
+    @@media (max-width: 768px) {
+        .side-menu {
+            width: 50px;
+        }
+
+        .side-menu:hover {
+            width: auto;
+        }
+
+        .main-content {
+            margin-left: 50px;
+        }
+
+        .side-menu:hover ~ .main-content {
+            margin-left: max-content;
+        }
+    }
+</style>
