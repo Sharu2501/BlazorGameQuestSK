@@ -8,7 +8,7 @@ namespace SharedModels
         public int Health { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
-        public MonstreTypeEnum Type { get; set; }
+        public MonsterTypeEnum Type { get; set; }
 
         public Monster()
         {
@@ -18,10 +18,10 @@ namespace SharedModels
             Health = 100;
             Attack = 10;
             Defense = 5;
-            Type = MonstreTypeEnum.BEAST;
+            Type = MonsterTypeEnum.BEAST;
         }
 
-        public Monster(int idMonster, string name, int level, int health, int attack, int defense, MonstreTypeEnum type)
+        public Monster(int idMonster, string name, int level, int health, int attack, int defense, MonsterTypeEnum type)
         {
             IdMonster = idMonster;
             Name = name;

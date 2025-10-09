@@ -6,6 +6,6 @@ namespace SharedModels
     {
         public GameDbContext(DbContextOptions<GameDbContext> options) : base(options) { }
 
-        public DbSet<Salle> Salles { get; set; }
+        public DbSet<Room> Rooms { get; set; }
     }
 }

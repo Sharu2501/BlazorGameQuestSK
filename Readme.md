@@ -1,4 +1,4 @@
-# BlazorGameQuestSK LSI1 GRP25
+# BlazorGameQuestSK LSI1 GRP25 SASIKUMAR Sahkana & KAFAGY Ahmed 
 
 ## Structure
 - **BlazorGame.Client** : Application Blazor WebAssembly.
@@ -7,7 +7,14 @@
 - **BlazorGame.Tests** : Tests unitaires avec xUnit.
 
 ## V1
-- Mise en place de la solution et des projets.
-- Création d’une page d’accueil et d’un composant d'une salle.
-- Ajout d’un premier modèle partagé.
-- Ajout d’un projet de tests unitaires.
+* Création de la structure globale de son projet ( Solution, micro-services, etc.) ok
+*  Création d’un projet Client Blazor WebAssembly ok
+* Identifier l’ensemble (du moins l’essentiel) des pages pour son projet ok
+* Mise en place du routing et des composants de base (css, js, etc.) ok
+* Page d’accueil, menu, navigation, etc.
+* Création de l’interface « Nouvelle aventure » (sans logique métier) ok
+* Création d’un composant Blazor affichant une salle de jeu statique ok
+
+* Créer un projet Tests ok
+* Utilisation de xUnit ou MSTest.
+* Définition des cas de tests pour les fonctionnalités du projet.

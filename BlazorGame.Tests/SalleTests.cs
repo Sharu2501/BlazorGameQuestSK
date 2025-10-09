@@ -5,9 +5,9 @@ namespace BlazorGame.Tests
     public class SalleTests
     {
         [Fact]
-        public void Salle_Par_Defaut()
+        public void Room()
         {
-            var salle = new Salle();
+            var salle = new Room();
             Assert.Equal("Une salle vide", salle.Description);
         }
     }

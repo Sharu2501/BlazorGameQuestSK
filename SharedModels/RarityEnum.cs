@@ -1,11 +1,11 @@
 namespace SharedModels
 {
-    public enum RareteEnum
+    public enum RarityEnum
     {
-        COMMUN,
+        COMMON,
         RARE,
         EPIC,
         LEGENDARY,
-        MYTHIQUE
+        MYTHICAL
     }
 }

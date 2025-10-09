@@ -1,6 +1,6 @@
 namespace SharedModels
 {
-    public enum MonstreTypeEnum
+    public enum MonsterTypeEnum
     {
         DRAGON,
         GOBLIN,
