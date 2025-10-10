@@ -18,6 +18,8 @@ namespace SharedModels
             Level = 0;
             Username = "default";
             HighScore = 0;
+            Action = PlayerActionEnum.NONE;
+
         }
 
         public Player(int playerId, int level, string username, int highScore, 
