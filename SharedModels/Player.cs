@@ -2,38 +2,14 @@ namespace SharedModels
 {
     public class Player
     {
-        public int PlayerId { get; set; }
-        public int Level { get; set; }
-        public string Username { get; set; }
-        public int HighScore { get; set; }
-
-        public int ExperiencePoints { get; set; }
-        public int LevelCap { get; set; }
-        public PlayerActionEnum Action { get; set; }
-        public int Gold { get; set; }
-
-        public Player()
-        {
-            PlayerId = 0;
-            Level = 0;
-            Username = "default";
-            HighScore = 0;
-            Action = PlayerActionEnum.NONE;
-
-        }
-
-        public Player(int playerId, int level, string username, int highScore, 
-                      PlayerActionEnum action = PlayerActionEnum.NONE, 
-                      int experiencePoints = 0, int levelCap = 100)
-        {
-            PlayerId = playerId;
-            Level = level;
-            Username = username;
-            HighScore = highScore;
-            Action = action;
-            ExperiencePoints = experiencePoints;
-            LevelCap = levelCap;
-        }
+        public int PlayerId { get; set; } = 0;
+        public int Level { get; set; } = 0;
+        public string Username { get; set; } = "default";
+        public int HighScore { get; set; } = 0;
+        public int ExperiencePoints { get; set; } = 0;
+        public int LevelCap { get; set; } = 100;
+        public PlayerActionEnum Action { get; set; } = PlayerActionEnum.NONE;
+        public int Gold { get; set; } = 0;
 
         public void ResetAction()
         {
@@ -81,21 +57,5 @@ namespace SharedModels
             };
             Console.WriteLine(message);
         }
-
-        // Getters
-        public int GetPlayerId() => PlayerId;
-        public int GetLevel() => Level;
-        public string GetUsername() => Username;
-        public int GetHighScore() => HighScore;
-        public int GetExperiencePoints() => ExperiencePoints;
-
-        public PlayerActionEnum GetAction() => Action;
-
-        // Setters
-        public void SetPlayerId(int playerId) => PlayerId = playerId;
-        public void SetLevel(int level) => Level = level;
-        public void SetUsername(string username) => Username = username;
-        public void SetHighScore(int highScore) => HighScore = highScore;
-        public void SetAction(PlayerActionEnum action) => Action = action;
     }
 }

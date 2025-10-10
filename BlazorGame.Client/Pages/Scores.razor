@@ -200,22 +200,41 @@ ul {
 
         HighScores = new List<HighScore>
         {
-            new HighScore(1, player, 1200),
-            new HighScore(2, player, 950),
-            new HighScore(3, player, 1500)
+            new HighScore() {
+                Id = 1,
+                Player = player,
+                Score = 1200,
+            },
+            new HighScore() {
+                Id = 2,
+                Player = player,
+                Score = 950,
+            },
+            new HighScore() {
+                Id = 3,
+                Player = player,
+                Score = 1500,
+            }
         };
 
         GameHistories = new List<GameHistory>
         {
-            new GameHistory(1, player, new List<Dungeon>
-            {
-                new Dungeon { Name = "Donjon de Feu", Description = "Un donjon brûlant." },
-                new Dungeon { Name = "Donjon de Glace", Description = "Un donjon gelé." }
-            }),
-            new GameHistory(2, player, new List<Dungeon>
-            {
-                new Dungeon { Name = "Forêt Maudite", Description = "Le fantôme de la forêt." }
-            })
+            new GameHistory() {
+                Id = 1,
+                Player = player,
+                CompletedDungeons = new List<Dungeon> {
+                    new Dungeon { Name = "Donjon de Feu", Description = "Un donjon brûlant." },
+                    new Dungeon { Name = "Donjon de Glace", Description = "Un donjon gelé." }
+                }
+            },
+            new GameHistory() {
+                Id = 2,
+                Player = player,
+                CompletedDungeons = new List<Dungeon> {
+                    new Dungeon { Name = "Forêt Maudite", Description = "Le fantôme de la forêt." }
+                }
+            }
         };
+
     }
 }

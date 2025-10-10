@@ -18,10 +18,17 @@ namespace BlazorGame.Tests
         [Fact]
         public void ParameterizedConstructor_ShouldSetProperties()
         {
-            var artifact = new Artifact(1, "Sword", "Sharp sword", RarityEnum.EPIC);
+            var artifact = new Artifact()
+            {
+                Id = 1,
+                Name = "Epée",
+                Description = "Epée tranchante",
+                Rarity = RarityEnum.EPIC
+            };
+
             Assert.Equal(1, artifact.Id);
-            Assert.Equal("Sword", artifact.Name);
-            Assert.Equal("Sharp sword", artifact.Description);
+            Assert.Equal("Epée", artifact.Name);
+            Assert.Equal("Epée tranchante", artifact.Description);
             Assert.Equal(RarityEnum.EPIC, artifact.Rarity);
         }
     }

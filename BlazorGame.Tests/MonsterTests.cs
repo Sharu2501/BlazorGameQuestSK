@@ -21,7 +21,17 @@ namespace BlazorGame.Tests
         [Fact]
         public void ParameterizedConstructor_ShouldSetProperties()
         {
-            var monster = new Monster(1, "Goblin", 2, 50, 12, 3, MonsterTypeEnum.GOBLIN);
+            var monster = new Monster()
+            {
+                IdMonster = 1,
+                Name = "Goblin",
+                Level = 2,
+                Health = 50,
+                Attack = 12,
+                Defense = 3,
+                Type = MonsterTypeEnum.GOBLIN
+            };
+
             Assert.Equal(1, monster.IdMonster);
             Assert.Equal("Goblin", monster.Name);
             Assert.Equal(2, monster.Level);

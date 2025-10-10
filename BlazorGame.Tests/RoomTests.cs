@@ -8,19 +8,25 @@ namespace BlazorGame.Tests
         [Fact]
         public void Explore_ShouldSetIsExploredTrue()
         {
-            var player = new Player(1, 5, "Hero", 1000);
-            var room = new Room(
-                id: 1,
-                name: "Chamber of Trials",
-                level: 1,
-                description: "A dark room filled with monsters.",
-                monster: null,
-                isExplored: false,
-                experienceGained: 50,
-                goldGained: 20,
-                difficultyLevel: DifficultyLevelEnum.MEDIUM,
-                player: player
-            );
+            var player = new Player()
+            {
+                PlayerId = 1,
+                Level = 5,
+                Username = "Player1",
+                HighScore = 1000
+            };
+
+            var room = new Room()
+            {
+                Id = 1,
+                Name = "Chambre des monstres",
+                Level = 1,
+                Description = "Une chambre sombre remplie de monstres.",
+                ExperienceGained = 50,
+                GoldGained = 20,
+                DifficultyLevel = DifficultyLevelEnum.MEDIUM,
+                Player = player
+            };
 
             room.Explore();
 
@@ -30,13 +36,22 @@ namespace BlazorGame.Tests
         [Fact]
         public void RoomToString_ShouldIncludePlayerInfos()
         {
-            var player = new Player(2, 3, "Mage", 500);
-            var room = new Room(player: player);
-
+            var player = new Player()
+            {
+                PlayerId = 2,
+                Level = 3,
+                Username = "Mage",
+                HighScore = 500
+            };
+            
+            var room = new Room()
+            {
+                Player = player
+            };
             var result = room.ToString();
 
             Assert.Contains("Player", result);
-            Assert.Contains(player.GetUsername(), result);
+            Assert.Contains(player.Username, result);
         }
     }
 }
