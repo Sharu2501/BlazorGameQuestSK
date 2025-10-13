@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
+
+/* Reset et variables */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --bg-card: rgba(20,20,30,0.85);
+    --accent-red: #a80000;
+    --accent-red-hover: #d00000;
+    --text-primary: #ffffff;
+    --text-muted: #6b7280;
+}
+
+html, body {
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-primary);
+    height: 100%;
+    overflow: hidden;
+}
+
+.salle-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.salle-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75);
+    z-index: 1;
+}
+
+.salle-container h3, .salle-container p, .actions, .message {
+    position: relative;
+    z-index: 2;
+}
+
+.salle-container h3 {
+    font-size: 1.5rem;
+    color: var(--accent-red);
+    text-shadow: 0 0 20px rgba(168,0,0,0.6);
+    margin-bottom: 1rem;
+}
+
+.salle-container p {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.actions button {
+    padding: 1rem 2rem;
+    font-size: 0.65rem;
+    color: var(--text-primary);
+    border: 1px solid var(--accent-red);
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(168,0,0,0.3), rgba(168,0,0,0.2));
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.actions button:hover {
+    background: linear-gradient(135deg, rgba(168,0,0,0.5), rgba(168,0,0,0.3));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(168,0,0,0.4);
+}
+
+.message {
+    margin-top: 2rem;
+    font-size: 0.65rem;
+    color: var(--text-primary);
+    text-shadow: 0 0 10px rgba(168,0,0,0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .salle-container h3 { font-size: 1.2rem; }
+    .salle-container p { font-size: 0.55rem; }
+    .actions button { font-size: 0.55rem; padding: 0.8rem 1.5rem; }
+    .message { font-size: 0.55rem; }
+}
