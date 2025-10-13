@@ -1,116 +1,210 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
 
-html, body {
+/* === RESET === */
+* {
     margin: 0;
     padding: 0;
-    height: 100%;
-    width: 100%;
-    font-family: 'Press Start 2P', cursive;
-    background-image: url("../images/aventure.jpg");
-    background-size: cover;
-    background-position: center;
-    color: white;
-    overflow: auto;
+    box-sizing: border-box;
 }
 
+:root {
+    --bg-dark: #0a0a0f;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --accent-red: #a80000;
+    --accent-red-hover: #d00000;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+html, body {
+    font-family: 'Press Start 2P', cursive;
+    background: var(--bg-dark) url("../images/aventure.jpg") center/cover fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+/* === BACKGROUND OVERLAY === */
 .background-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.25);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
     z-index: 0;
 }
 
+/* === PAGE CONTAINER === */
 .scores-page-container {
     position: relative;
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 2rem;
     z-index: 1;
+    display: flex;
+    justify-content: center;
+    padding: 4rem 1rem;
 }
 
 .scores-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    width: 90%;
-    max-width: 800px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+    max-width: 900px;
+    width: 100%;
+    padding: 2rem;
     text-align: center;
+    position: relative;
     z-index: 2;
 }
 
+/* === LOGO ET TITRE === */
 .scores-logo {
     width: 120px;
-    height: auto;
-    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 20px rgba(168, 0, 0, 0.8));
+    animation: float 3s ease-in-out infinite, pulse 4s ease-in-out infinite;
+    margin-bottom: 1.5rem;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0%, 100% { filter: drop-shadow(0 0 15px rgba(168, 0, 0, 0.6)); }
+    50% { filter: drop-shadow(0 0 25px rgba(168, 0, 0, 1)); }
 }
 
 .scores-container h3 {
-    font-size: 1.5rem;
-    color: #fff;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.7);
-    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: var(--accent-red);
+    text-shadow: 0 0 20px rgba(168, 0, 0, 0.7);
+    margin-bottom: 1.5rem;
 }
 
+/* === SECTIONS === */
 .scores-section, .history-section {
-    background-color: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(6px);
-    padding: 1rem;
-    margin: 0.5rem 0;
-    border-radius: 12px;
-    color: white;
-    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
 }
 
+.scores-section:hover,
+.history-section:hover {
+    border-color: var(--accent-red);
+    transform: translateY(-4px);
+}
+
+/* === TITRES DES SECTIONS === */
+.scores-section h4,
+.history-section h4 {
+    font-size: 0.8rem;
+    color: var(--accent-red);
+    margin-bottom: 1rem;
+    text-shadow: 0 0 15px rgba(168, 0, 0, 0.6);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* === TABLE DES SCORES === */
 .scores-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 0.5rem;
+    font-size: 0.65rem;
+}
+
+.scores-table thead {
+    background: rgba(168, 0, 0, 0.3);
 }
 
 .scores-table th, .scores-table td {
-    border: 1px solid #fff;
-    padding: 0.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
+    padding: 0.75rem;
+    color: var(--text-primary);
 }
 
+.scores-table tbody tr:hover {
+    background: rgba(168, 0, 0, 0.1);
+}
+
+/* === HISTORY CARDS === */
 .history-card {
-    border: 1px solid #fff;
-    padding: 0.5rem;
-    border-radius: 8px;
-    margin-bottom: 0.6rem;
-    background-color: rgba(255,255,255,0.05);
-    text-align: left;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.6rem;
+    transition: all 0.3s ease;
 }
 
-ul {
-    margin: 0.3rem 0 0 1rem;
-    padding: 0;
-    list-style: disc;
+.history-card:hover {
+    background: rgba(168, 0, 0, 0.08);
+    border-color: var(--accent-red);
+    transform: scale(1.02);
 }
 
+.history-card strong {
+    color: var(--accent-red);
+}
+
+.history-card ul {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+    list-style-type: square;
+    color: var(--text-secondary);
+}
+
+/* === BOUTONS === */
 .scores-container button {
-    padding: 0.6rem 1.2rem;
+    padding: 0.8rem 1.6rem;
+    border: 1px solid var(--accent-red);
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.2);
-    color: #fff;
+    background: linear-gradient(135deg, rgba(168, 0, 0, 0.4), rgba(168, 0, 0, 0.2));
+    color: var(--text-primary);
+    font-size: 0.7rem;
     cursor: pointer;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
-    backdrop-filter: blur(10px);
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     margin-top: 1rem;
 }
 
 .scores-container button:hover {
-    background: rgba(255,255,255,0.35);
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    background: linear-gradient(135deg, rgba(168, 0, 0, 0.6), rgba(168, 0, 0, 0.4));
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 25px rgba(168, 0, 0, 0.5);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .scores-container {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .scores-container h3 {
+        font-size: 1rem;
+    }
+
+    .scores-table th, .scores-table td {
+        font-size: 0.55rem;
+        padding: 0.5rem;
+    }
+
+    .history-card {
+        font-size: 0.55rem;
+    }
+
+    .scores-logo {
+        width: 90px;
+    }
 }
