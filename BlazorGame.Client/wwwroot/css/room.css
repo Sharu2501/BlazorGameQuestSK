@@ -1,16 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
 
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* Reset et variables */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-    --bg-dark: #0a0a0f;
-    --bg-card: rgba(20, 20, 30, 0.85);
+    --bg-card: rgba(20,20,30,0.85);
     --accent-red: #a80000;
     --accent-red-hover: #d00000;
     --text-primary: #ffffff;
@@ -19,73 +13,61 @@
 
 html, body {
     font-family: 'Press Start 2P', cursive;
-    background: var(--bg-dark);
     color: var(--text-primary);
     height: 100%;
     overflow: hidden;
 }
 
-.home-container {
+.salle-container {
     position: relative;
     width: 100%;
     height: 100vh;
-    background-image: url("../images/antre_donjon.png");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-}
-
-.home-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.75);
-    z-index: 1;
-}
-
-.home-content {
-    position: relative;
-    z-index: 2;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 2rem;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
-.home-content h1 {
-    font-size: 2rem;
+.salle-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75);
+    z-index: 1;
+}
+
+.salle-container h3, .salle-container p, .actions, .message {
+    position: relative;
+    z-index: 2;
+}
+
+.salle-container h3 {
+    font-size: 1.5rem;
     color: var(--accent-red);
     text-shadow: 0 0 20px rgba(168,0,0,0.6);
     margin-bottom: 1rem;
 }
 
-.home-content p {
+.salle-container p {
     font-size: 0.7rem;
     color: var(--text-muted);
     margin-bottom: 2rem;
 }
 
-/* Logo qui flotte */
-.home-logo {
-    width: 120px;
-    height: auto;
-    filter: drop-shadow(0 0 20px rgba(168,0,0,0.8));
-    animation: float 3s ease-in-out infinite;
-    margin-bottom: 2rem;
+.actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-}
-
-/* Bouton start */
-.start-button {
+.actions button {
     padding: 1rem 2rem;
     font-size: 0.65rem;
     color: var(--text-primary);
@@ -97,15 +79,23 @@ html, body {
     font-family: 'Press Start 2P', cursive;
 }
 
-.start-button:hover {
+.actions button:hover {
     background: linear-gradient(135deg, rgba(168,0,0,0.5), rgba(168,0,0,0.3));
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(168,0,0,0.4);
 }
 
+.message {
+    margin-top: 2rem;
+    font-size: 0.65rem;
+    color: var(--text-primary);
+    text-shadow: 0 0 10px rgba(168,0,0,0.6);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .home-content h1 { font-size: 1.5rem; }
-    .home-content p { font-size: 0.55rem; }
-    .home-logo { width: 100px; }
-    .start-button { font-size: 0.55rem; padding: 0.8rem 1.5rem; }
+    .salle-container h3 { font-size: 1.2rem; }
+    .salle-container p { font-size: 0.55rem; }
+    .actions button { font-size: 0.55rem; padding: 0.8rem 1.5rem; }
+    .message { font-size: 0.55rem; }
 }
