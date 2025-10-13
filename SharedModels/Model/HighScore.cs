@@ -1,4 +1,4 @@
-namespace SharedModels
+namespace SharedModels.Model
 {
     /// <summary>
     /// Représente une entrée de score élevé dans le jeu.

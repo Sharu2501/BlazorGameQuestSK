@@ -1,4 +1,5 @@
-using SharedModels;
+using SharedModels.Enum;
+using SharedModels.Model;
 using Xunit;
 
 namespace BlazorGame.Tests

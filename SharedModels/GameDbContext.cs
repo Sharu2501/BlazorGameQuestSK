@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using SharedModels.Enum;
+using SharedModels.Model;
 
 /// <summary>
 /// DbContext pour le jeu, gérant la connexion à la base de données et les ensembles d'entités.

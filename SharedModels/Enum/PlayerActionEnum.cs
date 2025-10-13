@@ -1,4 +1,4 @@
-namespace SharedModels
+namespace SharedModels.Enum
 {
     /// <summary>
     /// Enumération des actions possibles qu'un joueur peut entreprendre.

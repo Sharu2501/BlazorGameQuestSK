@@ -1,4 +1,4 @@
-namespace SharedModels
+namespace SharedModels.Enum
 {
     /// <summary>
     /// Enumération des raretés des artefacts dans le jeu.

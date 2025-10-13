@@ -1,4 +1,4 @@
-namespace SharedModels
+namespace SharedModels.Model
 {
     /// <summary>
     /// Représente un donjon dans le jeu avec ses propriétés.

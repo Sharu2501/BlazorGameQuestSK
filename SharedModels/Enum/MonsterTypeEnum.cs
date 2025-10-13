@@ -1,4 +1,4 @@
-namespace SharedModels
+namespace SharedModels.Enum
 {
     /// <summary>
     /// Enumération des types de monstres dans le jeu.

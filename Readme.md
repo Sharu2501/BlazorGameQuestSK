@@ -16,6 +16,8 @@ Pour cette première version, nous avons mis en place les éléments suivants :
 - Configuration du **routing** et intégration des composants de base (CSS, JS, etc.).  
 - Développement de la **page d’accueil**, du **menu de navigation** et des composants associés.  
 - Création de l’interface **« Nouvelle aventure »**.
+- Création de l’interface **« Connexion Admin »** avec l'utilisateur `Admin` et mot de passe `Admin`
+- Création de l’interface **« Connexion »** avec l'utilisateur `Test` et mot de passe `Test`
 - Développement d’un **composant Blazor affichant une salle de jeu statique** pour visualiser l’environnement du joueur.
 
 ### Tests

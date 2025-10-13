@@ -1,4 +1,4 @@
-namespace SharedModels
+namespace SharedModels.Model
 {
     /// <summary>
     /// Représente l'historique, y compris les donjons complétés par un joueur.

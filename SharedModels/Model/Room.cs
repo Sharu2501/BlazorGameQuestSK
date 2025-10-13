@@ -1,4 +1,4 @@
-namespace SharedModels
+namespace SharedModels.Model
 {
     /// <summary>
     /// Enumération des niveaux de difficulté pour une salle.

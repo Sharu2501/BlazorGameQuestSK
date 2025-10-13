@@ -1,4 +1,6 @@
-namespace SharedModels
+using SharedModels.Enum;
+
+namespace SharedModels.Model
 {
 
     /// <summary>

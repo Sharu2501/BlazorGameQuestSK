@@ -1,4 +1,6 @@
-namespace SharedModels
+using SharedModels.Enum;
+
+namespace SharedModels.Model
 {
     /// <summary>
     /// Représente un joueur dans le jeu avec ses propriétés et ses actions. 
