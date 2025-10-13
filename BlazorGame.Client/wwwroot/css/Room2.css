@@ -6,7 +6,7 @@ html, body {
     height: 100%;
     width: 100%;
     font-family: 'Press Start 2P', cursive;
-    background-image: url("images/coffre.jpg");
+    background-image: url("../images/coffre.jpg");
     background-size: cover;
     background-position: center;
     color: white;

@@ -19,7 +19,7 @@ html, body {
 .home-container {
     position: relative;
     height: 100vh;
-    background-image: url("images/aventure.jpg");
+    background-image: url("../images/antre_donjon.png");
     background-size: cover;
     background-position: center;
     display: flex;
