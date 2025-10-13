@@ -22,3 +22,28 @@ Pour cette première version, nous avons mis en place les éléments suivants :
 - Mise en place du **projet de tests unitaires**.  
 - Utilisation de **xUnit** pour l’écriture des tests.  
 - Définition et implémentation des **cas de tests pour les fonctionnalités de base**, notamment pour les classes `Player`, `Dungeon`, `Room` et `Monster`.
+
+- Concernant les tests futurs, nous souhaitons réaliser les tests suivants : 
+1. Tests sur la progression du joueur
+
+- Vérifier que le joueur valide correctement une salle lorsqu’il remplit les conditions néecssaires (par exemple la résolution d’une énigme ou victoire contre un monstre).
+
+- S’assurer que le système met bien à jour l’état de la salle (ouverte, terminée, verrouillée) après la validation.
+
+- Tester la sauvegarde de la progression du joueur (retour dans la salle correcte après reconnexion).
+
+2. Tests sur les scores et les classements
+
+- Vérifier que le score d’un joueur est correctement calculé en fonction des actions réalisées (victoires, objets collectés, temps écoulé).
+
+- Comparer les scores entre plusieurs joueurs pour tester le bon classement dans le tableau des scores.
+
+- Valider la mise à jour du classement après une nouvelle partie.
+
+3. Tests sur le système de quêtes et d’aventures
+
+- S’assurer qu’une nouvelle aventure peut être créée correctement et qu’elle est bien enregistrée.
+
+- Tester le comportement du jeu lorsqu’un joueur interrompt une partie en cours (sauvegarde et reprise).
+
+- Vérifier que les récompenses (points, objets, expérience) sont bien attribuées à la fin d’une aventure.
