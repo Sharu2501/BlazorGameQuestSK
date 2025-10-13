@@ -1,5 +1,8 @@
 namespace SharedModels
 {
+    /// <summary>
+    /// Représente l'historique, y compris les donjons complétés par un joueur.
+    /// </summary>
     public class GameHistory
     {
         public int Id { get; set; }

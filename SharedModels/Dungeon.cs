@@ -1,5 +1,8 @@
 namespace SharedModels
 {
+    /// <summary>
+    /// Représente un donjon dans le jeu avec ses propriétés.
+    /// </summary>
     public class Dungeon
     {
         public int IdDungeon { get; set; } = 0;

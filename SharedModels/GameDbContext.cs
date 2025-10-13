@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 
+/// <summary>
+/// DbContext pour le jeu, gérant la connexion à la base de données et les ensembles d'entités.
+/// </summary>
 namespace SharedModels
 {
     public class GameDbContext : DbContext

@@ -1,5 +1,9 @@
 namespace SharedModels
 {
+
+    /// <summary>
+    /// Represents an artifact dans le jeu avec ses propriétés.
+    /// </summary>
     public class Artifact
     {
         public int Id { get; set; } = 0;

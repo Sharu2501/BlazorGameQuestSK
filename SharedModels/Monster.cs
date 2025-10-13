@@ -1,5 +1,8 @@
 namespace SharedModels
 {
+    /// <summary>
+    /// Représente un monstre dans le jeu avec ses propriétés.
+    /// </summary>
     public class Monster
     {
         public int IdMonster { get; set; } = 0;

@@ -1,5 +1,8 @@
 namespace SharedModels
 {
+    /// <summary>
+    /// Représente un joueur dans le jeu avec ses propriétés et ses actions. 
+    /// </summary>
     public class Player
     {
         public int PlayerId { get; set; } = 0;

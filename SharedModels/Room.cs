@@ -1,5 +1,8 @@
 namespace SharedModels
 {
+    /// <summary>
+    /// Enumération des niveaux de difficulté pour une salle.
+    /// </summary>
     public enum DifficultyLevelEnum
     {
         EASY,
