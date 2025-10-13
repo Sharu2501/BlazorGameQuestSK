@@ -1,6 +1,5 @@
 @page "/scores"
-@using SharedModels
-@inject NavigationManager NavigationManager
+
 <link rel="stylesheet" href="css/Scores.css" />
 <div class="scores-page-container">
     <div class="background-overlay"></div>
@@ -8,115 +7,53 @@
         <img src="images/logo.png" alt="Logo" class="scores-logo" />
         <h3>Mes Scores et Historique</h3>
 
-        @if (HighScores == null || GameHistories == null)
-        {
-            <p>Chargement...</p>
-        }
-        else
-        {
-            <section class="scores-section">
-                <h4>Mes Meilleurs Scores</h4>
-                @if (HighScores.Count == 0)
-                {
-                    <p>Aucun score enregistré.</p>
-                }
-                else
-                {
-                    <table class="scores-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Score</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var score in HighScores.OrderByDescending(s => s.Score))
-                            {
-                                <tr>
-                                    <td>@score.Id</td>
-                                    <td>@score.Score</td>
-                                    <td>@score.DateAchieved.ToString("dd/MM/yyyy HH:mm")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            </section>
+        <section class="scores-section">
+            <h4>Mes Meilleurs Scores</h4>
+            <table class="scores-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>3</td>
+                        <td>1500</td>
+                        <td>13/10/2025 18:19</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>1200</td>
+                        <td>13/10/2025 18:19</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>950</td>
+                        <td>13/10/2025 18:19</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-            <section class="history-section">
-                <h4>Historique des Parties</h4>
-                @if (GameHistories.Count == 0)
-                {
-                    <p>Aucune partie jouée pour le moment.</p>
-                }
-                else
-                {
-                    @foreach (var history in GameHistories.OrderByDescending(h => h.DatePlayed))
-                    {
-                        <div class="history-card">
-                            <p><strong>Date :</strong> @history.DatePlayed.ToString("dd/MM/yyyy HH:mm")</p>
-                            <p><strong>Donjons complétés :</strong> @history.CompletedDungeons.Count</p>
-                            <ul>
-                                @foreach (var dungeon in history.CompletedDungeons)
-                                {
-                                    <li>@dungeon.Name - @dungeon.Description</li>
-                                }
-                            </ul>
-                        </div>
-                    }
-                }
-            </section>
-        }
+        <section class="history-section">
+            <h4>Historique des Parties</h4>
+            <div class="history-card">
+                <p><strong>Date :</strong> 13/10/2025 18:19</p>
+                <p><strong>Donjons complétés :</strong> 2</p>
+                <ul>
+                    <li>Donjon de Feu - Un donjon brûlant.</li>
+                    <li>Donjon de Glace - Un donjon gelé.</li>
+                </ul>
+            </div>
+            <div class="history-card">
+                <p><strong>Date :</strong> 13/10/2025 18:19</p>
+                <p><strong>Donjons complétés :</strong> 1</p>
+                <ul>
+                    <li>Forêt Maudite - Le fantôme de la forêt.</li>
+                </ul>
+            </div>
+        </section>
     </div>
 </div>
-
-
-@code {
-    private List<HighScore> HighScores = new();
-    private List<GameHistory> GameHistories = new();
-
-    protected override void OnInitialized()
-    {
-        var player = new Player { Username = "Joueur1" };
-
-        HighScores = new List<HighScore>
-        {
-            new HighScore() {
-                Id = 1,
-                Player = player,
-                Score = 1200,
-            },
-            new HighScore() {
-                Id = 2,
-                Player = player,
-                Score = 950,
-            },
-            new HighScore() {
-                Id = 3,
-                Player = player,
-                Score = 1500,
-            }
-        };
-
-        GameHistories = new List<GameHistory>
-        {
-            new GameHistory() {
-                Id = 1,
-                Player = player,
-                CompletedDungeons = new List<Dungeon> {
-                    new Dungeon { Name = "Donjon de Feu", Description = "Un donjon brûlant." },
-                    new Dungeon { Name = "Donjon de Glace", Description = "Un donjon gelé." }
-                }
-            },
-            new GameHistory() {
-                Id = 2,
-                Player = player,
-                CompletedDungeons = new List<Dungeon> {
-                    new Dungeon { Name = "Forêt Maudite", Description = "Le fantôme de la forêt." }
-                }
-            }
-        };
-
-    }
-}

@@ -1,207 +1,199 @@
 @page "/admin"
+@layout EmptyLayout
 @inject NavigationManager NavigationManager
 
 <link rel="stylesheet" href="css/Admin.css" />
 
-<div class="admin-page-container">
-    <div class="admin-header">
-        <img src="images/logo.png" alt="Logo" class="admin-logo" />
-        <h1>⚔️ Panneau d'Administration ⚔️</h1>
-        <p class="subtitle">Gestion des joueurs et des scores</p>
-    </div>
-
-    <div class="admin-content">
-        <!-- Section Joueurs -->
-        <section class="admin-section">
-            <div class="section-header">
-                <h2>👥 Liste des Joueurs</h2>
-            </div>
-
-            <div class="table-container">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nom d'utilisateur</th>
-                            <th>Date de création</th>
-                            <th>Dernière connexion</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Joueur1</td>
-                            <td>03/10/2025 14:30</td>
-                            <td>13/10/2025 09:15</td>
-                            <td>
-                                <button class="icon-button edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="icon-button delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Joueur2</td>
-                            <td>05/10/2025 09:15</td>
-                            <td>13/10/2025 14:22</td>
-                            <td>
-                                <button class="icon-button edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="icon-button delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Joueur3</td>
-                            <td>08/10/2025 18:45</td>
-                            <td>12/10/2025 20:50</td>
-                            <td>
-                                <button class="icon-button edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="icon-button delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Section Scores -->
-        <section class="admin-section">
-            <div class="section-header">
-                <h2>🏆 Liste des Scores</h2>
-            </div>
-
-            <div class="table-container">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Joueur</th>
-                            <th>Score</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Joueur2</td>
-                            <td><span class="score-value">1500</span></td>
-                            <td>11/10/2025 16:20</td>
-                            <td>
-                                <button class="icon-button edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="icon-button delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Joueur1</td>
-                            <td><span class="score-value">1200</span></td>
-                            <td>08/10/2025 10:05</td>
-                            <td>
-                                <button class="icon-button edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="icon-button delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Joueur2</td>
-                            <td><span class="score-value">1100</span></td>
-                            <td>13/10/2025 14:30</td>
-                            <td>
-                                <button class="icon-button edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="icon-button delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Joueur1</td>
-                            <td><span class="score-value">950</span></td>
-                            <td>10/10/2025 11:45</td>
-                            <td>
-                                <button class="icon-button edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="icon-button delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>Joueur3</td>
-                            <td><span class="score-value">800</span></td>
-                            <td>12/10/2025 20:10</td>
-                            <td>
-                                <button class="icon-button edit">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="icon-button delete">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Statistiques -->
-        <section class="admin-section stats-section">
-            <h2>📊 Statistiques</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-label">Joueurs</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🏆</div>
-                    <div class="stat-value">5</div>
-                    <div class="stat-label">Scores enregistrés</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-value">1500</div>
-                    <div class="stat-label">Meilleur score</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">📈</div>
-                    <div class="stat-value">1110</div>
-                    <div class="stat-label">Score moyen</div>
+<div class="admin-container">
+    <main class="main-content">
+        <header class="content-header">
+            <div class="header-left">
+                <img src="images/logo.png" alt="Logo" class="logo-img" />
+                <div class="header-text">
+                    <h1 class="page-title">Panneau d'Administration</h1>
+                    <p class="page-subtitle">Gestion complète de votre donjon</p>
                 </div>
             </div>
-        </section>
+            <div class="header-right">
+                <button class="notification-btn">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="logout-btn" @onclick="Logout" title="Déconnexion">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </div>
+        </header>
 
-        <div class="admin-footer">
-            <button class="logout-button" @onclick="Logout">
-                <i class="bi bi-door-closed"></i> Déconnexion
-            </button>
+        <div class="bento-grid">
+
+            <section class="bento-box leaderboard">
+                <div class="section-header">
+                    <div class="header-title">
+                        <i class="bi bi-trophy"></i>
+                        <h2>Classement des Scores</h2>
+                    </div>
+                    <button class="add-btn">
+                        <i class="bi bi-plus-circle"></i> Ajouter
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Joueur</th>
+                                <th>Score</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="rank-1">
+                                <td><span class="rank-badge gold">🥇</span></td>
+                                <td><div class="player-info"><div class="avatar">J2</div><span>Joueur2</span></div></td>
+                                <td><span class="score-badge high">1500</span></td>
+                                <td>11/10/2025</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                             <tr class="rank-2">
+                                <td><span class="rank-badge silver">🥈</span></td>
+                                <td><div class="player-info"><div class="avatar">J1</div><span>Joueur1</span></div></td>
+                                <td><span class="score-badge high">1200</span></td>
+                                <td>08/10/2025</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                             <tr class="rank-3">
+                                <td><span class="rank-badge bronze">🥉</span></td>
+                                <td><div class="player-info"><div class="avatar">J3</div><span>Joueur3</span></div></td>
+                                <td><span class="score-badge medium">1100</span></td>
+                                <td>13/10/2025</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="bento-box stat-card-bento">
+                 <div class="stat-icon-wrapper purple"><i class="bi bi-people"></i></div>
+                 <div class="stat-info">
+                     <p class="stat-label">Joueurs actifs</p>
+                     <h3 class="stat-value">3</h3>
+                     <span class="stat-change positive">+12% ce mois</span>
+                 </div>
+            </section>
+
+            <section class="bento-box stat-card-bento">
+                <div class="stat-icon-wrapper gold"><i class="bi bi-star"></i></div>
+                <div class="stat-info">
+                    <p class="stat-label">Meilleur score</p>
+                    <h3 class="stat-value">1500</h3>
+                    <span class="stat-change neutral">Joueur2</span>
+                </div>
+            </section>
+
+            <section class="bento-box stat-card-bento">
+                <div class="stat-icon-wrapper blue"><i class="bi bi-trophy"></i></div>
+                <div class="stat-info">
+                    <p class="stat-label">Scores enregistrés</p>
+                    <h3 class="stat-value">5</h3>
+                    <span class="stat-change positive">+8 cette semaine</span>
+                </div>
+            </section>
+
+            <section class="bento-box stat-card-bento">
+                <div class="stat-icon-wrapper green"><i class="bi bi-graph-up"></i></div>
+                <div class="stat-info">
+                    <p class="stat-label">Score moyen</p>
+                    <h3 class="stat-value">1110</h3>
+                    <span class="stat-change positive">+15% vs hier</span>
+                </div>
+            </section>
+
+            <section class="bento-box players-list">
+                 <div class="section-header">
+                    <div class="header-title">
+                        <i class="bi bi-people"></i>
+                        <h2>Liste des Joueurs</h2>
+                    </div>
+                    <button class="add-btn">
+                        <i class="bi bi-plus-circle"></i> Ajouter
+                    </button>
+                </div>
+                <div class="table-wrapper">
+                     <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Joueur</th>
+                                <th>Créé le</th>
+                                <th>Dernière connexion</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="id-badge">001</span></td>
+                                <td><div class="player-info"><div class="avatar">J1</div><span>Joueur1</span></div></td>
+                                <td>03/10/2025</td>
+                                <td>13/10/2025</td>
+                                <td><span class="status-badge online">En ligne</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="id-badge">002</span></td>
+                                <td><div class="player-info"><div class="avatar">J2</div><span>Joueur2</span></div></td>
+                                <td>05/10/2025</td>
+                                <td>13/10/2025</td>
+                                <td><span class="status-badge online">En ligne</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="id-badge">003</span></td>
+                                <td><div class="player-info"><div class="avatar">J3</div><span>Joueur3</span></div></td>
+                                <td>08/10/2025</td>
+                                <td>12/10/2025</td>
+                                <td><span class="status-badge offline">Hors ligne</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
-    </div>
+    </main>
 </div>
 
 @code {
