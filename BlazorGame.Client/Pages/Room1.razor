@@ -1,21 +1,20 @@
 @page "/room1"
 @inject NavigationManager Navigation
 
-<link rel="stylesheet" href="css/Room1.css" />
-<div class="salle-container">
-    <h3>Salle 1</h3>
-    <p>Un gobelin apparaît. Que faites-vous ?</p>
-
-    <div class="actions">
-        <button @onclick="Combattre">Combattre</button>
-        <button @onclick="Fuir">Fuir</button>
-        <button @onclick="Fouiller">Fouiller</button>
+<link rel="stylesheet" href="css/room.css" />
+<div class="salle-container" style="background-image: url('images/room1.jpg');">
+    <div class="salle-content">
+        <img src="images/logo.png" class="room-logo" />
+        <h3>Salle 1</h3>
+        <p>Un gobelin apparaît. Que faites-vous ?</p>
+        <div class="actions">
+            <button @onclick="Combattre">Combattre</button>
+            <button @onclick="Fuir">Fuir</button>
+            <button @onclick="Fouiller">Fouiller</button>
+        </div>
+        <p class="message">@message</p>
     </div>
-
-    <p class="message">@message</p>
 </div>
-
-
 
 @code {
     private string message = "Choisissez une action.";

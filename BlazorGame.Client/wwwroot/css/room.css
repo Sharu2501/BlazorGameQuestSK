@@ -2,100 +2,134 @@
 @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
 
 /* Reset et variables */
-* { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
-    --bg-card: rgba(20,20,30,0.85);
+    --bg-card: rgba(20, 20, 30, 0.85);
     --accent-red: #a80000;
     --accent-red-hover: #d00000;
     --text-primary: #ffffff;
-    --text-muted: #6b7280;
+    --text-muted: #a0a0b0;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow: 0 4px 6px rgba(0,0,0,0.3);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html, body {
     font-family: 'Press Start 2P', cursive;
     color: var(--text-primary);
     height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
+html, body, #app, main {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+/* ===== CONTAINER ===== */
 .salle-container {
     position: relative;
-    width: 100%;
     height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 2rem;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    overflow: hidden;
 }
 
 .salle-container::before {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top:0; left:0;
+    width:100%; height:100%;
     background: rgba(0,0,0,0.75);
-    z-index: 1;
+    z-index: 0;
 }
 
-.salle-container h3, .salle-container p, .actions, .message {
+.salle-content {
     position: relative;
-    z-index: 2;
+    z-index: 1;
+    max-width: 800px;
 }
 
-.salle-container h3 {
+/* ===== LOGO ===== */
+.room-logo {
+    width: 100px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(168,0,0,0.8));
+    animation: float 3s ease-in-out infinite;
+    margin-bottom: 2rem;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* ===== TITRES & TEXTE ===== */
+h3 {
     font-size: 1.5rem;
     color: var(--accent-red);
     text-shadow: 0 0 20px rgba(168,0,0,0.6);
     margin-bottom: 1rem;
 }
 
-.salle-container p {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    margin-bottom: 2rem;
+p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
 }
 
+/* ===== ACTIONS ===== */
 .actions {
+    margin: 2rem 0;
     display: flex;
-    gap: 1rem;
     flex-wrap: wrap;
+    gap: 1rem;
     justify-content: center;
 }
 
 .actions button {
     padding: 1rem 2rem;
-    font-size: 0.65rem;
+    border-radius: 18px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
     color: var(--text-primary);
-    border: 1px solid var(--accent-red);
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(168,0,0,0.3), rgba(168,0,0,0.2));
     cursor: pointer;
+    box-shadow: var(--shadow-lg);
     transition: all 0.3s ease;
-    font-family: 'Press Start 2P', cursive;
+    backdrop-filter: blur(10px);
 }
 
 .actions button:hover {
-    background: linear-gradient(135deg, rgba(168,0,0,0.5), rgba(168,0,0,0.3));
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(168,0,0,0.4);
+    background: rgba(168,0,0,0.2);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(168,0,0,0.5);
 }
 
+/* ===== MESSAGE ===== */
 .message {
-    margin-top: 2rem;
-    font-size: 0.65rem;
-    color: var(--text-primary);
-    text-shadow: 0 0 10px rgba(168,0,0,0.6);
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--accent-red);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
 }
 
-/* Responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-    .salle-container h3 { font-size: 1.2rem; }
-    .salle-container p { font-size: 0.55rem; }
-    .actions button { font-size: 0.55rem; padding: 0.8rem 1.5rem; }
-    .message { font-size: 0.55rem; }
+    h3 { font-size: 1.2rem; }
+    p { font-size: 0.85rem; }
+    .actions button { padding: 0.8rem 1.5rem; font-size: 0.85rem; }
 }
