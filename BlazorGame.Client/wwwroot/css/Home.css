@@ -1,33 +1,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
 
-html, body {
+/* Reset */
+* {
     margin: 0;
     padding: 0;
-    font-family: 'Press Start 2P', cursive;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
+    box-sizing: border-box;
 }
 
-.page, .main, .content {
-    margin: 0;
-    padding: 0;
+:root {
+    --bg-dark: #0a0a0f;
+    --bg-card: rgba(20, 20, 30, 0.85);
+    --accent-red: #a80000;
+    --accent-red-hover: #d00000;
+    --text-primary: #ffffff;
+    --text-muted: #6b7280;
+}
+
+html, body {
+    font-family: 'Press Start 2P', cursive;
+    background: var(--bg-dark);
+    color: var(--text-primary);
     height: 100%;
-    width: 100%;
+    overflow: hidden;
 }
 
 .home-container {
     position: relative;
+    width: 100%;
     height: 100vh;
     background-image: url("../images/antre_donjon.png");
     background-size: cover;
     background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+    background-attachment: fixed;
 }
 
 .home-overlay {
@@ -36,55 +41,71 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background: rgba(0,0,0,0.75);
     z-index: 1;
 }
 
 .home-content {
     position: relative;
     z-index: 2;
-    text-align: center;
+    height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 1.5rem;
+    text-align: center;
+    padding: 2rem;
 }
 
 .home-content h1 {
-    font-size: 3rem;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-    font-family: 'Press Start 2P', cursive;
-    color: #ffffffca;
-    text-shadow:
-        0 0 8px #ffffffca,
-        0 0 20px #ffffffca,
-        0 0 40px rgba(255, 251, 247, 0.6);
-    letter-spacing: 2px;    
+    font-size: 2rem;
+    color: var(--accent-red);
+    text-shadow: 0 0 20px rgba(168,0,0,0.6);
+    margin-bottom: 1rem;
 }
 
+.home-content p {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+/* Logo qui flotte */
+.home-logo {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(168,0,0,0.8));
+    animation: float 3s ease-in-out infinite;
+    margin-bottom: 2rem;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Bouton start */
 .start-button {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 0.6rem 1.2rem; 
+    padding: 1rem 2rem;
+    font-size: 0.65rem;
+    color: var(--text-primary);
+    border: 1px solid var(--accent-red);
     border-radius: 12px;
-    font-size: 1rem;
+    background: linear-gradient(135deg, rgba(168,0,0,0.3), rgba(168,0,0,0.2));
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s, box-shadow 0.3s;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    font-family: 'Press Start 2P', cursive;
 }
 
 .start-button:hover {
-    background: rgba(255, 255, 255, 0.35);
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, rgba(168,0,0,0.5), rgba(168,0,0,0.3));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(168,0,0,0.4);
 }
 
-.home-logo {
-    height: 300px;
-    width: auto;
-    margin: 1rem 0;
-    padding: 6px;
+@media (max-width: 768px) {
+    .home-content h1 { font-size: 1.5rem; }
+    .home-content p { font-size: 0.55rem; }
+    .home-logo { width: 100px; }
+    .start-button { font-size: 0.55rem; padding: 0.8rem 1.5rem; }
 }
