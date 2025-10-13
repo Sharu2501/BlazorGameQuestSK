@@ -67,7 +67,22 @@
 
     private void DoLogin()
     {
-        NavigationManager.NavigateTo("/Room1");
+        // Vérification si c'est l'admin
+        if (Username.ToLower() == "admin" && Password == "admin")
+        {
+            NavigationManager.NavigateTo("/admin");
+            return;
+        }
+
+        // Vérification basique pour les joueurs normaux
+        if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password))
+        {
+            NavigationManager.NavigateTo("/Room1");
+        }
+        else
+        {
+            ErrorMessage = "Veuillez remplir tous les champs.";
+        }
     }
 
     private class TokenResponse
