@@ -16,9 +16,7 @@ namespace SharedModels.Model
         {
             return $"Dungeon [IdDungeon={IdDungeon}, Name={Name}, Description={Description}, RoomsCount={Rooms.Count}]";
         }
-        public void ExploreDungeon()
-        {
-            IsExplored = true;
-        }
+        
+    
     }
 }
