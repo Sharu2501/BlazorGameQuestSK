@@ -4,6 +4,9 @@
 ## Structure du projet
 - **BlazorGame.Client** : Application front-end développée en Blazor WebAssembly.  
 - **AuthenticationServices** : API pour gérer l’authentification et les sessions utilisateurs.  
+- **BlazorGameAPI** : Micro-service principal responsable de la **logique métier du jeu**.  
+  Il gère les interactions liées aux **joueurs, donjons, monstres, objets et historiques de parties**.  
+  Ce projet intègre **Entity Framework Core** pour la gestion des données et expose plusieurs **endpoints RESTful** documentés via **Swagger**.
 - **SharedModels** : Bibliothèque de classes partagées entre le client et les services.  
 - **BlazorGame.Tests** : Projet de tests unitaires utilisant xUnit pour valider les fonctionnalités.
 
@@ -49,3 +52,22 @@ Pour cette première version, nous avons mis en place les éléments suivants :
 - Tester le comportement du jeu lorsqu’un joueur interrompt une partie en cours (sauvegarde et reprise).
 
 - Vérifier que les récompenses (points, objets, expérience) sont bien attribuées à la fin d’une aventure.
+
+## Version 2 – V2
+Pour cette deuxième version, nous avons mis en place les éléments suivants :
+
+- Redéfinition des **principaux modèles** et de leurs propriétés : `User`, `Admin`, `GameHistory`, `HighScore`, `Monster`, `Artifact`, etc.
+
+- Mise en place de **Entity Framework Core (EF Core)** avec prise en charge d’une **base InMemory** pour les tests.  
+
+- Création des **migrations initiales** et configuration complète du **`ApplicationDbContext`**.  
+
+- Développement des **micro-services et endpoints** correspondants dans l’API **BlazorGameAPI** pour gérer les modèles du jeu.  
+
+- Ajout et configuration de **Swagger** pour la documentation et le test des endpoints.  
+
+- **Tests via l’interface Swagger** pour valider les requêtes et les réponses des services.  
+
+- **Mise à jour des tests unitaires** existants pour prendre en compte les nouvelles fonctionnalités du modèle et des services.  
+
+- **Vérification de la couverture de code** avec Coverlet et ajustements des tests sur les classes principales.

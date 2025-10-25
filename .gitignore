@@ -42,3 +42,4 @@ Thumbs.db
 # Existing rules
 BlazorGameClient/bin/
 BlazorGameClient/obj/
+BlazorGame.Tests/TestResults/0d3458e5-c6f8-47b6-a9ea-38bd12c34958/coverage.cobertura.xml
