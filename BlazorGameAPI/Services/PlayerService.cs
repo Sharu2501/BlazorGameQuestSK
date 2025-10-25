@@ -34,12 +34,12 @@ namespace BlazorGameAPI.Services
                 .Include(gh => gh.CompletedDungeons)
                 .FirstOrDefaultAsync(gh => gh.Player.PlayerId == playerId);
 
-            double expPercentage = player.LevelCap > 0 
-                ? (player.ExperiencePoints / (double)player.LevelCap) * 100 
+            double expPercentage = player.LevelCap > 0
+                ? (player.ExperiencePoints / (double)player.LevelCap) * 100
                 : 0;
 
-            double healthPercentage = player.MaxHealth > 0 
-                ? (player.Health / (double)player.MaxHealth) * 100 
+            double healthPercentage = player.MaxHealth > 0
+                ? (player.Health / (double)player.MaxHealth) * 100
                 : 0;
 
             int totalDungeons = gameHistory?.CompletedDungeons?.Count ?? 0;
@@ -81,7 +81,7 @@ namespace BlazorGameAPI.Services
                 player.ExperiencePoints -= player.LevelCap;
                 player.Level++;
                 player.LevelCap += 100;
-                
+
                 player.MaxHealth += 10;
                 player.Health = player.MaxHealth;
                 player.Attack += 2;
