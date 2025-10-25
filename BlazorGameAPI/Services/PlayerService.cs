@@ -18,12 +18,12 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Récupère les statistiques complètes d'un joueur
         /// </summary>
-        public async Task<PlayerStatsDto?> GetPlayerStats(int playerId)
+        public async Task<PlayerStatsDto?> GetPlayerStats(int Id)
         {
             var player = await _context.Players
                 .Include(p => p.HighScore)
                 .Include(p => p.Inventory)
-                .FirstOrDefaultAsync(p => p.PlayerId == playerId);
+                .FirstOrDefaultAsync(p => p.Id == Id);
 
             if (player == null)
             {
@@ -32,7 +32,7 @@ namespace BlazorGameAPI.Services
 
             var gameHistory = await _context.GameHistories
                 .Include(gh => gh.CompletedDungeons)
-                .FirstOrDefaultAsync(gh => gh.Player.PlayerId == playerId);
+                .FirstOrDefaultAsync(gh => gh.Player.Id == Id);
 
             double expPercentage = player.LevelCap > 0
                 ? (player.ExperiencePoints / (double)player.LevelCap) * 100
@@ -46,7 +46,7 @@ namespace BlazorGameAPI.Services
 
             return new PlayerStatsDto
             {
-                PlayerId = player.PlayerId,
+                PlayerId = player.Id,
                 Username = player.Username,
                 Level = player.Level,
                 ExperiencePoints = player.ExperiencePoints,
@@ -69,9 +69,9 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Ajoute de l'expérience au joueur et gère la montée de niveau
         /// </summary>
-        public async Task AddExperience(int playerId, int points)
+        public async Task AddExperience(int Id, int points)
         {
-            var player = await _context.Players.FindAsync(playerId);
+            var player = await _context.Players.FindAsync(Id);
             if (player == null) return;
 
             player.ExperiencePoints += points;
@@ -94,9 +94,9 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Change l'action actuelle du joueur
         /// </summary>
-        public async Task ChangeAction(int playerId, PlayerActionEnum action)
+        public async Task ChangeAction(int Id, PlayerActionEnum action)
         {
-            var player = await _context.Players.FindAsync(playerId);
+            var player = await _context.Players.FindAsync(Id);
             if (player == null) return;
 
             player.Action = action;
@@ -106,17 +106,17 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Réinitialise l'action du joueur à NONE
         /// </summary>
-        public async Task ResetAction(int playerId)
+        public async Task ResetAction(int Id)
         {
-            await ChangeAction(playerId, PlayerActionEnum.NONE);
+            await ChangeAction(Id, PlayerActionEnum.NONE);
         }
 
         /// <summary>
         /// Ajoute de l'or au joueur
         /// </summary>
-        public async Task AddGold(int playerId, int amount)
+        public async Task AddGold(int Id, int amount)
         {
-            var player = await _context.Players.FindAsync(playerId);
+            var player = await _context.Players.FindAsync(Id);
             if (player == null) return;
 
             player.Gold += amount;
@@ -126,9 +126,9 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Retire de l'or au joueur
         /// </summary>
-        public async Task<bool> RemoveGold(int playerId, int amount)
+        public async Task<bool> RemoveGold(int Id, int amount)
         {
-            var player = await _context.Players.FindAsync(playerId);
+            var player = await _context.Players.FindAsync(Id);
             if (player == null || player.Gold < amount) return false;
 
             player.Gold -= amount;
@@ -139,9 +139,9 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Soigne le joueur
         /// </summary>
-        public async Task HealPlayer(int playerId, int amount)
+        public async Task HealPlayer(int Id, int amount)
         {
-            var player = await _context.Players.FindAsync(playerId);
+            var player = await _context.Players.FindAsync(Id);
             if (player == null) return;
 
             player.Health = Math.Min(player.Health + amount, player.MaxHealth);
@@ -151,9 +151,9 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Inflige des dégâts au joueur
         /// </summary>
-        public async Task TakeDamage(int playerId, int damage)
+        public async Task TakeDamage(int Id, int damage)
         {
-            var player = await _context.Players.FindAsync(playerId);
+            var player = await _context.Players.FindAsync(Id);
             if (player == null) return;
 
             player.Health = Math.Max(player.Health - damage, 0);
@@ -163,20 +163,20 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Vérifie si le joueur est mort
         /// </summary>
-        public async Task<bool> IsDead(int playerId)
+        public async Task<bool> IsDead(int Id)
         {
-            var player = await _context.Players.FindAsync(playerId);
+            var player = await _context.Players.FindAsync(Id);
             return player == null || player.Health <= 0;
         }
 
         /// <summary>
         /// Ajoute un artefact à l'inventaire du joueur
         /// </summary>
-        public async Task AddArtifactToInventory(int playerId, Artifact artifact)
+        public async Task AddArtifactToInventory(int Id, Artifact artifact)
         {
             var player = await _context.Players
                 .Include(p => p.Inventory)
-                .FirstOrDefaultAsync(p => p.PlayerId == playerId);
+                .FirstOrDefaultAsync(p => p.Id == Id);
 
             if (player == null) return;
 
@@ -187,11 +187,11 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Retire un artefact de l'inventaire du joueur
         /// </summary>
-        public async Task<bool> RemoveArtifactFromInventory(int playerId, int artifactId)
+        public async Task<bool> RemoveArtifactFromInventory(int Id, int artifactId)
         {
             var player = await _context.Players
                 .Include(p => p.Inventory)
-                .FirstOrDefaultAsync(p => p.PlayerId == playerId);
+                .FirstOrDefaultAsync(p => p.Id == Id);
 
             if (player == null) return false;
 
@@ -206,12 +206,12 @@ namespace BlazorGameAPI.Services
         /// <summary>
         /// Récupère un joueur par son ID
         /// </summary>
-        public async Task<Player?> GetPlayerById(int playerId)
+        public async Task<Player?> GetPlayerById(int Id)
         {
             return await _context.Players
                 .Include(p => p.HighScore)
                 .Include(p => p.Inventory)
-                .FirstOrDefaultAsync(p => p.PlayerId == playerId);
+                .FirstOrDefaultAsync(p => p.Id == Id);
         }
 
         /// <summary>
@@ -224,6 +224,7 @@ namespace BlazorGameAPI.Services
                 Username = username,
                 Email = email,
                 PasswordHash = passwordHash,
+                UserType = UserTypeEnum.PLAYER,
                 Level = 1,
                 Health = 100,
                 MaxHealth = 100,

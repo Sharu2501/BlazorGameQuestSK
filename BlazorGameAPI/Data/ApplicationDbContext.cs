@@ -25,7 +25,6 @@ namespace BlazorGameAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Monster>()
                 .HasKey(m => m.IdMonster);
 
@@ -83,18 +82,18 @@ namespace BlazorGameAPI.Data
                 .WithMany()
                 .UsingEntity(j => j.ToTable("GameHistoryDungeons"));
 
+            modelBuilder.Entity<GameSession>()
+                .HasIndex(gs => gs.PlayerId);
+
+            modelBuilder.Entity<GameSession>()
+                .HasIndex(gs => gs.IsActive);
+
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username);
-
-            modelBuilder.Entity<GameSession>()
-                .HasIndex(gs => gs.PlayerId);
-
-            modelBuilder.Entity<GameSession>()
-                .HasIndex(gs => gs.IsActive);
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Email)

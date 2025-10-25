@@ -32,29 +32,19 @@ namespace BlazorGameAPI.Services
         /// <param name="attack"></param>
         /// <param name="defense"></param>
         /// <returns></returns>
-        public async Task<int> CalculateDamage(int attack, int defense)
+        public Task<int> CalculateDamage(int attack, int defense)
         {
             var roll = RollDice(20);
             var baseDamage = attack - (defense / 2);
 
-            if (roll == 20)
-            {
-                return baseDamage * 2;
-            }
-            else if (roll == 1)
-            {
-                return 0;
-            }
-            else if (roll >= 15)
-            {
-                return (int)(baseDamage * 1.5);
-            }
-            else if (roll <= 5)
-            {
-                return (int)(baseDamage * 0.5);
-            }
+            int result;
+            if (roll == 20) result = baseDamage * 2;
+            else if (roll == 1) result = 0;
+            else if (roll >= 15) result = (int)(baseDamage * 1.5);
+            else if (roll <= 5) result = (int)(baseDamage * 0.5);
+            else result = Math.Max(baseDamage, 1);
 
-            return Math.Max(baseDamage, 1);
+            return Task.FromResult(result);
         }
         /// <summary>
         /// Le joueur attaque un monstre.

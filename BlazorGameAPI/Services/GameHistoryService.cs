@@ -46,7 +46,7 @@ namespace BlazorGameAPI.Services
             return await _context.GameHistories
                 .Include(gh => gh.Player)
                 .Include(gh => gh.CompletedDungeons)
-                .FirstOrDefaultAsync(gh => gh.Player.PlayerId == playerId);
+                .FirstOrDefaultAsync(gh => gh.Player.Id == playerId);
         }
         /// <summary>
         /// Ajoute un donjon complété à l'historique de jeu d'un joueur.

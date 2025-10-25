@@ -1,90 +1,103 @@
-﻿using SharedModels.Enum;
+﻿using Xunit;
+using Microsoft.EntityFrameworkCore;
+using BlazorGameAPI.Services;
 using SharedModels.Model;
-using Xunit;
+using SharedModels.Enum;
+using System.Threading.Tasks;
+using System.Linq;
+using BlazorGameAPI.Data;
 
-namespace BlazorGame.Tests
+namespace BlazorGameAPI.Tests
 {
     public class PlayerTests
     {
-        [Fact]
-        public void Constructor_DefaultValues_ShouldInitializeCorrectly()
+        private ApplicationDbContext GetInMemoryDbContext([System.Runtime.CompilerServices.CallerMemberName] string testName = "")
         {
-            var player = new Player();
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: $"TestDb_{testName}")
+                .Options;
 
-            // Assertions pour les valeurs par défaut
-            Assert.Equal(0, player.PlayerId);
-            Assert.Equal(0, player.Level);
-            Assert.Equal("default", player.Username);
-            Assert.Equal(0, player.HighScore);
-            Assert.Equal(PlayerActionEnum.NONE, player.Action);
+            return new ApplicationDbContext(options);
         }
 
         [Fact]
-        public void Constructor_CustomValues_ShouldInitializeCorrectly()
+        public async Task CreatePlayer_ShouldAddPlayer()
         {
-            var player = new Player()
-            {
-                PlayerId = 1,
-                Level = 5,
-                Username = "TestPlayer",
-                HighScore = 100,
-                Action = PlayerActionEnum.NONE
-            };
+            var context = GetInMemoryDbContext();
+            var service = new PlayerService(context);
 
-            // Assertion pour le joueur avec l'id 1, le niveau 5, le nom d'utilisateur "TestPlayer" et un score de 100
-            Assert.Equal(1, player.PlayerId);
-            Assert.Equal(5, player.Level);
+            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+
+            Assert.NotNull(player);
             Assert.Equal("TestPlayer", player.Username);
-            Assert.Equal(100, player.HighScore);
-            Assert.Equal(PlayerActionEnum.NONE, player.Action);
+            Assert.Equal(1, player.Level);
+            Assert.Equal(UserTypeEnum.PLAYER, player.UserType);
+            Assert.Equal(100, player.MaxHealth);
         }
 
         [Fact]
-        public void AddExperience_ShouldIncreaseExperienceAndLevelUp()
+        public async Task AddExperience_ShouldLevelUpPlayer()
         {
-            var player = new Player()
-            {
-                PlayerId = 1,
-                Level = 1,
-                Username = "Test",
-                HighScore = 0,
-                Action = PlayerActionEnum.NONE,
-                ExperiencePoints = 90,
-                LevelCap = 100
-            };
+            var context = GetInMemoryDbContext();
+            var service = new PlayerService(context);
 
-            // Réalisation d'une action
-            player.AddExperience(15); // total 105 donc passage au niveau suivant
+            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            await service.AddExperience(player.Id, 150);
 
-            // Assertion pour vérifier l'augmentation de l'expérience et le niveau
-            Assert.Equal(2, player.Level);
-            Assert.Equal(5, player.ExperiencePoints); // 105 - 100 = 5
+            var updatedPlayer = await service.GetPlayerById(player.Id);
+            Assert.NotNull(updatedPlayer); 
+            Assert.Equal(2, updatedPlayer.Level);
+            Assert.Equal(50, updatedPlayer.ExperiencePoints);
         }
 
         [Fact]
-        public void ChangeAction_ShouldUpdateAction()
+        public async Task HealPlayer_ShouldNotExceedMaxHealth()
         {
-            var player = new Player();
+            var context = GetInMemoryDbContext();
+            var service = new PlayerService(context);
 
-            // Le joueur choisit de se battre comme action
-            player.ChangeAction(PlayerActionEnum.FIGHT);
+            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            await service.TakeDamage(player.Id, 50);
+            await service.HealPlayer(player.Id, 100);
 
-            // Assertion pour vérifier que l'action a été mise à jour
-            Assert.Equal(PlayerActionEnum.FIGHT, player.Action);
+            var updatedPlayer = await service.GetPlayerById(player.Id);
+            Assert.NotNull(updatedPlayer); 
+            Assert.Equal(updatedPlayer.MaxHealth, updatedPlayer.Health);
         }
 
         [Fact]
-        public void ResetAction_ShouldSetActionToNone()
+        public async Task AddAndRemoveGold_ShouldWorkCorrectly()
         {
-            var player = new Player();
-            // Le joueur choisit de se soigner comme action
-            player.ChangeAction(PlayerActionEnum.HEAL);
+            var context = GetInMemoryDbContext();
+            var service = new PlayerService(context);
 
-            // Le joueur réinitialise son action
-            player.ResetAction();
+            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            await service.AddGold(player.Id, 200);
+            var updatedPlayer = await service.GetPlayerById(player.Id);
+            Assert.NotNull(updatedPlayer); 
+            Assert.Equal(200, updatedPlayer.Gold);
 
-            // Assertion pour vérifier que l'action est revenue à NONE
-            Assert.Equal(PlayerActionEnum.NONE, player.Action);
+            bool removed = await service.RemoveGold(player.Id, 150);
+            updatedPlayer = await service.GetPlayerById(player.Id);
+            Assert.True(removed);
+            Assert.NotNull(updatedPlayer); 
+            Assert.Equal(50, updatedPlayer.Gold);
+        }
+
+        [Fact]
+        public async Task AddArtifactToInventory_ShouldIncreaseCount()
+        {
+            var context = GetInMemoryDbContext();
+            var service = new PlayerService(context);
+
+            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            var artifact = new Artifact { Name = "Sword", Rarity = RarityEnum.RARE };
+            await service.AddArtifactToInventory(player.Id, artifact);
+
+            var updatedPlayer = await service.GetPlayerById(player.Id);
+            Assert.NotNull(updatedPlayer); 
+            Assert.Single(updatedPlayer.Inventory);
+            Assert.Equal("Sword", updatedPlayer.Inventory.First().Name);
         }
     }
 }

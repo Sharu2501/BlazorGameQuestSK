@@ -41,7 +41,7 @@ namespace BlazorGameAPI.Services
         {
             var player = await _context.Players
                 .Include(p => p.HighScore)
-                .FirstOrDefaultAsync(p => p.PlayerId == playerId);
+                .FirstOrDefaultAsync(p => p.Id == playerId);
 
             if (player == null)
                 return false;
@@ -77,7 +77,7 @@ namespace BlazorGameAPI.Services
         {
             var player = await _context.Players
                 .Include(p => p.HighScore)
-                .FirstOrDefaultAsync(p => p.PlayerId == playerId);
+                .FirstOrDefaultAsync(p => p.Id == playerId);
 
             return player?.HighScore;
         }

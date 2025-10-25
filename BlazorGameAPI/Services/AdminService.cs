@@ -74,19 +74,19 @@ namespace BlazorGameAPI.Services
         /// </summary>
         /// <param name="playerId"></param>
         /// <returns></returns>
-        public async Task<object> GetPlayerDetailedStats(int playerId)
+        public async Task<object?> GetPlayerDetailedStats(int playerId)
         {
             var player = await _context.Players
                 .Include(p => p.HighScore)
                 .Include(p => p.Inventory)
-                .FirstOrDefaultAsync(p => p.PlayerId == playerId);
+                .FirstOrDefaultAsync(p => p.Id == playerId);
 
             if (player == null)
                 return null;
 
             var history = await _context.GameHistories
                 .Include(gh => gh.CompletedDungeons)
-                .FirstOrDefaultAsync(gh => gh.Player.PlayerId == playerId);
+                .FirstOrDefaultAsync(gh => gh.Player.Id == playerId);
 
             return new
             {

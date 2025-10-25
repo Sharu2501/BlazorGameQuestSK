@@ -7,7 +7,7 @@ namespace SharedModels.Model
     {
         public int Id { get; set; }
         public Player Player { get; set; } = null!;
-        public List<Dungeon>? CompletedDungeons { get; set; } = new List<Dungeon>();
+        public List<Dungeon> CompletedDungeons { get; set; } = new List<Dungeon>();
         public DateTime DatePlayed { get; set; } = DateTime.Now;
 
         public override string ToString()
