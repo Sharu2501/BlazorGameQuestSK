@@ -1,0 +1,51 @@
+@page "/game-rules"
+<link href="css/game-rules.css" rel="stylesheet" />
+
+<div class="game-rules-container">
+    <div class="game-rules-overlay"></div>
+    <div class="game-rules-content">
+        <img src="images/logo.png" alt="Logo" class="home-logo" />
+
+        <h3>Règles du Jeu</h3>
+
+        <div class="rules-grid">
+            @foreach (var rule in Rules)
+            {
+                <div class="rule-card @(rule.IsFloating ? "floating" : "")"
+                    @onmouseover="() => StopFloating(rule)"
+                    @onmouseout="() => StartFloating(rule)">
+                    <i class="@rule.Icon"></i>
+                    <h4>@rule.Title</h4>
+                    <p>@rule.Description</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private class Rule
+    {
+        public required string Title { get; set; }
+        public required string Description { get; set; }
+        public required string Icon { get; set; }
+        public bool IsFloating { get; set; } = true;
+    }
+
+    private List<Rule> Rules = new List<Rule>
+    {
+        new Rule { Title="Objectif du Jeu", Description="Progresser dans les donjons, vaincre les ennemis, collecter des artefacts rares et atteindre le plus haut score possible.", Icon="bi bi-flag-fill" },
+        new Rule { Title="Création de Personnage", Description="Chaque joueur commence au niveau 1 avec 100 points de santé. Personnalisez votre personnage avec un nom unique.", Icon="bi bi-person-fill" },
+        new Rule { Title="Progression", Description="Gagnez de l'expérience, montez de niveau et collectez de l'or pour améliorer votre équipement.", Icon="bi bi-arrow-up-circle-fill" },
+        new Rule { Title="Combat", Description="Actions possibles : Attaquer, Défendre, Soigner, Fuir. Les combats dépendent de vos statistiques.", Icon="bi bi-lungs-fill" },
+        new Rule { Title="Artefacts", Description="Trouvez des artefacts pour améliorer vos capacités. Rareté : Commun, Rare, Épique, Légendaire, Mythique.", Icon="bi bi-gem" },
+        new Rule { Title="Mort", Description="Si la santé tombe à 0, vous perdez les progrès dans le donjon actuel. Recommencez avec votre personnage existant.", Icon="bi bi-sign-dead-end" },
+        new Rule { Title="Scores", Description="Essayez de battre votre propre record ou celui des autres joueurs. Les scores élevés sont enregistrés.", Icon="bi bi-bar-chart-fill" }
+    };
+
+    private void StopFloating(Rule rule) => rule.IsFloating = false;
+    private void StartFloating(Rule rule)
+    {
+        rule.IsFloating = true;
+    }
+}

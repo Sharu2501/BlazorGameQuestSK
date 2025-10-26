@@ -9,6 +9,10 @@
             <i class="bi bi-bar-chart-fill"></i>
             <span>Scores</span>
         </NavLink>
+        
+        <NavLink href="/game-rules" class="menu-item" Match="NavLinkMatch.All">
+            <i class="bi bi-journal-text"></i> <span>Règles du jeu</span>
+        </NavLink>
 
         <NavLink href="/" class="menu-item" Match="NavLinkMatch.All">
             <i class="bi bi-door-closed-fill"></i>
@@ -25,7 +29,6 @@
         transition: filter 0.3s ease, transform 0.3s ease;
     }
 
-    /* Logo sombre + animation si active */
     .navbar-brand.active-page {
         filter: brightness(0.6);
         animation: pulse 1.5s infinite alternate;
