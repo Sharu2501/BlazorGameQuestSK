@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BlazorGameAPI.Data;
+using BlazorGameAPI.Services;
+using SharedModels.Enum;
 using SharedModels.Model;
 
 [ApiController]
@@ -9,9 +11,12 @@ public class RoomController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
 
-    public RoomController(ApplicationDbContext context)
+    private readonly RoomService _roomService;
+
+    public RoomController(ApplicationDbContext context, RoomService roomService)
     {
         _context = context;
+        _roomService = roomService;
     }
 
     /// <summary>
@@ -64,5 +69,12 @@ public class RoomController : ControllerBase
         _context.Rooms.Remove(room);
         await _context.SaveChangesAsync();
         return NoContent();
+    }
+
+    [HttpGet("generate")]
+    public async Task<ActionResult<Room>> GenerateRoom(int level, int difficulty)
+    {
+        var room = await _roomService.GenerateRoom(level, (DifficultyLevelEnum)difficulty);
+        return Ok(room);
     }
 }

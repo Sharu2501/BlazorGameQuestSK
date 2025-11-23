@@ -8,7 +8,6 @@ namespace SharedModels.Model
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-
         public UserTypeEnum UserType { get; set; } = UserTypeEnum.DEFAULT;
 
         public override string ToString()

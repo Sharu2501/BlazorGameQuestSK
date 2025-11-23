@@ -20,7 +20,7 @@ Pour cette première version, nous avons mis en place les éléments suivants :
 - Développement de la **page d’accueil**, du **menu de navigation** et des composants associés.  
 - Création de l’interface **« Nouvelle aventure »**.
 - Création de l’interface **« Connexion Admin »** avec l'utilisateur `Admin` et mot de passe `Admin`
-- Création de l’interface **« Connexion »** avec l'utilisateur `Test` et mot de passe `Test`
+- Création de l’interface **« Connexion »** avec l'utilisateur `player` et mot de passe `player`
 - Développement d’un **composant Blazor affichant une salle de jeu statique** pour visualiser l’environnement du joueur.
 
 ### Tests
