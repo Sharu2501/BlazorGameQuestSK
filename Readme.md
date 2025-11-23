@@ -71,3 +71,15 @@ Pour cette deuxième version, nous avons mis en place les éléments suivants :
 - **Mise à jour des tests unitaires** existants pour prendre en compte les nouvelles fonctionnalités du modèle et des services.  
 
 - **Vérification de la couverture de code** avec Coverlet et ajustements des tests sur les classes principales.
+
+## Version 3 – V2
+
+Dans cette troisième version, nous avons mis en cohérence notre backend et frontend. Nous avons notamment :
+- **Génération aléatoire** d'une salle en fonction du level du joueur connecté.
+- Affichage des **stats** du joueur en fonction de ses actions.
+- Affichage du **score final** en fin de partie.
+- Sauvegarde du **score** et de **l'historique**.
+- Réalisation des **jeux de tests** appropriés.
+- Vérification de la **couverture de code** à 80% avec Coverlet.
+
+Les données liées à une partie, joueurs et monstres sont stockés dans la base de données **SupaBase**.
