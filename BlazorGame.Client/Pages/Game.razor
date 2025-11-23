@@ -3,9 +3,11 @@
 @using SharedModels.Enum
 @inject HttpClient Http
 @inject AuthService AuthService
+@inject GameService GameService
 @inject NavigationManager NavigationManager
 
 <link rel="stylesheet" href="css/room.css" />
+<link rel="stylesheet" href="css/game.css" />
 
 @if (isLoading)
 {
@@ -18,7 +20,7 @@ else if (gameState != null)
     <div class="salle-container" style="background-image: url('@GetRoomImage()')">
         <div class="salle-content">
             <img src="images/logo.png" class="room-logo" />
-            
+
             <div class="dungeon-info">
                 <h2>@gameState.CurrentDungeon?.Name</h2>
                 <p class="dungeon-desc">@gameState.CurrentDungeon?.Description</p>
@@ -28,7 +30,7 @@ else if (gameState != null)
 
             <h3>@gameState.CurrentRoom?.Name</h3>
             <p>@gameState.CurrentRoom?.Description</p>
-            
+
             @if (gameState.CurrentRoom?.Monster != null && !gameState.IsMonsterDefeated)
             {
                 <div class="monster-info">
@@ -40,7 +42,7 @@ else if (gameState != null)
                     </div>
                 </div>
             }
-            
+
             <div class="actions">
                 @foreach (var action in GetAvailableActions())
                 {
@@ -62,9 +64,9 @@ else if (gameState != null)
                     }
                 }
             </div>
-            
+
             <p class="message">@message</p>
-            
+
             <div class="player-stats">
                 <h4>📊 Statistiques de @PlayerStats?.Username</h4>
                 <div class="stats-grid">
@@ -98,64 +100,9 @@ else if (gameState != null)
     </div>
 }
 
-<style>
-.heal-potions {
-    margin: 1rem 0;
-    font-size: 1.2rem;
-    color: white;
-}
-
-.potion-available {
-    margin: 0 0.2rem;
-    font-size: 1.5rem;
-}
-
-.potion-used {
-    margin: 0 0.2rem;
-    font-size: 1.5rem;
-    opacity: 0.3;
-}
-
-.loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: white;
-    font-size: 2rem;
-}
-
-.dungeon-info {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-}
-
-.dungeon-desc {
-    font-style: italic;
-    opacity: 0.9;
-}
-</style>
-
 @code {
     [SupplyParameterFromQuery]
     public int Difficulty { get; set; } = 0;
-
-    private class GameState
-    {
-        public Dungeon? CurrentDungeon { get; set; }
-        public Room? CurrentRoom { get; set; }
-        public int CurrentRoomIndex { get; set; }
-        public int TotalRooms { get; set; }
-        public bool IsMonsterDefeated { get; set; }
-        public bool IsRoomCompleted { get; set; }
-        public int Score { get; set; }
-        public int SessionId { get; set; }
-        public int HealUsedInRoom { get; set; }
-        public int MaxHealPerRoom { get; set; } = 2;
-        public DifficultyLevelEnum DifficultyLevel { get; set; }
-    }
 
     private GameState? gameState;
     private PlayerStatsDto? PlayerStats;
@@ -177,23 +124,11 @@ else if (gameState != null)
     {
         try
         {
-            PlayerStats = await Http.GetFromJsonAsync<PlayerStatsDto>(
-                $"http://localhost:5240/api/Player/{AuthService.CurrentPlayerId.Value}/stats"
-            );
-
+            PlayerStats = await GameService.GetPlayerStats();
             var difficultyLevel = (DifficultyLevelEnum)Difficulty;
 
-            var dungeonResponse = await Http.PostAsJsonAsync(
-                "http://localhost:5240/api/Dungeon/generate",
-                new { numberOfRooms = 5, level = PlayerStats.Level, difficulty = Difficulty }
-            );
-            var dungeon = await dungeonResponse.Content.ReadFromJsonAsync<Dungeon>();
-
-            var sessionResponse = await Http.PostAsJsonAsync(
-                "http://localhost:5240/api/GameSession/start",
-                new { PlayerId = AuthService.CurrentPlayerId.Value, DungeonId = dungeon.IdDungeon }
-            );
-            var session = await sessionResponse.Content.ReadFromJsonAsync<GameSession>();
+            var dungeon = await GameService.GenerateDungeon(5, PlayerStats.Level, Difficulty);
+            var session = await GameService.StartSession(AuthService.CurrentPlayerId.Value, dungeon.IdDungeon);
 
             gameState = new GameState
             {
@@ -295,9 +230,7 @@ else if (gameState != null)
                     break;
             }
 
-            PlayerStats = await Http.GetFromJsonAsync<PlayerStatsDto>(
-                $"http://localhost:5240/api/Player/{playerId}/stats"
-            );
+            PlayerStats = await GameService.GetPlayerStats();
 
             if (PlayerStats?.Health <= 0)
             {
@@ -317,10 +250,7 @@ else if (gameState != null)
         if (gameState?.CurrentRoom?.Monster == null)
             return;
 
-        var response = await Http.PostAsJsonAsync("http://localhost:5240/api/Combat/attack",
-            new { playerId, monsterId = gameState.CurrentRoom.Monster.IdMonster });
-
-        var result = await response.Content.ReadFromJsonAsync<AttackResult>();
+        var result = await GameService.AttackMonster(playerId, gameState.CurrentRoom.Monster.IdMonster);
 
         if (result == null || !result.Success)
         {
@@ -331,18 +261,11 @@ else if (gameState != null)
         if (!result.Hit)
         {
             message = result.Message;
-            
+
             if (gameState.CurrentRoom.Monster != null)
             {
-                var monsterResponse = await Http.PostAsJsonAsync("http://localhost:5240/api/Combat/monster-attack",
-                    new { monsterId = gameState.CurrentRoom.Monster.IdMonster, playerId });
-                var monsterResult = await monsterResponse.Content.ReadFromJsonAsync<AttackResult>();
-                
-                if (monsterResult != null && monsterResult.Hit)
-                {
-                    message += $"\n{monsterResult.Message}";
-                }
-                else if (monsterResult != null)
+                var monsterResult = await GameService.MonsterAttack(gameState.CurrentRoom.Monster.IdMonster, playerId);
+                if (monsterResult != null)
                 {
                     message += $"\n{monsterResult.Message}";
                 }
@@ -350,31 +273,25 @@ else if (gameState != null)
             return;
         }
 
-        var updatedMonster = await Http.GetFromJsonAsync<Monster>(
-            $"http://localhost:5240/api/Monster/{gameState.CurrentRoom.Monster.IdMonster}"
-        );
+        var updatedMonster = await GameService.GetMonster(gameState.CurrentRoom.Monster.IdMonster);
 
         if (updatedMonster.Health <= 0)
         {
             gameState.IsMonsterDefeated = true;
-            
+
             int roomScore = CalculateRoomScore();
             gameState.Score += roomScore;
-            
+
             message = $"{result.Message}\nVous avez vaincu {updatedMonster.Name} ! +{roomScore} points";
-            
-            await Http.PostAsJsonAsync($"http://localhost:5240/api/Combat/victory",
-                new { playerId, roomId = gameState.CurrentRoom.Id });
+
+            await GameService.PostVictory(playerId, gameState.CurrentRoom.Id);
         }
         else
         {
             message = $"{result.Message}\n{updatedMonster.Name} a encore {updatedMonster.Health} PV.";
             gameState.CurrentRoom.Monster = updatedMonster;
-            
-            var monsterResponse = await Http.PostAsJsonAsync("http://localhost:5240/api/Combat/monster-attack",
-                new { monsterId = updatedMonster.IdMonster, playerId });
-            var monsterResult = await monsterResponse.Content.ReadFromJsonAsync<AttackResult>();
-            
+
+            var monsterResult = await GameService.MonsterAttack(updatedMonster.IdMonster, playerId);
             if (monsterResult != null)
             {
                 message += $"\n{monsterResult.Message}";
@@ -384,7 +301,7 @@ else if (gameState != null)
 
     private async Task Defend(int playerId)
     {
-        await Http.PostAsJsonAsync("http://localhost:5240/api/Combat/defend", new { playerId });
+        await GameService.Defend(playerId);
         message = "Vous vous mettez en position défensive.";
     }
 
@@ -396,16 +313,15 @@ else if (gameState != null)
             return;
         }
 
-        await Http.PostAsJsonAsync($"http://localhost:5240/api/Player/{playerId}/heal", 20);
+        await GameService.Heal(playerId, 20);
         gameState.HealUsedInRoom++;
         message = "Vous utilisez une potion de soin. +20 PV";
     }
 
     private async Task Flee(int playerId)
     {
-        var response = await Http.PostAsJsonAsync("http://localhost:5240/api/Combat/flee", new { playerId });
-        bool success = await response.Content.ReadFromJsonAsync<bool>();
-        
+        bool success = await GameService.Flee(playerId);
+
         if (success)
         {
             message = "Vous fuyez la salle avec succès !";
@@ -417,10 +333,7 @@ else if (gameState != null)
             message = "Échec de la fuite ! Le monstre vous rattrape.";
             if (gameState?.CurrentRoom?.Monster != null)
             {
-                var monsterResponse = await Http.PostAsJsonAsync("http://localhost:5240/api/Combat/monster-attack",
-                    new { monsterId = gameState.CurrentRoom.Monster.IdMonster, playerId });
-                var monsterResult = await monsterResponse.Content.ReadFromJsonAsync<AttackResult>();
-                
+                var monsterResult = await GameService.MonsterAttack(gameState.CurrentRoom.Monster.IdMonster, playerId);
                 if (monsterResult != null)
                 {
                     message += $"\n{monsterResult.Message}";
@@ -433,12 +346,12 @@ else if (gameState != null)
     {
         var random = new Random();
         int goldFound = random.Next(10, 50) * (PlayerStats?.Level ?? 1);
-        
-        await Http.PostAsJsonAsync($"http://localhost:5240/api/Player/{playerId}/add-gold", goldFound);
-        
+
+        await GameService.AddGold(playerId, goldFound);
+
         int roomScore = CalculateRoomScore() / 2;
         gameState.Score += roomScore;
-        
+
         message = $"Vous fouillez la salle et trouvez {goldFound} pièces d'or ! +{roomScore} points";
         gameState.IsRoomCompleted = true;
     }
@@ -465,21 +378,13 @@ else if (gameState != null)
             return;
 
         var playerId = AuthService.CurrentPlayerId.Value;
-        
         int completionBonus = CalculateDungeonBonus();
         gameState.Score += completionBonus;
-        
-        await Http.PostAsJsonAsync("http://localhost:5240/api/HighScore/update",
-            new { playerId, score = gameState.Score });
-        
-        await Http.PostAsJsonAsync("http://localhost:5240/api/GameHistory", new 
-        { 
-            playerId, 
-            dungeonIds = new[] { gameState.CurrentDungeon?.IdDungeon } 
-        });
-        
-        await Http.PostAsJsonAsync($"http://localhost:5240/api/GameSession/end/{gameState.SessionId}", new { });
-        
+
+        await GameService.UpdateHighScore(playerId, gameState.Score);
+        await GameService.AddGameHistory(playerId, gameState.CurrentDungeon?.IdDungeon ?? 0);
+        await GameService.EndSession(gameState.SessionId);
+
         NavigationManager.NavigateTo($"/game-over?score={gameState.Score}&success=true");
     }
 
@@ -488,80 +393,45 @@ else if (gameState != null)
         if (!AuthService.CurrentPlayerId.HasValue || gameState == null)
             return;
 
-        await Http.PostAsJsonAsync("http://localhost:5240/api/HighScore/update",
-            new { playerId = AuthService.CurrentPlayerId.Value, score = gameState.Score });
-        
-        await Http.PostAsJsonAsync($"http://localhost:5240/api/GameSession/end/{gameState.SessionId}", new { });
-        
+        await GameService.UpdateHighScore(AuthService.CurrentPlayerId.Value, gameState.Score);
+        await GameService.EndSession(gameState.SessionId);
+
         NavigationManager.NavigateTo($"/game-over?score={gameState.Score}&success=false");
     }
 
     private int CalculateRoomScore()
     {
-        if (gameState == null)
-            return 0;
-
         int baseScore = 100;
-        
-        double difficultyMultiplier = gameState.DifficultyLevel switch
-        {
-            DifficultyLevelEnum.EASY => 1.0,
-            DifficultyLevelEnum.MEDIUM => 1.5,
-            DifficultyLevelEnum.HARD => 2.0,
-            DifficultyLevelEnum.EXTREME => 3.0,
-            _ => 1.0
-        };
-
-        return (int)(baseScore * difficultyMultiplier * (PlayerStats?.Level ?? 1));
+        int difficultyMultiplier = ((int)gameState.DifficultyLevel + 1);
+        return baseScore * difficultyMultiplier;
     }
 
     private int CalculateDungeonBonus()
     {
-        if (gameState == null)
-            return 0;
-
         int baseBonus = 500;
-        
-        double difficultyMultiplier = gameState.DifficultyLevel switch
-        {
-            DifficultyLevelEnum.EASY => 1.0,
-            DifficultyLevelEnum.MEDIUM => 1.5,
-            DifficultyLevelEnum.HARD => 2.0,
-            DifficultyLevelEnum.EXTREME => 3.0,
-            _ => 1.0
-        };
-
-        return (int)(baseBonus * difficultyMultiplier * (PlayerStats?.Level ?? 1));
+        int difficultyMultiplier = ((int)gameState.DifficultyLevel + 1);
+        return baseBonus * difficultyMultiplier;
     }
 
     private string GetRoomImage()
     {
-        if (gameState?.CurrentRoom == null)
-            return "images/room1.jpg";
-        
-        var images = new[] { "images/room1.jpg", "images/room2.jpg" };
-        return images[gameState.CurrentRoomIndex % images.Length];
+        return gameState.DifficultyLevel switch
+        {
+            DifficultyLevelEnum.EASY => "images/room1.jpg",
+            DifficultyLevelEnum.MEDIUM => "images/room2.jpg",
+            DifficultyLevelEnum.HARD => "images/mystric_shine.png",
+            _ => "images/aventure.jpg",
+        };
     }
 
-    private string GetDifficultyName(DifficultyLevelEnum difficulty)
+    private string GetDifficultyName(DifficultyLevelEnum level)
     {
-        return difficulty switch
+        return level switch
         {
             DifficultyLevelEnum.EASY => "Facile",
             DifficultyLevelEnum.MEDIUM => "Moyen",
             DifficultyLevelEnum.HARD => "Difficile",
-            DifficultyLevelEnum.EXTREME => "Extrême",
-            _ => "Inconnu"
+            _ => "Inconnu",
         };
-    }
-
-    public class AttackResult
-    {
-        public bool Success { get; set; }
-        public bool Hit { get; set; }
-        public int Damage { get; set; }
-        public int MonsterHealth { get; set; }
-        public int PlayerHealth { get; set; }
-        public string Message { get; set; } = string.Empty;
     }
 }

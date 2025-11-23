@@ -19,6 +19,7 @@ builder.Services.AddOidcAuthentication(options =>
     options.ProviderOptions.DefaultScopes.Add("email");
 });
 
+builder.Services.AddScoped<GameService>();
 builder.Services.AddSingleton<AuthService>();
 
 await builder.Build().RunAsync();

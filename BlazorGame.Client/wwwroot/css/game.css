@@ -1,0 +1,37 @@
+.heal-potions {
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.potion-available {
+    margin: 0 0.2rem;
+    font-size: 1.5rem;
+}
+
+.potion-used {
+    margin: 0 0.2rem;
+    font-size: 1.5rem;
+    opacity: 0.3;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+    font-size: 2rem;
+}
+
+.dungeon-info {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.dungeon-desc {
+    font-style: italic;
+    opacity: 0.9;
+}
