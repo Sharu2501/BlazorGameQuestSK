@@ -4,7 +4,7 @@ using BlazorGameAPI.Data;
 using BlazorGameAPI.Services;
 using Xunit;
 
-namespace BlazorGame.Tests
+namespace BlazorGame.Tests.ModelsTests
 {
     public class DungeonTests
     {

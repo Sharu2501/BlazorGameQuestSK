@@ -5,7 +5,7 @@ using SharedModels.Enum;
 using SharedModels.Model;
 using Xunit;
 
-namespace BlazorGame.Tests
+namespace BlazorGame.Tests.ModelsTests
 {
     public class RoomTests
     {
@@ -21,12 +21,10 @@ namespace BlazorGame.Tests
         [Fact]
         public async Task CreateRoom_ShouldAddRoomToDatabase()
         {
-            // Arrange
             var context = GetInMemoryDbContext();
-            var monsterService = new MonsterService(context); // Mock ou service réel
+            var monsterService = new MonsterService(context);
             var roomService = new RoomService(context, monsterService);
 
-            // Act
             var room = await roomService.CreateRoom(
                 "Test Room",
                 1,
@@ -36,7 +34,6 @@ namespace BlazorGame.Tests
                 20
             );
 
-            // Assert
             Assert.NotNull(room);
             Assert.Equal("Test Room", room.Name);
             Assert.Equal(1, room.Level);
@@ -52,9 +49,8 @@ namespace BlazorGame.Tests
         [Fact]
         public async Task MarkRoomAsExplored_ShouldSetIsExploredToTrue()
         {
-            // Arrange
             var context = GetInMemoryDbContext();
-            var monsterService = new MonsterService(context); // Mock ou service réel
+            var monsterService = new MonsterService(context);
             var roomService = new RoomService(context, monsterService);
 
             var room = await roomService.CreateRoom(
@@ -66,10 +62,8 @@ namespace BlazorGame.Tests
                 20
             );
 
-            // Act
             var result = await roomService.MarkRoomAsExplored(room.Id);
 
-            // Assert
             Assert.True(result);
             var updatedRoom = context.Rooms.FirstOrDefault(r => r.Id == room.Id);
             Assert.NotNull(updatedRoom);
@@ -79,9 +73,8 @@ namespace BlazorGame.Tests
         [Fact]
         public async Task AssignMonsterToRoom_ShouldAssignMonster()
         {
-            // Arrange
             var context = GetInMemoryDbContext();
-            var monsterService = new MonsterService(context); // Mock ou service réel
+            var monsterService = new MonsterService(context);
             var roomService = new RoomService(context, monsterService);
 
             var room = await roomService.CreateRoom(
@@ -105,10 +98,8 @@ namespace BlazorGame.Tests
             context.Monsters.Add(monster);
             await context.SaveChangesAsync();
 
-            // Act
             var result = await roomService.AssignMonsterToRoom(room.Id, monster.IdMonster);
 
-            // Assert
             Assert.True(result);
             var updatedRoom = context.Rooms.Include(r => r.Monster).FirstOrDefault(r => r.Id == room.Id);
             Assert.NotNull(updatedRoom);

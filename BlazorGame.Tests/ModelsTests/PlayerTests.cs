@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using BlazorGameAPI.Data;
 
-namespace BlazorGameAPI.Tests
+namespace BlazorGameAPI.Tests.ModelsTests
 {
     public class PlayerTests
     {
@@ -26,7 +26,7 @@ namespace BlazorGameAPI.Tests
             var context = GetInMemoryDbContext();
             var service = new PlayerService(context);
 
-            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            var player = await service.CreatePlayer("TestPlayer", "test@gmail.com", "hashedpassword");
 
             Assert.NotNull(player);
             Assert.Equal("TestPlayer", player.Username);
@@ -41,7 +41,7 @@ namespace BlazorGameAPI.Tests
             var context = GetInMemoryDbContext();
             var service = new PlayerService(context);
 
-            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            var player = await service.CreatePlayer("TestPlayer", "test@gmail.com", "hashedpassword");
             await service.AddExperience(player.Id, 150);
 
             var updatedPlayer = await service.GetPlayerById(player.Id);
@@ -56,7 +56,7 @@ namespace BlazorGameAPI.Tests
             var context = GetInMemoryDbContext();
             var service = new PlayerService(context);
 
-            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            var player = await service.CreatePlayer("TestPlayer", "test@gmail.com", "hashedpassword");
             await service.TakeDamage(player.Id, 50);
             await service.HealPlayer(player.Id, 100);
 
@@ -71,7 +71,7 @@ namespace BlazorGameAPI.Tests
             var context = GetInMemoryDbContext();
             var service = new PlayerService(context);
 
-            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            var player = await service.CreatePlayer("TestPlayer", "test@gmail.com", "hashedpassword");
             await service.AddGold(player.Id, 200);
             var updatedPlayer = await service.GetPlayerById(player.Id);
             Assert.NotNull(updatedPlayer); 
@@ -90,7 +90,7 @@ namespace BlazorGameAPI.Tests
             var context = GetInMemoryDbContext();
             var service = new PlayerService(context);
 
-            var player = await service.CreatePlayer("TestPlayer", "test@example.com", "hashedpassword");
+            var player = await service.CreatePlayer("TestPlayer", "test@gmail.com", "hashedpassword");
             var artifact = new Artifact { Name = "Sword", Rarity = RarityEnum.RARE };
             await service.AddArtifactToInventory(player.Id, artifact);
 
