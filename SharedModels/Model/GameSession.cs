@@ -1,5 +1,8 @@
 namespace SharedModels.Model
 {
+    /// <summary>
+    /// Représente une session de jeu en cours pour un joueur.
+    /// </summary>
     public class GameSession
     {
         public int SessionId { get; set; } = 0;
@@ -7,7 +10,7 @@ namespace SharedModels.Model
         public int CurrentRoomId { get; set; } = 0;
         public int CurrentDungeonId { get; set; } = 0;
         public bool IsActive { get; set; } = true;
-       public DateTime StartTime { get; set; } = DateTime.Now;
+       public DateTime StartTime { get; set; } = DateTime.UtcNow;
 
         public override string ToString()
         {

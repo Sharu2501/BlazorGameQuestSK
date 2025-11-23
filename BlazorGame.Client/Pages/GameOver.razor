@@ -1,0 +1,68 @@
+@page "/game-over"
+@using BlazorGame.Client.Services
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+
+<link rel="stylesheet" href="css/log-out.css" />
+
+<div class="logout-page-container">
+    <div class="logout-overlay"></div>
+    <div class="logout-container">
+        <img src="images/logo.png" alt="Logo" class="logout-logo" />
+        
+        @if (success)
+        {
+            <h3>🎉 Victoire !</h3>
+            <p>Félicitations @AuthService.CurrentUsername !</p>
+            <p>Vous avez terminé le donjon avec succès !</p>
+        }
+        else
+        {
+            <h3>💀 Défaite</h3>
+            <p>Vous avez été vaincu...</p>
+        }
+        
+        <div style="margin: 20px 0;">
+            <h2>Score final: @score</h2>
+        </div>
+
+        <button @onclick="GoToHome">Nouvelle partie</button>
+        <button @onclick="GoToScores" style="margin-top: 10px;">Voir les scores</button>
+    </div>
+</div>
+
+@code {
+    private int score;
+    private bool success;
+
+    protected override void OnInitialized()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        var query = uri.Query;
+        
+        if (!string.IsNullOrEmpty(query))
+        {
+            var parameters = System.Web.HttpUtility.ParseQueryString(query);
+            
+            if (int.TryParse(parameters["score"], out var scoreValue))
+            {
+                score = scoreValue;
+            }
+            
+            if (bool.TryParse(parameters["success"], out var successValue))
+            {
+                success = successValue;
+            }
+        }
+    }
+
+    private void GoToHome()
+    {
+        NavigationManager.NavigateTo("/home");
+    }
+
+    private void GoToScores()
+    {
+        NavigationManager.NavigateTo("/scores");
+    }
+}

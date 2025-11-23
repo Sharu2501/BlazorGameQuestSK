@@ -1,5 +1,7 @@
 ﻿@page "/home"
+@using BlazorGame.Client.Services
 @inject NavigationManager NavigationManager
+@inject AuthService AuthService
 
 <link href="css/home.css" rel="stylesheet" />
 
@@ -7,6 +9,7 @@
     <div class="home-overlay"></div>
     <div class="home-content">
         <h1>⚔️ BlazorGameQuest SK ⚔️</h1>
+        <p>Bienvenue @AuthService.CurrentUsername !</p>
         <p>Prêt à affronter des monstres terrifiants ?</p>
         <img src="images/logo.png" alt="Logo" class="home-logo" />
         <button class="start-button" @onclick="StartAdventure">
@@ -16,9 +19,16 @@
 </div>
 
 @code {
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
     private void StartAdventure()
     {
-        Console.WriteLine("Nouvelle aventure lancée !");
-        NavigationManager.NavigateTo("/Room1");
+        NavigationManager.NavigateTo("/difficulty-selection");
     }
 }

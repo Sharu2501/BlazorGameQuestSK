@@ -1,0 +1,149 @@
+@page "/difficulty-selection"
+@using BlazorGame.Client.Services
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+
+<link rel="stylesheet" href="css/home.css" />
+
+<div class="home-container">
+    <div class="home-overlay"></div>
+    <div class="home-content">
+        <img src="images/logo.png" alt="Logo" class="home-logo" />
+        <h2>⚔️ Choisissez votre Difficulté ⚔️</h2>
+        <p>Bienvenue @AuthService.CurrentUsername !</p>
+
+        <div class="difficulty-grid">
+            <button class="difficulty-btn easy" @onclick="() => StartGame(0)">
+                <i class="bi bi-star"></i>
+                <h3>Facile</h3>
+                <p>Monstres de niveau similaire</p>
+                <p>Bonus score: x1.0</p>
+            </button>
+
+            <button class="difficulty-btn medium" @onclick="() => StartGame(1)">
+                <i class="bi bi-star-fill"></i>
+                <h3>Moyen</h3>
+                <p>Monstres légèrement plus forts</p>
+                <p>Bonus score: x1.5</p>
+            </button>
+
+            <button class="difficulty-btn hard" @onclick="() => StartGame(2)">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <h3>Difficile</h3>
+                <p>Monstres puissants</p>
+                <p>Bonus score: x2.0</p>
+            </button>
+
+            <button class="difficulty-btn extreme" @onclick="() => StartGame(3)">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <h3>Extrême</h3>
+                <p>Monstres redoutables</p>
+                <p>Bonus score: x3.0</p>
+            </button>
+        </div>
+
+        <button class="start-button back-btn" @onclick="GoBack">
+            Retour
+        </button>
+    </div>
+</div>
+
+<style>
+.difficulty-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+    max-width: 800px;
+}
+
+.difficulty-btn {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.difficulty-btn:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.difficulty-btn.easy:hover {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.difficulty-btn.medium:hover {
+    border-color: #FFC107;
+    background: rgba(255, 193, 7, 0.2);
+}
+
+.difficulty-btn.hard:hover {
+    border-color: #FF5722;
+    background: rgba(255, 87, 34, 0.2);
+}
+
+.difficulty-btn.extreme:hover {
+    border-color: #9C27B0;
+    background: rgba(156, 39, 176, 0.2);
+}
+
+.difficulty-btn i {
+    font-size: 2rem;
+    margin: 0.5rem;
+}
+
+.difficulty-btn h3 {
+    margin: 1rem 0;
+    font-size: 1.5rem;
+}
+
+.difficulty-btn p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.back-btn {
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+</style>
+
+@code {
+    /// <summary>
+    /// Redirige vers la page de sélection de difficulté si l'utilisateur n'est pas authentifié.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+    /// <summary>
+    /// Démarre le jeu avec la difficulté sélectionnée.
+    /// </summary>
+    /// <param name="difficulty"></param>
+    private void StartGame(int difficulty)
+    {
+        NavigationManager.NavigateTo($"/game?difficulty={difficulty}");
+    }
+    /// <summary>
+    /// Retourne à la page d'accueil.
+    /// </summary>
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/home");
+    }
+}

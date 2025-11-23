@@ -7,7 +7,7 @@ namespace SharedModels.Model
     {
         public int Id { get; set; }
         public int Score { get; set; }
-        public DateTime DateAchieved { get; set; } = DateTime.Now;
+        public DateTime DateAchieved { get; set; } = DateTime.UtcNow;
 
         public override string ToString()
         {

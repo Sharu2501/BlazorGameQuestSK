@@ -54,7 +54,11 @@ namespace BlazorGameAPI.Services
             Room? room = _context.Rooms.Find(roomId);
             return Task.FromResult(room);
         }
-
+        /// <summary>
+        /// Récupère toutes les salles d'un donjon donné.
+        /// </summary>
+        /// <param name="dungeonId"></param>
+        /// <returns></returns>
         public Task<List<Room>> GetRoomsByDungeonId(int dungeonId)
         {
             List<Room> rooms = _context.Rooms
@@ -62,7 +66,12 @@ namespace BlazorGameAPI.Services
                 .ToList();
             return Task.FromResult(rooms);
         }
-
+        /// <summary>
+        /// Assigne un monstre à une salle.
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <param name="monsterId"></param>
+        /// <returns></returns>
         public Task<bool> AssignMonsterToRoom(int roomId, int monsterId)
         {
             var room = _context.Rooms.Find(roomId);
@@ -78,7 +87,11 @@ namespace BlazorGameAPI.Services
 
             return Task.FromResult(true);
         }
-
+        /// <summary>
+        /// Marque une salle comme explorée.
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
         public Task<bool> MarkRoomAsExplored(int roomId)
         {
             var room = _context.Rooms.Find(roomId);
@@ -93,13 +106,21 @@ namespace BlazorGameAPI.Services
 
             return Task.FromResult(true);
         }
-
+        /// <summary>
+        /// Vérifie si une salle a été explorée.
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
         public Task<bool> IsRoomExplored(int roomId)
         {
             var room = _context.Rooms.Find(roomId);
             return Task.FromResult(room?.IsExplored ?? false);
         }
-
+        /// <summary>
+        /// Met à jour les informations d'une salle.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <returns></returns>
         public Task<bool> UpdateRoom(Room room)
         {
             var existingRoom = _context.Rooms.Find(room.Id);
@@ -120,6 +141,11 @@ namespace BlazorGameAPI.Services
             _context.SaveChanges();
             return Task.FromResult(true);
         }
+        /// <summary>
+        /// Supprime une salle par son ID.
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
         public Task<bool> DeleteRoom(int roomId)
         {
             var room = _context.Rooms.Find(roomId);
@@ -197,7 +223,7 @@ namespace BlazorGameAPI.Services
 
             if (random.Next(100) < 80)
             {
-                var monster = await _monsterService.GenerateMonsterForLevel(dungeonLevel);
+                var monster = await _monsterService.GenerateMonsterForLevel(dungeonLevel, difficulty);
                 room.Monster = monster;
             }
 

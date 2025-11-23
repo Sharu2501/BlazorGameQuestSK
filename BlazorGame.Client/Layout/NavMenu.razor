@@ -1,25 +1,44 @@
-﻿<div class="side-menu">
+﻿@using BlazorGame.Client.Services
+<div class="side-menu">
     <nav>
-        <NavLink href="/home" class="menu-item" Match="NavLinkMatch.All">
-            <i class="bi bi-controller"></i>
-            <span>Nouvelle partie</span>
-        </NavLink>
+        @if (AuthService.IsAuthenticated)
+        {
+            <NavLink href="/home" class="menu-item" Match="NavLinkMatch.All">
+                <i class="bi bi-controller"></i>
+                <span>Nouvelle partie</span>
+            </NavLink>
 
-        <NavLink href="/scores" class="menu-item" Match="NavLinkMatch.All">
-            <i class="bi bi-bar-chart-fill"></i>
-            <span>Scores</span>
-        </NavLink>
-        
-        <NavLink href="/game-rules" class="menu-item" Match="NavLinkMatch.All">
-            <i class="bi bi-journal-text"></i> <span>Règles du jeu</span>
-        </NavLink>
+            <NavLink href="/scores" class="menu-item" Match="NavLinkMatch.All">
+                <i class="bi bi-bar-chart-fill"></i>
+                <span>Scores</span>
+            </NavLink>
+            
+            <NavLink href="/game-rules" class="menu-item" Match="NavLinkMatch.All">
+                <i class="bi bi-journal-text"></i>
+                <span>Règles du jeu</span>
+            </NavLink>
 
-        <NavLink href="/" class="menu-item" Match="NavLinkMatch.All">
-            <i class="bi bi-door-closed-fill"></i>
-            <span>Déconnexion</span>
-        </NavLink>
+            <NavLink href="/logout" class="menu-item" Match="NavLinkMatch.All">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Déconnexion</span>
+            </NavLink>
+        }
     </nav>
 </div>
+
+@inject AuthService AuthService
+
+@code {
+    protected override void OnInitialized()
+    {
+        AuthService.OnAuthStateChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnAuthStateChanged -= StateHasChanged;
+    }
+}
 
 <style scoped>
     .navbar-brand {
@@ -83,7 +102,6 @@
         border-radius: 6px;
     }
 
-    /* Hover pour les autres liens */
     .menu-item:hover:not(.active),
     .menu-item.active {
         background-color: #7e25257b;

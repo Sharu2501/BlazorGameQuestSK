@@ -13,23 +13,33 @@ public class MonsterController : ControllerBase
     {
         _context = context;
     }
-
-    /// <summary>
-    /// Permet de récupérer tous les monstres.
-    /// </summary>
-    /// <returns></returns>
+/// <summary>
+/// Retourne la liste des monstres.
+/// </summary>
+/// <returns></returns>
     [HttpGet]
     public async Task<IActionResult> GetMonsters()
     {
         var monsters = await _context.Monsters.ToListAsync();
         return Ok(monsters);
     }
-
-    /// <summary>
-    /// Permet de créer un monstre.
-    /// </summary>
-    /// <param name="monster"></param>
-    /// <returns></returns>
+/// <summary>
+/// Retourne un monstre spécifique.
+/// </summary>
+/// <param name="id"></param>
+/// <returns></returns>
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetMonster(int id)
+    {
+        var monster = await _context.Monsters.FindAsync(id);
+        if (monster == null) return NotFound();
+        return Ok(monster);
+    }
+/// <summary>
+/// Crée un nouveau monstre.
+/// </summary>
+/// <param name="monster"></param>
+/// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> CreateMonster([FromBody] Monster monster)
     {
