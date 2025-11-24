@@ -21,8 +21,10 @@ html, body {
     font-family: 'Press Start 2P', cursive;
     background: var(--bg-dark);
     color: var(--text-primary);
-    height: 100%;
-    overflow: hidden;
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .home-container {
