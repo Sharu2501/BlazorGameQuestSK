@@ -12,12 +12,13 @@ namespace BlazorGameAPI.Services
         {
             _context = context;
         }
-/// <summary>
-/// Crée un nouveau score élevé pour un joueur.
-/// </summary>
-/// <param name="playerId"></param>
-/// <param name="score"></param>
-/// <returns></returns>
+
+        /// <summary>
+        /// Crée un nouveau score élevé pour un joueur.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <param name="score"></param>
+        /// <returns></returns>
         public async Task<HighScore> CreateHighScore(int playerId, int score)
         {
             var highScore = new HighScore
@@ -31,12 +32,13 @@ namespace BlazorGameAPI.Services
 
             return highScore;
         }
-/// <summary>
-/// Met à jour le score élevé d'un joueur si le nouveau score est supérieur.
-/// </summary>
-/// <param name="playerId"></param>
-/// <param name="newScore"></param>
-/// <returns></returns>
+
+        /// <summary>
+        /// Met à jour le score élevé d'un joueur si le nouveau score est supérieur.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <param name="newScore"></param>
+        /// <returns></returns>
         public async Task<bool> UpdateHighScore(int playerId, int newScore)
         {
             var player = await _context.Players
@@ -68,11 +70,12 @@ namespace BlazorGameAPI.Services
 
             return false;
         }
-/// <summary>
-/// Récupère le score élevé d'un joueur.
-/// </summary>
-/// <param name="playerId"></param>
-/// <returns></returns>
+
+        /// <summary>
+        /// Récupère le score élevé d'un joueur.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
         public async Task<HighScore?> GetPlayerHighScore(int playerId)
         {
             var player = await _context.Players
@@ -81,11 +84,12 @@ namespace BlazorGameAPI.Services
 
             return player?.HighScore;
         }
-/// <summary>
-/// Récupère les meilleurs scores.
-/// </summary>
-/// <param name="count"></param>
-/// <returns></returns>
+
+        /// <summary>
+        /// Récupère les meilleurs scores.
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public async Task<List<HighScore>> GetTopScores(int count)
         {
             return await _context.HighScores
@@ -93,21 +97,23 @@ namespace BlazorGameAPI.Services
                 .Take(count)
                 .ToListAsync();
         }
-/// <summary>
-/// Récupère le classement général.
-/// </summary>
-/// <returns></returns>
+
+        /// <summary>
+        /// Récupère le classement général.
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<HighScore>> GetLeaderboard()
         {
             return await _context.HighScores
                 .OrderByDescending(hs => hs.Score)
                 .ToListAsync();
         }
-/// <summary>
-/// Récupère le rang d'un joueur.
-/// </summary>
-/// <param name="playerId"></param>
-/// <returns></returns>
+        
+        /// <summary>
+        /// Récupère le rang d'un joueur.
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
         public async Task<int> GetPlayerRank(int playerId)
         {
             var playerScore = await GetPlayerHighScore(playerId);

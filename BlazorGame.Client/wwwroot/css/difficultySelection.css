@@ -1,0 +1,85 @@
+.difficulty-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+    max-width: 800px;
+}
+
+.difficulty-container {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-image: url("../images/antre_donjon.png");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.difficulty-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+}
+.difficulty-btn {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.difficulty-btn:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.difficulty-btn.easy:hover {
+    border-color: #4CAF50;
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.difficulty-btn.medium:hover {
+    border-color: #FFC107;
+    background: rgba(255, 193, 7, 0.2);
+}
+
+.difficulty-btn.hard:hover {
+    border-color: #FF5722;
+    background: rgba(255, 87, 34, 0.2);
+}
+
+.difficulty-btn.extreme:hover {
+    border-color: #9C27B0;
+    background: rgba(156, 39, 176, 0.2);
+}
+
+.difficulty-btn i {
+    font-size: 2rem;
+    margin: 0.5rem;
+}
+
+.difficulty-btn h3 {
+    margin: 1rem 0;
+    font-size: 1.5rem;
+}
+
+.difficulty-btn p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.back-btn {
+    margin-top: 2rem;
+    background: rgba(255, 255, 255, 0.1) !important;
+}

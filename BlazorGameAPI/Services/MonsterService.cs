@@ -38,7 +38,6 @@ namespace BlazorGameAPI.Services
             await _context.SaveChangesAsync();
             return monster;
         }
-
         /// <summary>
         /// Récupère un monstre par son ID.
         /// </summary>
@@ -93,7 +92,7 @@ namespace BlazorGameAPI.Services
             return Task.FromResult<Monster?>(monstersInRange[index]);
         }
         /// <summary>
-        /// Met à jour les informations d'un monstre existant.
+        /// Met à jour les informations d'un monstre.
         /// </summary>
         /// <param name="monster"></param>
         /// <returns></returns>
@@ -132,37 +131,95 @@ namespace BlazorGameAPI.Services
             _context.SaveChanges();
             return Task.FromResult(true);
         }
-
         /// <summary>
-        /// Génère un monstre adapté au niveau spécifié.
+        /// Génère un monstre adapté au niveau du joueur et à la difficulté spécifiée.
         /// </summary>
-        /// <param name="level"></param>
-        /// <param name="type"></param>
+        /// <param name="playerLevel"></param>
+        /// <param name="difficulty"></param>
         /// <returns></returns>
-        public async Task<Monster> GenerateMonsterForLevel(int level, MonsterTypeEnum? type = null)
+        public async Task<Monster> GenerateMonsterForLevel(int playerLevel, DifficultyLevelEnum difficulty)
         {
             var random = new Random();
 
-            var monsterType = type ?? (MonsterTypeEnum)random.Next(0, Enum.GetValues(typeof(MonsterTypeEnum)).Length);
+            var levelVariation = difficulty switch
+            {
+                DifficultyLevelEnum.EASY => random.Next(-2, 1),
+                DifficultyLevelEnum.MEDIUM => random.Next(-1, 2),
+                DifficultyLevelEnum.HARD => random.Next(0, 3),
+                DifficultyLevelEnum.EXTREME => random.Next(1, 5),
+                _ => 0
+            };
+
+            var monsterLevel = Math.Max(1, playerLevel + levelVariation);
+
+            var monsterType = (MonsterTypeEnum)random.Next(0, Enum.GetValues(typeof(MonsterTypeEnum)).Length);
 
             var monsterNames = monsterType switch
             {
-                MonsterTypeEnum.DRAGON => new string[] { "Drakor", "Fyrezor", "Scalewing", "Infernus" },
-                MonsterTypeEnum.GOBLIN => new string[] { "Gribble", "Snark", "Grimp", "Razz" },
-                MonsterTypeEnum.TROLL => new string[] { "Grunk", "Thud", "Bouldar", "Smash" },
-                MonsterTypeEnum.UNDEAD => new string[] { "Skeleton Warrior", "Zombie", "Wraith", "Ghoul" },
-                MonsterTypeEnum.BEAST => new string[] { "Dire Wolf", "Giant Spider", "Cave Bear", "Wyvern" },
-                MonsterTypeEnum.DEMON => new string[] { "Hellspawn", "Dreadlord", "Abyssal", "Tormentor" },
-                MonsterTypeEnum.ELEMENTAL => new string[] { "Fire Elemental", "Ice Golem", "Storm Spirit", "Earth Guardian" },
-                MonsterTypeEnum.HUMANOID => new string[] { "Bandit", "Cultist", "Dark Knight", "Assassin" },
-                _ => new string[] { "Monster" }
+                MonsterTypeEnum.DRAGON => new string[]
+                {
+                    "Drakor",
+                    "Fyrezor",
+                    "Écaille-Ailes",
+                    "Infernus"
+                },
+                MonsterTypeEnum.GOBLIN => new string[]
+                {
+                    "Griblou",
+                    "Snark",
+                    "Grimp",
+                    "Razz"
+                },
+                MonsterTypeEnum.TROLL => new string[]
+                {
+                    "Gronk",
+                    "Toud",
+                    "Bouldar",
+                    "Fracasse"
+                },
+                MonsterTypeEnum.UNDEAD => new string[]
+                {
+                    "Guerrier Squelette",
+                    "Zombie",
+                    "Apparition",
+                    "Goule"
+                },
+                MonsterTypeEnum.BEAST => new string[]
+                {
+                    "Grand Loup",
+                    "Araignée Géante",
+                    "Ours des Cavernes",
+                    "Vouivre"
+                },
+                MonsterTypeEnum.DEMON => new string[]
+                {
+                    "Engeance des Enfers",
+                    "Seigneur de l’Effroi",
+                    "Abyssal",
+                    "Tourmenteur"
+                },
+                MonsterTypeEnum.ELEMENTAL => new string[]
+                {
+                    "Élémentaire de Feu",
+                    "Golem de Glace",
+                    "Esprit de Tempête",
+                    "Gardien de Terre"
+                },
+                MonsterTypeEnum.HUMANOID => new string[]
+                {
+                    "Bandit",
+                    "Cultiste",
+                    "Chevalier Noir",
+                    "Assassin"
+                },
+                _ => new string[] { "Monstre" }
             };
 
             var name = monsterNames[random.Next(monsterNames.Length)];
 
-            var baseHealth = 50 + (level * 15);
-            var baseAttack = 5 + (level * 2);
-            var baseDefense = 3 + (level * 1);
+            var baseHealth = 50 + (monsterLevel * 15);
+            var baseAttack = 5 + (monsterLevel * 2);
+            var baseDefense = 3 + (monsterLevel * 1);
 
             var health = baseHealth + random.Next(-baseHealth / 10, baseHealth / 10);
             var attack = baseAttack + random.Next(-baseAttack / 10, baseAttack / 10);
@@ -171,7 +228,7 @@ namespace BlazorGameAPI.Services
             var monster = new Monster
             {
                 Name = name,
-                Level = level,
+                Level = monsterLevel,
                 Health = health,
                 Attack = attack,
                 Defense = defense,

@@ -1,5 +1,8 @@
 @page "/logout"
+@using BlazorGame.Client.Services
 @inject NavigationManager NavigationManager
+@inject AuthService AuthService
+
 <link rel="stylesheet" href="css/log-out.css" />
 <div class="logout-page-container">
     <div class="logout-overlay"></div>
@@ -14,6 +17,11 @@
 
 
 @code {
+    protected override void OnInitialized()
+    {
+        AuthService.Logout();
+    }
+
     private void GoToLogin()
     {
         NavigationManager.NavigateTo("/");

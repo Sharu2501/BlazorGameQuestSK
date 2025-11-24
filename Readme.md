@@ -10,6 +10,17 @@
 - **SharedModels** : Bibliothèque de classes partagées entre le client et les services.  
 - **BlazorGame.Tests** : Projet de tests unitaires utilisant xUnit pour valider les fonctionnalités.
 
+## Choix d'architecture 
+Nous avons décidé de réaliser ce projet en micro-services car cela permet d'avoir une **décomposition claire des responsabilités** : on a en effet besoin d'API pour la logique du jeu, une authentication et des modèles pour les différentes entités.
+
+D'autre part, nous avons également choisi cette architecture pour son efficacité en matière d'**évolution** : on peut faire évoluer chaque composant et les mettre à jour puis redéployer indépendamment. 
+
+Par rapport à Keycloack, cette architecture nous parait également plus appropriée car cela permet une meilleure **sécurité** avec une authentication centralisée. Les endpoints REST du jeu n'exposent jamais d'informations de sécurité. De plus, grâce à l’utilisation de Swagger, chaque micro-service expose et documente ses endpoints, ce qui facilite l’intégration, la maintenance et les évolutions.
+
+Enfin, cela nous permet d'écrire des **tests unitaires** et d'intégrations tout en assurant une couverture de code élevée en validant séparément.
+
+Cette architecture nous permettra donc dans le futur un déploiement simple via **Docker** puisque chaque service est dans un contenant.
+
 ## Version 1 – V1
 Pour cette première version, nous avons mis en place les éléments suivants :  
 
@@ -20,7 +31,7 @@ Pour cette première version, nous avons mis en place les éléments suivants :
 - Développement de la **page d’accueil**, du **menu de navigation** et des composants associés.  
 - Création de l’interface **« Nouvelle aventure »**.
 - Création de l’interface **« Connexion Admin »** avec l'utilisateur `Admin` et mot de passe `Admin`
-- Création de l’interface **« Connexion »** avec l'utilisateur `Test` et mot de passe `Test`
+- Création de l’interface **« Connexion »** avec l'utilisateur `player` et mot de passe `player`
 - Développement d’un **composant Blazor affichant une salle de jeu statique** pour visualiser l’environnement du joueur.
 
 ### Tests
@@ -71,3 +82,18 @@ Pour cette deuxième version, nous avons mis en place les éléments suivants :
 - **Mise à jour des tests unitaires** existants pour prendre en compte les nouvelles fonctionnalités du modèle et des services.  
 
 - **Vérification de la couverture de code** avec Coverlet et ajustements des tests sur les classes principales.
+
+## Version 3 – V3
+
+Dans cette troisième version, nous avons mis en cohérence notre backend et frontend. Nous avons notamment :
+- une **génération aléatoire** d'une salle en fonction du level du joueur connecté.
+- un **choix de difficulté** dans l'interface graphique.
+- un affichage des **stats** du joueur en fonction de ses actions.
+- un affichage du **score final** en fin de partie.
+- une sauvegarde du **score** et de **l'historique**.
+- une réalisation des **jeux de tests** plus poussées.
+- une vérification de la **couverture de code** avec Coverlet.
+
+Les données liées à une partie, joueurs et monstres sont stockés dans la base de données **SupaBase**. Pour l'instant, sans keycloak, nous réalisons une vérification pour l'authentication rapide.
+
+Le jeu se déroule sur le port 5000 et les requêtes se font en démarrant le projet BlazorGameAPI.

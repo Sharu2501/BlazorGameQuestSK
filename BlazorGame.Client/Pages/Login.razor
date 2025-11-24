@@ -1,6 +1,9 @@
 @page "/"
+@using BlazorGame.Client.Services
 @inject NavigationManager NavigationManager
 @inject IAccessTokenProvider TokenProvider
+@inject HttpClient Http
+@inject AuthService AuthService
 <link rel="stylesheet" href="css/login.css" />
 <div class="login-page-container">
     <div class="login-overlay"></div>
@@ -65,31 +68,61 @@
         ShowPassword = !ShowPassword;
     }
 
-    private void DoLogin()
+    private async Task DoLogin()
     {
-        // Vérification si c'est l'admin
         if (Username.ToLower() == "admin" && Password == "admin")
         {
             NavigationManager.NavigateTo("/admin");
             return;
         }
 
-        // Vérification basique pour les joueurs normaux
         if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password))
         {
-            NavigationManager.NavigateTo("/home");
+            try
+            {
+                var players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Player");
+                var player = players?.FirstOrDefault(p => p.Username.ToLower() == Username.ToLower());
+
+                if (player == null)
+                {
+                    player = new Player
+                    {
+                        Username = Username,
+                        Email = $"{Username}@game.com",
+                        PasswordHash = Password,
+                        UserType = SharedModels.Enum.UserTypeEnum.PLAYER,
+                        Level = 1,
+                        Health = 100,
+                        MaxHealth = 100,
+                        Attack = 10,
+                        Defense = 5,
+                        Gold = 0,
+                        ExperiencePoints = 0,
+                        LevelCap = 100
+                    };
+
+                    var response = await Http.PostAsJsonAsync("http://localhost:5240/api/Player", player);
+                    player = await response.Content.ReadFromJsonAsync<Player>();
+                }
+
+                if (player != null)
+                {
+                    AuthService.Login(player.Id, player.Username);
+                    NavigationManager.NavigateTo("/home");
+                }
+                else
+                {
+                    ErrorMessage = "Erreur lors de la connexion.";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Erreur : {ex.Message}";
+            }
         }
         else
         {
             ErrorMessage = "Veuillez remplir tous les champs.";
         }
-    }
-
-    private class TokenResponse
-    {
-        public string access_token { get; set; } = "";
-        public string refresh_token { get; set; } = "";
-        public string token_type { get; set; } = "";
-        public int expires_in { get; set; }
     }
 }

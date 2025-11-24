@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage">
+        <Configuration>
+          <Exclude>
+            <ModulePath>.*BlazorGame.Client.*</ModulePath>
+          </Exclude>
+
+          <ExcludeByFile>
+            <Exclude>**/Migrations/**</Exclude>
+            <Exclude>**/Data/**</Exclude>
+            <Exclude>**/Properties/**</Exclude>
+            <Exclude>**/obj/**</Exclude>
+            <Exclude>**/bin/**</Exclude>
+            <Exclude>**/Program.cs</Exclude>
+            <Exclude>**/*.csproj</Exclude>
+            <Exclude>**/*.http</Exclude>
+            <Exclude>**/Dockerfile*</Exclude>
+            <Exclude>**/*.Designer.cs</Exclude>
+            <Exclude>**/*ModelSnapshot.cs</Exclude>
+          </ExcludeByFile>
+
+          <ExcludeByAttribute>
+            <Exclude>ObsoleteAttribute</Exclude>
+          </ExcludeByAttribute>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

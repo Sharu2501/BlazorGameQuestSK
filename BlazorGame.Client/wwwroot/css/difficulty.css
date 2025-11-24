@@ -1,0 +1,97 @@
+.difficulty-container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('../images/background.jpg') center/cover;
+}
+
+.difficulty-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.difficulty-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+    max-width: 1200px;
+    padding: 2rem;
+}
+
+.difficulty-logo {
+    width: 120px;
+    margin-bottom: 2rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.difficulty-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.difficulty-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.difficulty-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.difficulty-card.easy:hover {
+    border-color: #4CAF50;
+    box-shadow: 0 10px 30px rgba(76, 175, 80, 0.5);
+}
+
+.difficulty-card.medium:hover {
+    border-color: #FFC107;
+    box-shadow: 0 10px 30px rgba(255, 193, 7, 0.5);
+}
+
+.difficulty-card.hard:hover {
+    border-color: #FF5722;
+    box-shadow: 0 10px 30px rgba(255, 87, 34, 0.5);
+}
+
+.difficulty-card.extreme:hover {
+    border-color: #9C27B0;
+    box-shadow: 0 10px 30px rgba(156, 39, 176, 0.5);
+}
+
+.difficulty-card i {
+    font-size: 2rem;
+    margin: 0.5rem;
+}
+
+.back-button {
+    margin-top: 2rem;
+    padding: 1rem 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid white;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: white;
+    color: black;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}

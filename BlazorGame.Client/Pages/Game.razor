@@ -1,0 +1,79 @@
+@namespace BlazorGame.Client.Pages
+@page "/game"
+
+<link rel="stylesheet" href="css/room.css" />
+<link rel="stylesheet" href="css/game.css" />
+
+@if (isLoading)
+{
+    <div class="loading-container">
+        <p>Génération du donjon...</p>
+    </div>
+}
+else if (gameState != null)
+{
+    <div class="salle-container" style="background-image: url('@GetRoomImage()')">
+        <div class="salle-content">
+            <img src="images/logo.png" class="room-logo" />
+
+            <div class="dungeon-info">
+                <h2>@gameState.CurrentDungeon?.Name</h2>
+                <p class="dungeon-desc">@gameState.CurrentDungeon?.Description</p>
+                <p>Salle @(gameState.CurrentRoomIndex + 1) / @gameState.TotalRooms</p>
+                <p>Difficulté: @GetDifficultyName(gameState.DifficultyLevel)</p>
+            </div>
+
+            <div class="battle-container">
+                <div class="player-stats-side">
+                    <h4 style="color:limegreen;"> @PlayerStats?.Username</h4>
+                    <div class="stats-box green-bg">
+                        <div class="stat-item">❤️ PV: @PlayerStats?.Health / @PlayerStats?.MaxHealth</div>
+                        <div class="stat-item">⚔️ ATQ: @PlayerStats?.Attack</div>
+                        <div class="stat-item">🛡️ DEF: @PlayerStats?.Defense</div>
+                        <div class="stat-item">💰 Or: @PlayerStats?.Gold</div>
+                        <div class="stat-item">📈 Niveau: @PlayerStats?.Level</div>
+                    </div>
+                </div>
+
+                <div class="battle-messages">
+                    <div class="battle-message">@message</div>
+                </div>
+
+                @if (gameState.CurrentRoom?.Monster != null)
+                {
+                    <div class="monster-stats-side">
+                        <h4 style="color:#fc4343;">👾 @gameState.CurrentRoom.Monster.Name</h4>
+                        <div class="stats-box red-bg">
+                            <div class="stat-item">❤️ PV: @gameState.CurrentRoom.Monster.Health</div>
+                            <div class="stat-item">⚔️ ATQ: @gameState.CurrentRoom.Monster.Attack</div>
+                            <div class="stat-item">🛡️ DEF: @gameState.CurrentRoom.Monster.Defense</div>
+                            <div class="stat-item">📈 Niveau: @gameState.CurrentRoom.Monster.Level</div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="actions">
+                @foreach (var action in GetAvailableActions())
+                {
+                    <button @onclick="@(() => ExecuteAction(action))" disabled="@IsActionDisabled(action)">@action</button>
+                }
+            </div>
+
+            <div class="heal-potions">
+                <span>🧪 Potions de soin: </span>
+                @for (int i = 0; i < gameState.MaxHealPerRoom; i++)
+                {
+                    @if (i < gameState.HealUsedInRoom)
+                    {
+                        <span class="potion-used">⚫</span>
+                    }
+                    else
+                    {
+                        <span class="potion-available">🟢</span>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}

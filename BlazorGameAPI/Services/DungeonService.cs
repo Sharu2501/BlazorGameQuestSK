@@ -39,6 +39,7 @@ namespace BlazorGameAPI.Services
 
             return Task.FromResult(dungeon);
         }
+
         /// <summary>
         /// Récupère un donjon par son ID.
         /// </summary>
@@ -49,6 +50,7 @@ namespace BlazorGameAPI.Services
             Dungeon? dungeon = _context.Dungeons.Find(dungeonId);
             return Task.FromResult(dungeon);
         }
+
         /// <summary>
         /// Récupère tous les donjons.
         /// </summary>
@@ -58,8 +60,9 @@ namespace BlazorGameAPI.Services
             List<Dungeon> dungeons = _context.Dungeons.ToList();
             return Task.FromResult(dungeons);
         }
+
         /// <summary>
-        /// Récupère les donjons par statut d'exploration
+        /// Récupère les donjons par statut d'exploration.
         /// </summary>
         /// <param name="isExplored"></param>
         /// <returns></returns>
@@ -70,8 +73,9 @@ namespace BlazorGameAPI.Services
                 .ToList();
             return Task.FromResult(dungeons);
         }
+
         /// <summary>
-        /// Ajoute une salle à un donjon
+        /// Ajoute une salle à un donjon.     
         /// </summary>
         /// <param name="dungeonId"></param>
         /// <param name="room"></param>
@@ -89,8 +93,9 @@ namespace BlazorGameAPI.Services
 
             return Task.FromResult(true);
         }
+
         /// <summary>
-        /// Assigne un artefact à un donjon
+        /// Assigne un artefact à un donjon.
         /// </summary>
         /// <param name="dungeonId"></param>
         /// <param name="artifactId"></param>
@@ -110,8 +115,9 @@ namespace BlazorGameAPI.Services
 
             return Task.FromResult(true);
         }
+
         /// <summary>
-        /// Marque un donjon comme exploré
+        /// Marque un donjon comme exploré.
         /// </summary>
         /// <param name="dungeonId"></param>
         /// <returns></returns>
@@ -128,8 +134,9 @@ namespace BlazorGameAPI.Services
 
             return Task.FromResult(true);
         }
+
         /// <summary>
-        /// Vérifie si un donjon est complété
+        /// Vérifie si un donjon est complété.
         /// </summary>
         /// <param name="dungeonId"></param>
         /// <returns></returns>
@@ -138,8 +145,9 @@ namespace BlazorGameAPI.Services
             Dungeon? dungeon = _context.Dungeons.Find(dungeonId);
             return Task.FromResult(dungeon?.IsExplored ?? false);
         }
+
         /// <summary>
-        /// Calcule le pourcentage de progression dans un donjon
+        /// Récupère le pourcentage de progression d'un donjon.
         /// </summary>
         /// <param name="dungeonId"></param>
         /// <returns></returns>
@@ -161,8 +169,9 @@ namespace BlazorGameAPI.Services
 
             return progress;
         }
+        
         /// <summary>
-        /// Génère un donjon aléatoire avec un nombre spécifié de salles et un niveau de difficulté.
+        /// Génère un donjon aléatoire avec des salles et éventuellement un artefact.
         /// </summary>
         /// <param name="numberOfRooms"></param>
         /// <param name="level"></param>
@@ -171,27 +180,25 @@ namespace BlazorGameAPI.Services
         {
             var random = new Random();
 
-            // Noms de donjons
             Dictionary<string, string> dungeonTemplates = new()
-{
-    { "The Forsaken Depths", "An ancient place filled with untold dangers and treasures" },
-    { "Tower of Shadows", "Few who enter these halls ever return to tell the tale" },
-    { "Crimson Catacombs", "Dark magic permeates every stone of this cursed place" },
-    { "The Lost Temple", "Legends speak of great riches hidden within" },
-    { "Abyssal Fortress", "The air itself seems hostile in this forsaken realm" },
-    { "Dragon's Keep", "A maze of corridors where death lurks around every corner" },
-    { "The Cursed Citadel", "Ancient curses protect the treasures within" },
-    { "Ruins of Eternity", "Time has forgotten this place, but evil has not" },
-    { "The Dark Sanctum", "A sanctuary corrupted by dark forces" },
-    { "Tomb of the Ancient Kings", "The resting place of forgotten rulers" },
-    { "The Infernal Dungeon", "Flames and fury await those who dare enter" },
-    { "Castle Dreadmoor", "A once-proud fortress now home to nightmares" }
-};
+            {
+                { "Les Profondeurs Abandonnées", "Un ancien lieu empli de dangers et de trésors indicibles" },
+                { "Tour des Ombres", "Peu de ceux qui entrent dans ces halls reviennent pour raconter l’histoire" },
+                { "Catacombes Cramoisies", "Une magie sombre imprègne chaque pierre de cet endroit maudit" },
+                { "Le Temple Perdu", "Les légendes parlent de grandes richesses cachées en son sein" },
+                { "Forteresse Abyssale", "L’air lui‑même semble hostile dans ce royaume oublié" },
+                { "Donjon du Dragon", "Un dédale de couloirs où la mort guette à chaque tournant" },
+                { "La Citadelle Maudite", "De anciennes malédictions protègent les trésors qu’elle renferme" },
+                { "Ruines de l’Éternité", "Le temps a oublié ce lieu, mais le mal, lui, s’en souvient" },
+                { "Le Sombre Sanctuaire", "Un sanctuaire corrompu par des forces obscures" },
+                { "Tombeau des Anciens Rois", "Le lieu de repos de souverains oubliés" },
+                { "Donjon Infernal", "Flammes et fureur attendent ceux qui osent entrer" },
+                { "Château de Morfroi", "Une forteresse jadis fière, désormais foyer de cauchemars" }
+            };
 
             var selectedDungeon = dungeonTemplates.ElementAt(random.Next(dungeonTemplates.Count));
             var name = selectedDungeon.Key;
             var description = selectedDungeon.Value;
-
 
             var dungeon = new Dungeon
             {
@@ -224,19 +231,86 @@ namespace BlazorGameAPI.Services
 
             if (random.Next(100) < 50)
             {
-                var artifact = await _artifactService.GetRandomArtifact();
-                if (artifact != null)
+                var artifactNames = new Dictionary<RarityEnum, string[]>
                 {
-                    dungeon.Artifact = artifact;
+                    { RarityEnum.COMMON, new[]
+                        {
+                            "Épée Rouillée",
+                            "Bouclier Usé",
+                            "Bottes en Cuir"
+                        }
+                    },
+                    { RarityEnum.RARE, new[]
+                        {
+                            "Dague d’Argent",
+                            "Anneau Enchanté",
+                            "Cape Magique"
+                        }
+                    },
+                    { RarityEnum.EPIC, new[]
+                        {
+                            "Tueur de Dragons",
+                            "Couronne des Rois",
+                            "Plume de Phénix"
+                        }
+                    },
+                    { RarityEnum.LEGENDARY, new[]
+                        {
+                            "Excalibur",
+                            "Marteau de Thor",
+                            "Saint Graal"
+                        }
+                    },
+                    { RarityEnum.MYTHICAL, new[]
+                        {
+                            "Œil de l’Éternité",
+                            "Essence du Vide",
+                            "Épée Céleste"
+                        }
+                    }
+                };
+
+                var rarities = new[] { RarityEnum.COMMON, RarityEnum.RARE, RarityEnum.EPIC, RarityEnum.LEGENDARY, RarityEnum.MYTHICAL };
+                var weights = new[] { 50, 30, 15, 4, 1 };
+                var totalWeight = weights.Sum();
+                var randomValue = random.Next(totalWeight);
+
+                RarityEnum selectedRarity = RarityEnum.COMMON;
+                int cumulative = 0;
+                for (int i = 0; i < weights.Length; i++)
+                {
+                    cumulative += weights[i];
+                    if (randomValue < cumulative)
+                    {
+                        selectedRarity = rarities[i];
+                        break;
+                    }
                 }
+
+                var names = artifactNames[selectedRarity];
+                var artifactName = names[random.Next(names.Length)];
+                var artifactDescription = $"Un {selectedRarity.ToString().ToLower()} artifact trouvé dans le fin fond du donjon.";
+
+                var newArtifact = new Artifact
+                {
+                    Name = artifactName,
+                    Description = artifactDescription,
+                    Rarity = selectedRarity
+                };
+
+                _context.Artifacts.Add(newArtifact);
+                await _context.SaveChangesAsync();
+
+                dungeon.Artifact = newArtifact;
             }
 
             await _context.SaveChangesAsync();
 
             return dungeon;
         }
+
         /// <summary>
-        /// Met à jour les informations d'un donjon existant.
+        /// Met à jour les informations d'un donjon.
         /// </summary>
         /// <param name="dungeon"></param>
         /// <returns></returns>
@@ -255,6 +329,7 @@ namespace BlazorGameAPI.Services
             _context.SaveChanges();
             return Task.FromResult(true);
         }
+        
         /// <summary>
         /// Supprime un donjon par son ID.
         /// </summary>
@@ -272,7 +347,5 @@ namespace BlazorGameAPI.Services
             _context.SaveChanges();
             return Task.FromResult(true);
         }
-
-
     }
 }

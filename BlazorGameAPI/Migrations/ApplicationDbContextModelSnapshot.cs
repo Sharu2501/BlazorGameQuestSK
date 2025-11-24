@@ -347,9 +347,6 @@ namespace BlazorGameAPI.Migrations
                     b.Property<int>("MaxHealth")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
-
                     b.HasDiscriminator().HasValue(1);
                 });
 

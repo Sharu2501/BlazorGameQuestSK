@@ -5,6 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>opencover</CoverletOutputFormat>
+    <ExcludeByFile>**/Migrations/**;**/Data/**;**/Properties/**;**/Dockerfile*;**/*.csproj;**/*.http;**/Program.cs;**/obj/**;**/bin/**</ExcludeByFile>
   </PropertyGroup>
 
   <ItemGroup>

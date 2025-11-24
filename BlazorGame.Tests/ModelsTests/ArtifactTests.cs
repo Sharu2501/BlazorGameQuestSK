@@ -2,7 +2,7 @@ using SharedModels.Enum;
 using SharedModels.Model;
 using Xunit;
 
-namespace BlazorGame.Tests
+namespace BlazorGame.Tests.ModelsTests
 {
     public class ArtifactTests
     {

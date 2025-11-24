@@ -10,15 +10,21 @@ namespace BlazorGameAPI.Services
         private readonly ApplicationDbContext _context;
         private readonly PlayerService _playerService;
         private readonly Random _random;
-
+        
+        /// <summary>
+        /// Constructeur du service de combat.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="playerService"></param>
         public CombatService(ApplicationDbContext context, PlayerService playerService)
         {
             _context = context;
             _playerService = playerService;
             _random = new Random();
         }
+
         /// <summary>
-        /// Lance un dé à un nombre spécifié de faces.
+        /// Lance un dé à un nombre de faces spécifié.
         /// </summary>
         /// <param name="sides"></param>
         /// <returns></returns>
@@ -26,8 +32,24 @@ namespace BlazorGameAPI.Services
         {
             return _random.Next(1, sides + 1);
         }
+
         /// <summary>
-        /// Calcule les dégâts infligés en fonction de l'attaque et de la défense avec des modificateurs aléatoires.
+        /// Calcule la probabilité de toucher en fonction des niveaux de l'attaquant et du défenseur.
+        /// </summary>
+        /// <param name="attackerLevel"></param>
+        /// <param name="defenderLevel"></param>
+        /// <returns></returns>
+        private double CalculateHitChance(int attackerLevel, int defenderLevel)
+        {
+            int levelDifference = attackerLevel - defenderLevel;
+            double baseChance = 0.75;
+            double chanceModifier = levelDifference * 0.05;
+            double hitChance = Math.Clamp(baseChance + chanceModifier, 0.05, 0.95);
+            return hitChance;
+        }
+
+        /// <summary>
+        /// Calcule les dégâts infligés en fonction de l'attaque et de la défense.
         /// </summary>
         /// <param name="attack"></param>
         /// <param name="defense"></param>
@@ -46,62 +68,93 @@ namespace BlazorGameAPI.Services
 
             return Task.FromResult(result);
         }
+
         /// <summary>
         /// Le joueur attaque un monstre.
         /// </summary>
         /// <param name="playerId"></param>
         /// <param name="monsterId"></param>
         /// <returns></returns>
-        public async Task<bool> PlayerAttacksMonster(int playerId, int monsterId)
+        public async Task<AttackResult> PlayerAttacksMonster(int playerId, int monsterId)
         {
             var player = await _context.Players.FindAsync(playerId);
             var monster = await _context.Monsters.FindAsync(monsterId);
 
             if (player == null || monster == null)
-                return false;
+                return new AttackResult { Success = false, Message = "Erreur: joueur ou monstre introuvable" };
 
-            var attackRoll = RollDice(20);
+            double hitChance = CalculateHitChance(player.Level, monster.Level);
+            bool hit = _random.NextDouble() < hitChance;
 
-            if (attackRoll == 1)
+            if (!hit)
             {
-                return true;
+                return new AttackResult
+                {
+                    Success = true,
+                    Hit = false,
+                    Message = "Votre attaque a échoué !"
+                };
             }
 
             var damage = await CalculateDamage(player.Attack, monster.Defense);
             monster.Health = Math.Max(monster.Health - damage, 0);
 
             await _context.SaveChangesAsync();
-            return true;
+
+            return new AttackResult
+            {
+                Success = true,
+                Hit = true,
+                Damage = damage,
+                MonsterHealth = monster.Health,
+                Message = $"Vous infligez {damage} dégâts !"
+            };
         }
+
         /// <summary>
         /// Le monstre attaque le joueur.
         /// </summary>
         /// <param name="monsterId"></param>
         /// <param name="playerId"></param>
         /// <returns></returns>
-        public async Task<bool> MonsterAttacksPlayer(int monsterId, int playerId)
+        public async Task<AttackResult> MonsterAttacksPlayer(int monsterId, int playerId)
         {
             var monster = await _context.Monsters.FindAsync(monsterId);
             var player = await _context.Players.FindAsync(playerId);
 
             if (monster == null || player == null)
-                return false;
+                return new AttackResult { Success = false, Message = "Erreur" };
 
-            var attackRoll = RollDice(20);
+            double hitChance = CalculateHitChance(monster.Level, player.Level);
+            bool hit = _random.NextDouble() < hitChance;
 
-            if (attackRoll == 1)
+            if (!hit)
             {
-                return true;
+                return new AttackResult
+                {
+                    Success = true,
+                    Hit = false,
+                    Message = "Le monstre a raté son attaque !"
+                };
             }
 
             var damage = await CalculateDamage(monster.Attack, player.Defense);
             player.Health = Math.Max(player.Health - damage, 0);
 
             await _context.SaveChangesAsync();
-            return true;
+
+            return new AttackResult
+            {
+                Success = true,
+                Hit = true,
+                Damage = damage,
+                PlayerHealth = player.Health,
+                Message = $"Le monstre vous inflige {damage} dégâts !"
+            };
         }
+
         /// <summary>
-        /// Le joueur se défend pour augmenter temporairement sa défense.
+        /// Le joueur défend pour augmenter sa défense.
         /// </summary>
         /// <param name="playerId"></param>
         /// <returns></returns>
@@ -119,8 +172,9 @@ namespace BlazorGameAPI.Services
 
             return true;
         }
+
         /// <summary>
-        /// Le joueur se soigne pendant le combat.
+        /// Le joueur se soigne en combat.
         /// </summary>
         /// <param name="playerId"></param>
         /// <param name="healAmount"></param>
@@ -148,6 +202,7 @@ namespace BlazorGameAPI.Services
 
             return true;
         }
+
         /// <summary>
         /// Le joueur tente de fuir le combat.
         /// </summary>
@@ -164,6 +219,7 @@ namespace BlazorGameAPI.Services
 
             return fleeRoll + levelBonus >= 12;
         }
+
         /// <summary>
         /// Vérifie si un monstre est vaincu.
         /// </summary>
@@ -174,6 +230,7 @@ namespace BlazorGameAPI.Services
             var monster = await _context.Monsters.FindAsync(monsterId);
             return monster == null || monster.Health <= 0;
         }
+
         /// <summary>
         /// Vérifie si un joueur est vaincu.
         /// </summary>
@@ -183,8 +240,9 @@ namespace BlazorGameAPI.Services
         {
             return await _playerService.IsDead(playerId);
         }
+
         /// <summary>
-        /// Résout les conséquences de la victoire du joueur en combat.
+        /// Le joueur remporte le combat.
         /// </summary>
         /// <param name="playerId"></param>
         /// <param name="roomId"></param>
@@ -219,8 +277,9 @@ namespace BlazorGameAPI.Services
             room.IsExplored = true;
             await _context.SaveChangesAsync();
         }
+
         /// <summary>
-        /// Résout les conséquences de la défaite du joueur en combat.
+        /// Le joueur est vaincu.
         /// </summary>
         /// <param name="playerId"></param>
         /// <param name="roomId"></param>

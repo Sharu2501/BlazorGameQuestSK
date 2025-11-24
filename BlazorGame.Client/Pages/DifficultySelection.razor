@@ -1,0 +1,81 @@
+@page "/difficulty-selection"
+@using BlazorGame.Client.Services
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+
+<link rel="stylesheet" href="css/home.css" />
+<link rel="stylesheet" href="css/difficultySelection.css" />
+
+<div class="difficulty-container">
+    <div class="home-overlay"></div>
+    <div class="difficulty-content">
+        <img src="images/logo.png" alt="Logo" class="home-logo" />
+        <h2>⚔️ Choisissez votre Difficulté ⚔️</h2>
+        <p>Bienvenue @AuthService.CurrentUsername !</p>
+
+        <div class="difficulty-grid">
+            <button class="difficulty-btn easy" @onclick="() => StartGame(0)">
+                <i class="bi bi-star"></i>
+                <h3>Facile</h3>
+                <p>Monstres de niveau similaire</p>
+                <p>Bonus score: x1.0</p>
+            </button>
+
+            <button class="difficulty-btn medium" @onclick="() => StartGame(1)">
+                <i class="bi bi-star-fill"></i>
+                <h3>Moyen</h3>
+                <p>Monstres légèrement plus forts</p>
+                <p>Bonus score: x1.5</p>
+            </button>
+
+            <button class="difficulty-btn hard" @onclick="() => StartGame(2)">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <h3>Difficile</h3>
+                <p>Monstres puissants</p>
+                <p>Bonus score: x2.0</p>
+            </button>
+
+            <button class="difficulty-btn extreme" @onclick="() => StartGame(3)">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <h3>Extrême</h3>
+                <p>Monstres redoutables</p>
+                <p>Bonus score: x3.0</p>
+            </button>
+        </div>
+
+        <button class="start-button back-btn" @onclick="GoBack">
+            Retour
+        </button>
+    </div>
+</div>
+
+@code {
+    /// <summary>
+    /// Redirige vers la page de sélection de difficulté si l'utilisateur n'est pas authentifié.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+    /// <summary>
+    /// Démarre le jeu avec la difficulté sélectionnée.
+    /// </summary>
+    /// <param name="difficulty"></param>
+    private void StartGame(int difficulty)
+    {
+        NavigationManager.NavigateTo($"/game?difficulty={difficulty}");
+    }
+    /// <summary>
+    /// Retourne à la page d'accueil.
+    /// </summary>
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/home");
+    }
+}
