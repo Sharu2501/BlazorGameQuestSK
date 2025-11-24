@@ -19,7 +19,7 @@ else if (gameState != null)
             <div class="dungeon-info">
                 <h2>@gameState.CurrentDungeon?.Name</h2>
                 <p class="dungeon-desc">@gameState.CurrentDungeon?.Description</p>
-                <p>Salle @(gameState.CurrentRoomIndex + 1) / @gameState.TotalRooms</p>
+                <p>Salle @(gameState.CurrentRoomIndex + 1) / @gameState.TotalRooms - @gameState.CurrentRoom?.Name</p>
                 <p>Difficulté: @GetDifficultyName(gameState.DifficultyLevel)</p>
             </div>
 

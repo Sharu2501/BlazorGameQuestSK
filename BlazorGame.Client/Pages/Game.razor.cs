@@ -324,13 +324,13 @@ public partial class Game : ComponentBase
 
     private string GetRoomImage()
     {
-        return gameState.DifficultyLevel switch
-        {
-            DifficultyLevelEnum.EASY => "images/room1.jpg",
-            DifficultyLevelEnum.MEDIUM => "images/room2.jpg",
-            DifficultyLevelEnum.HARD => "images/mystic_shrine.jpg",
-            _ => "images/aventure.jpg",
-        };
+        var roomName = gameState?.CurrentRoom?.Name;
+
+        if (string.IsNullOrWhiteSpace(roomName))
+            return "images/aventure.jpg";
+
+        var fileName = roomName.Replace(" ", "_").ToLower();
+        return $"images/{fileName}.jpg";
     }
 
     private string GetDifficultyName(DifficultyLevelEnum level)
