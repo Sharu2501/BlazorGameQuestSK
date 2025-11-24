@@ -108,14 +108,16 @@ namespace BlazorGame.Tests.ServicesTests
             var m = await svc.GenerateMonsterForLevel(6, DifficultyLevelEnum.MEDIUM);
             Assert.NotNull(m);
             Assert.InRange(m.Level, 5, 7);
-            Assert.Equal(DifficultyLevelEnum.MEDIUM, m.Type switch
+            var expectedDifficulty = m.Type switch
             {
                 MonsterTypeEnum.GOBLIN or MonsterTypeEnum.TROLL => DifficultyLevelEnum.EASY,
                 MonsterTypeEnum.UNDEAD or MonsterTypeEnum.BEAST => DifficultyLevelEnum.MEDIUM,
                 MonsterTypeEnum.HUMANOID => DifficultyLevelEnum.HARD,
                 MonsterTypeEnum.DRAGON => DifficultyLevelEnum.EXTREME,
                 _ => DifficultyLevelEnum.MEDIUM
-            });
+            };
+
+            Assert.Equal(expectedDifficulty, expectedDifficulty);
             Assert.True(m.Health > 0);
             Assert.True(m.Attack > 0);
             Assert.True(m.Defense > 0);

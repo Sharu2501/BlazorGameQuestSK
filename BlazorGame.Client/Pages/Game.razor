@@ -23,20 +23,35 @@ else if (gameState != null)
                 <p>Difficulté: @GetDifficultyName(gameState.DifficultyLevel)</p>
             </div>
 
-            <h3>@gameState.CurrentRoom?.Name</h3>
-            <p>@gameState.CurrentRoom?.Description</p>
-
-            @if (gameState.CurrentRoom?.Monster != null && !gameState.IsMonsterDefeated)
-            {
-                <div class="monster-info">
-                    <h4>⚔️ @gameState.CurrentRoom.Monster.Name (Niveau @gameState.CurrentRoom.Monster.Level)</h4>
-                    <div class="monster-stats">
-                        <span>❤️ PV: @gameState.CurrentRoom.Monster.Health</span>
-                        <span>⚔️ ATQ: @gameState.CurrentRoom.Monster.Attack</span>
-                        <span>🛡️ DEF: @gameState.CurrentRoom.Monster.Defense</span>
+            <div class="battle-container">
+                <div class="player-stats-side">
+                    <h4 style="color:limegreen;"> @PlayerStats?.Username</h4>
+                    <div class="stats-box green-bg">
+                        <div class="stat-item">❤️ PV: @PlayerStats?.Health / @PlayerStats?.MaxHealth</div>
+                        <div class="stat-item">⚔️ ATQ: @PlayerStats?.Attack</div>
+                        <div class="stat-item">🛡️ DEF: @PlayerStats?.Defense</div>
+                        <div class="stat-item">💰 Or: @PlayerStats?.Gold</div>
+                        <div class="stat-item">📈 Niveau: @PlayerStats?.Level</div>
                     </div>
                 </div>
-            }
+
+                <div class="battle-messages">
+                    <div class="battle-message">@message</div>
+                </div>
+
+                @if (gameState.CurrentRoom?.Monster != null)
+                {
+                    <div class="monster-stats-side">
+                        <h4 style="color:#fc4343;">👾 @gameState.CurrentRoom.Monster.Name</h4>
+                        <div class="stats-box red-bg">
+                            <div class="stat-item">❤️ PV: @gameState.CurrentRoom.Monster.Health</div>
+                            <div class="stat-item">⚔️ ATQ: @gameState.CurrentRoom.Monster.Attack</div>
+                            <div class="stat-item">🛡️ DEF: @gameState.CurrentRoom.Monster.Defense</div>
+                            <div class="stat-item">📈 Niveau: @gameState.CurrentRoom.Monster.Level</div>
+                        </div>
+                    </div>
+                }
+            </div>
 
             <div class="actions">
                 @foreach (var action in GetAvailableActions())
@@ -58,38 +73,6 @@ else if (gameState != null)
                         <span class="potion-available">🟢</span>
                     }
                 }
-            </div>
-
-            <p class="message">@message</p>
-
-            <div class="player-stats">
-                <h4>📊 Statistiques de @PlayerStats?.Username</h4>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-label">❤️ PV:</span>
-                        <span class="stat-value">@PlayerStats?.Health / @PlayerStats?.MaxHealth</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">⚔️ ATQ:</span>
-                        <span class="stat-value">@PlayerStats?.Attack</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">🛡️ DEF:</span>
-                        <span class="stat-value">@PlayerStats?.Defense</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">💰 Or:</span>
-                        <span class="stat-value">@PlayerStats?.Gold</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">⭐ Score:</span>
-                        <span class="stat-value">@gameState.Score</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">📈 Niveau:</span>
-                        <span class="stat-value">@PlayerStats?.Level</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

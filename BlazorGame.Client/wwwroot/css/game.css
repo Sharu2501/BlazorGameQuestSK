@@ -1,37 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
+
+html, body {
+    font-family: 'Press Start 2P', cursive;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.battle-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 2rem 0 1.5rem 0;
+}
+.player-stats-side, .monster-stats-side {
+    width: 240px;
+}
+.stats-box {
+    padding: 1.1rem 1.2rem;
+    border-radius: 18px;
+    box-shadow: 0 0 14px #2228;
+    margin-top: 0.7rem;
+    background: rgba(34, 34, 54, 0.62);
+    backdrop-filter: blur(4px);
+    border: 2.5px solid var(--border-color);
+    font-family: 'Press Start 2P', monospace;
+}
+.green-bg {
+    background: linear-gradient(135deg, #17e57d20 10%, #33ffb320 90%);
+    border-left: 3.5px solid var(--accent-green);
+    color: var(--accent-green);
+}
+.red-bg {
+    background: linear-gradient(135deg, #ffe5e520 10%, #fc434320 90%);
+    border-right: 3.5px solid var(--accent-red);
+    color: var(--accent-red);
+}
+.stats-box .stat-item {
+    margin-bottom: 0.65rem;
+    font-size: 1.01rem;
+    text-shadow: 0 0 2px #fff4;
+}
+.stats-box .stat-item:last-child { margin-bottom: 0; }
+
+.battle-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 240px;
+    flex: 1;
+    margin-top: 30px;
+}
+.battle-message {
+    font-size: 1.4rem;
+    font-family: 'Press Start 2P', monospace;
+    color: #d40000;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 1.2rem 1.2rem;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none; 
+    border: none;
+    margin: 0 1rem;
+    opacity: 0;
+    animation: fadePop 0.8s forwards;
+    transition: color 0.28s;
+    text-shadow: none;
+}
+
+.battle-message.critical-hit {
+    color: var(--accent-gold);
+    background: transparent;
+    border: none;
+    animation: shakePop 0.7s;
+    text-shadow: none;
+}
+
+@keyframes fadePop {
+    0% { opacity: 0; transform: scale(0.84);}
+    70% { opacity: 1; transform: scale(1.1);}
+    100% { opacity: 1; transform: scale(1);}
+}
+@keyframes shakePop {
+    0%,100% { transform: scale(1); }
+    10%,30%,50%,70% { transform: scale(1.09) rotate(-2deg);}
+    20%,40%,60%,80% { transform: scale(1.14) rotate(2deg);}
+}
+
+.monster-stats-side h4 {
+    color: var(--accent-red);
+    text-shadow: 0 0 10px #3207;
+    text-align: right;
+}
+.player-stats-side h4 {
+    color: var(--accent-green);
+    text-shadow: 0 0 10px #094;
+    text-align: left;
+}
+
+@media (max-width: 900px) {
+    .battle-container { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+    .player-stats-side, .monster-stats-side { width: 100%; }
+    .battle-messages { min-width: 0; margin: 1.3rem 0; }
+}
+
 .heal-potions {
     margin: 1rem 0;
     font-size: 1.2rem;
-    color: white;
+    color: var(--accent-blue);
+    text-shadow: 0 0 8px #3338;
+    background: rgba(40,50,90,0.14);
+    padding: 0.65rem 0.9rem;
+    border-radius: 8px;
+    display: inline-block;
 }
 
 .potion-available {
     margin: 0 0.2rem;
     font-size: 1.5rem;
+    color: #20ff20;
+    text-shadow: 0 0 6px #b5ffb5;
 }
-
 .potion-used {
     margin: 0 0.2rem;
     font-size: 1.5rem;
-    opacity: 0.3;
+    opacity: 0.26;
+    color: #888;
 }
 
-.loading-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: white;
-    font-size: 2rem;
+.salle-content {
+    backdrop-filter: blur(16px) saturate(160%);
+    background: rgba(28,19,34,0.58);
+    border-radius: 20px;
+    padding: 2.5rem 3rem;
+    max-width: 1000px;
+    margin: auto;
+    box-shadow: var(--shadow-lg);
 }
 
 .dungeon-info {
     margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    background: rgba(60, 19, 34, 0.54);
+    border-radius: 16px;
+    box-shadow: 0 4px 10px #8025;
+    border: 2px solid var(--accent-red);
+    text-align: center;
+    font-size: 1.05rem;
 }
 
 .dungeon-desc {
     font-style: italic;
-    opacity: 0.9;
+    opacity: 0.93;
+    color: var(--accent-purple);
 }
