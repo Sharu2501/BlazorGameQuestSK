@@ -10,6 +10,7 @@ namespace BlazorGameAPI.Services
         private readonly ApplicationDbContext _context;
         private readonly PlayerService _playerService;
         private readonly Random _random;
+        
         /// <summary>
         /// Constructeur du service de combat.
         /// </summary>
@@ -21,6 +22,7 @@ namespace BlazorGameAPI.Services
             _playerService = playerService;
             _random = new Random();
         }
+
         /// <summary>
         /// Lance un dé à un nombre de faces spécifié.
         /// </summary>
@@ -30,6 +32,7 @@ namespace BlazorGameAPI.Services
         {
             return _random.Next(1, sides + 1);
         }
+
         /// <summary>
         /// Calcule la probabilité de toucher en fonction des niveaux de l'attaquant et du défenseur.
         /// </summary>
@@ -44,6 +47,7 @@ namespace BlazorGameAPI.Services
             double hitChance = Math.Clamp(baseChance + chanceModifier, 0.05, 0.95);
             return hitChance;
         }
+
         /// <summary>
         /// Calcule les dégâts infligés en fonction de l'attaque et de la défense.
         /// </summary>
@@ -64,6 +68,7 @@ namespace BlazorGameAPI.Services
 
             return Task.FromResult(result);
         }
+
         /// <summary>
         /// Le joueur attaque un monstre.
         /// </summary>
@@ -105,6 +110,7 @@ namespace BlazorGameAPI.Services
                 Message = $"Vous infligez {damage} dégâts !"
             };
         }
+
         /// <summary>
         /// Le monstre attaque le joueur.
         /// </summary>
@@ -146,6 +152,7 @@ namespace BlazorGameAPI.Services
                 Message = $"Le monstre vous inflige {damage} dégâts !"
             };
         }
+
         /// <summary>
         /// Le joueur défend pour augmenter sa défense.
         /// </summary>
@@ -165,6 +172,7 @@ namespace BlazorGameAPI.Services
 
             return true;
         }
+
         /// <summary>
         /// Le joueur se soigne en combat.
         /// </summary>
@@ -194,6 +202,7 @@ namespace BlazorGameAPI.Services
 
             return true;
         }
+
         /// <summary>
         /// Le joueur tente de fuir le combat.
         /// </summary>
@@ -210,6 +219,7 @@ namespace BlazorGameAPI.Services
 
             return fleeRoll + levelBonus >= 12;
         }
+
         /// <summary>
         /// Vérifie si un monstre est vaincu.
         /// </summary>
@@ -220,6 +230,7 @@ namespace BlazorGameAPI.Services
             var monster = await _context.Monsters.FindAsync(monsterId);
             return monster == null || monster.Health <= 0;
         }
+
         /// <summary>
         /// Vérifie si un joueur est vaincu.
         /// </summary>
@@ -229,6 +240,7 @@ namespace BlazorGameAPI.Services
         {
             return await _playerService.IsDead(playerId);
         }
+
         /// <summary>
         /// Le joueur remporte le combat.
         /// </summary>
@@ -265,6 +277,7 @@ namespace BlazorGameAPI.Services
             room.IsExplored = true;
             await _context.SaveChangesAsync();
         }
+
         /// <summary>
         /// Le joueur est vaincu.
         /// </summary>
@@ -304,6 +317,7 @@ namespace BlazorGameAPI.Services
             await _context.SaveChangesAsync();
         }
     }
+
     /// <summary>
     /// Résultat d'une attaque en combat.
     /// </summary>

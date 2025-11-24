@@ -156,15 +156,63 @@ namespace BlazorGameAPI.Services
 
             var monsterNames = monsterType switch
             {
-                MonsterTypeEnum.DRAGON => new string[] { "Drakor", "Fyrezor", "Scalewing", "Infernus" },
-                MonsterTypeEnum.GOBLIN => new string[] { "Gribble", "Snark", "Grimp", "Razz" },
-                MonsterTypeEnum.TROLL => new string[] { "Grunk", "Thud", "Bouldar", "Smash" },
-                MonsterTypeEnum.UNDEAD => new string[] { "Skeleton Warrior", "Zombie", "Wraith", "Ghoul" },
-                MonsterTypeEnum.BEAST => new string[] { "Dire Wolf", "Giant Spider", "Cave Bear", "Wyvern" },
-                MonsterTypeEnum.DEMON => new string[] { "Hellspawn", "Dreadlord", "Abyssal", "Tormentor" },
-                MonsterTypeEnum.ELEMENTAL => new string[] { "Fire Elemental", "Ice Golem", "Storm Spirit", "Earth Guardian" },
-                MonsterTypeEnum.HUMANOID => new string[] { "Bandit", "Cultist", "Dark Knight", "Assassin" },
-                _ => new string[] { "Monster" }
+                MonsterTypeEnum.DRAGON => new string[]
+                {
+                    "Drakor",
+                    "Fyrezor",
+                    "Écaille-Ailes",
+                    "Infernus"
+                },
+                MonsterTypeEnum.GOBLIN => new string[]
+                {
+                    "Griblou",
+                    "Snark",
+                    "Grimp",
+                    "Razz"
+                },
+                MonsterTypeEnum.TROLL => new string[]
+                {
+                    "Gronk",
+                    "Toud",
+                    "Bouldar",
+                    "Fracasse"
+                },
+                MonsterTypeEnum.UNDEAD => new string[]
+                {
+                    "Guerrier Squelette",
+                    "Zombie",
+                    "Apparition",
+                    "Goule"
+                },
+                MonsterTypeEnum.BEAST => new string[]
+                {
+                    "Grand Loup",
+                    "Araignée Géante",
+                    "Ours des Cavernes",
+                    "Vouivre"
+                },
+                MonsterTypeEnum.DEMON => new string[]
+                {
+                    "Engeance des Enfers",
+                    "Seigneur de l’Effroi",
+                    "Abyssal",
+                    "Tourmenteur"
+                },
+                MonsterTypeEnum.ELEMENTAL => new string[]
+                {
+                    "Élémentaire de Feu",
+                    "Golem de Glace",
+                    "Esprit de Tempête",
+                    "Gardien de Terre"
+                },
+                MonsterTypeEnum.HUMANOID => new string[]
+                {
+                    "Bandit",
+                    "Cultiste",
+                    "Chevalier Noir",
+                    "Assassin"
+                },
+                _ => new string[] { "Monstre" }
             };
 
             var name = monsterNames[random.Next(monsterNames.Length)];

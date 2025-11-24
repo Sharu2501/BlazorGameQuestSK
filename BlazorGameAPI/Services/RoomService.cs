@@ -169,26 +169,25 @@ namespace BlazorGameAPI.Services
         {
             var random = new Random();
 
-            // Dictionnaire nom → description
             Dictionary<string, string> roomTemplates = new()
-    {
-        { "Dark Chamber", "A dark passage filled with ancient mysteries" },
-        { "Crystal Cave", "The walls shimmer with crystalline formations" },
-        { "Ancient Hall", "Grand pillars reach toward a vaulted ceiling" },
-        { "Shadow Corridor", "Shadows dance on the stone walls" },
-        { "Mystic Shrine", "Strange runes glow with ethereal light" },
-        { "Forgotten Crypt", "The air is thick with the scent of decay" },
-        { "Sacred Sanctum", "A holy place now abandoned and silent" },
-        { "Hidden Vault", "Ancient treasures lie hidden here" },
-        { "Cursed Throne Room", "An ominous throne dominates the chamber" },
-        { "Abandoned Library", "Dusty tomes line the crumbling shelves" },
-        { "Torture Chamber", "Rusty chains hang from the blood-stained walls" },
-        { "Treasury", "Gold and jewels glitter in the dim light" },
-        { "Ritual Circle", "Arcane symbols are carved into the floor" },
-        { "War Room", "Old battle plans still hang on the walls" },
-        { "Armory", "Weapons of ages past rest in their racks" },
-        { "Dragon's Lair", "The heat is oppressive and the air smells of sulfur" }
-    };
+            {
+                { "Chambre Sombre", "Un passage obscur empli de mystères anciens" },
+                { "Grotte de Cristal", "Les parois scintillent de formations cristallines" },
+                { "Salle Ancienne", "De grands piliers soutiennent un plafond voûté" },
+                { "Couloir des Ombres", "Les ombres dansent sur les murs de pierre" },
+                { "Sanctuaire Mystique", "D’étranges runes brillent d’une lueur éthérée" },
+                { "Crypte Oubliée", "L’air est lourd de l’odeur de la décomposition" },
+                { "Sanctum Sacré", "Un lieu sacré désormais abandonné et silencieux" },
+                { "Coffre Caché", "De anciens trésors sont dissimulés ici" },
+                { "Salle du Trône Maudit", "Un trône inquiétant domine la pièce" },
+                { "Bibliothèque Abandonnée", "Des tomes poussiéreux garnissent les étagères en ruine" },
+                { "Chambre de Torture", "Des chaînes rouillées pendent des murs tachés de sang" },
+                { "Trésorerie", "L’or et les joyaux brillent faiblement dans la pénombre" },
+                { "Cercle Rituel", "Des symboles arcaniques sont gravés dans le sol" },
+                { "Salle de Guerre", "De vieux plans de bataille couvrent encore les murs" },
+                { "Armurerie", "Des armes d’un autre âge reposent dans leurs râteliers" },
+                { "Tanière du Dragon", "La chaleur est écrasante et l’air sent le soufre" }
+            };
 
             var selectedRoom = roomTemplates.ElementAt(random.Next(roomTemplates.Count));
             var name = selectedRoom.Key;
