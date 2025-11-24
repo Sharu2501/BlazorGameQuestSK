@@ -90,7 +90,7 @@ Dans cette troisième version, nous avons mis en cohérence notre backend et fro
 - Affichage des **stats** du joueur en fonction de ses actions.
 - Affichage du **score final** en fin de partie.
 - Sauvegarde du **score** et de **l'historique**.
-- Réalisation des **jeux de tests** appropriés.
-- Vérification de la **couverture de code** à 80% avec Coverlet.
+- Réalisation des **jeux de tests** plus poussées.
+- Vérification de la **couverture de code** avec Coverlet.
 
 Les données liées à une partie, joueurs et monstres sont stockés dans la base de données **SupaBase**.

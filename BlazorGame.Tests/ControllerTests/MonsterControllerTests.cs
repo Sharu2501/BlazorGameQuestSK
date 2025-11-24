@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
-using Xunit;
 using Microsoft.AspNetCore.Mvc;
-using BlazorGameAPI.Data;
+using BlazorGameAPI.Controllers;
 using SharedModels.Model;
 
 namespace BlazorGame.Tests.ControllersTests

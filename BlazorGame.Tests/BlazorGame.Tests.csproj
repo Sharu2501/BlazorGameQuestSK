@@ -31,7 +31,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SharedModels\SharedModels.csproj" />
     <ProjectReference Include="..\BlazorGameAPI\BlazorGameAPI.csproj" />
-    <ProjectReference Include="..\BlazorGame.Client\BlazorGame.Client.csproj" />
   </ItemGroup>
 
 </Project>

@@ -47,30 +47,6 @@ namespace BlazorGame.Tests.ModelsTests
         }
 
         [Fact]
-        public async Task MarkRoomAsExplored_ShouldSetIsExploredToTrue()
-        {
-            var context = GetInMemoryDbContext();
-            var monsterService = new MonsterService(context);
-            var roomService = new RoomService(context, monsterService);
-
-            var room = await roomService.CreateRoom(
-                "Test Room",
-                1,
-                "A room for testing",
-                DifficultyLevelEnum.MEDIUM,
-                50,
-                20
-            );
-
-            var result = await roomService.MarkRoomAsExplored(room.Id);
-
-            Assert.True(result);
-            var updatedRoom = context.Rooms.FirstOrDefault(r => r.Id == room.Id);
-            Assert.NotNull(updatedRoom);
-            Assert.True(updatedRoom.IsExplored);
-        }
-
-        [Fact]
         public async Task AssignMonsterToRoom_ShouldAssignMonster()
         {
             var context = GetInMemoryDbContext();

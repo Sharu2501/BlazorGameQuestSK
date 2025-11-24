@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.Model;
 using BlazorGameAPI.Services;
-using System.Collections.Generic;
+using BlazorGameAPI.Controllers;
 
 namespace BlazorGame.Tests.ControllersTests
 {

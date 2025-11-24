@@ -1,3 +1,4 @@
+namespace SharedModels.Model;
 public class AttackResult
 {
     public bool Success { get; set; }

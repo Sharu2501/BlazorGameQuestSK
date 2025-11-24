@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using BlazorGameAPI.Services;
 
+
+namespace BlazorGameAPI.Controllers {
+
 [ApiController]
 [Route("api/[controller]")]
 public class CombatController : ControllerBase
@@ -72,23 +75,28 @@ public class CombatController : ControllerBase
         return Ok();
     }
 }
-/// <summary>
-/// Requête d'attaque du joueur.
-/// </summary>
-public class AttackRequest { public int PlayerId { get; set; } public int MonsterId { get; set; } }
-/// <summary>
-/// Requête d'attaque du monstre.
-/// </summary>
-public class MonsterAttackRequest { public int MonsterId { get; set; } public int PlayerId { get; set; } }
-/// <summary>
-/// Requête de défense du joueur.
-/// </summary>
-public class DefendRequest { public int PlayerId { get; set; } }
-/// <summary>
-/// Requête de fuite du joueur.
-/// </summary>
-public class FleeRequest { public int PlayerId { get; set; } }
-/// <summary>
-/// Requête de victoire du joueur.
-/// </summary>
-public class VictoryRequest { public int PlayerId { get; set; } public int RoomId { get; set; } }
+    /// <summary>
+    /// Requête d'attaque du joueur.
+    /// </summary>
+    public class AttackRequest { public int PlayerId { get; set; } public int MonsterId { get; set; } }
+
+    /// <summary>
+    /// Requête d'attaque du monstre.
+    /// </summary>
+    public class MonsterAttackRequest { public int MonsterId { get; set; } public int PlayerId { get; set; } }
+
+    /// <summary>
+    /// Requête de défense du joueur.
+    /// </summary>
+    public class DefendRequest { public int PlayerId { get; set; } }
+
+    /// <summary>
+    /// Requête de fuite du joueur.
+    /// </summary>
+    public class FleeRequest { public int PlayerId { get; set; } }
+
+    /// <summary>
+    /// Requête de victoire du joueur.
+    /// </summary>
+    public class VictoryRequest { public int PlayerId { get; set; } public int RoomId { get; set; } }
+}

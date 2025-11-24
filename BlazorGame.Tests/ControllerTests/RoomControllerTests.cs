@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using BlazorGameAPI.Data;
+using BlazorGameAPI.Controllers;
 using BlazorGameAPI.Services;
 using SharedModels.Model;
 using SharedModels.Enum;
