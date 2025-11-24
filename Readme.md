@@ -83,14 +83,17 @@ Pour cette deuxième version, nous avons mis en place les éléments suivants :
 
 - **Vérification de la couverture de code** avec Coverlet et ajustements des tests sur les classes principales.
 
-## Version 3 – V2
+## Version 3 – V3
 
 Dans cette troisième version, nous avons mis en cohérence notre backend et frontend. Nous avons notamment :
-- **Génération aléatoire** d'une salle en fonction du level du joueur connecté.
-- Affichage des **stats** du joueur en fonction de ses actions.
-- Affichage du **score final** en fin de partie.
-- Sauvegarde du **score** et de **l'historique**.
-- Réalisation des **jeux de tests** plus poussées.
-- Vérification de la **couverture de code** avec Coverlet.
+- une **génération aléatoire** d'une salle en fonction du level du joueur connecté.
+- un **choix de difficulté** dans l'interface graphique.
+- un affichage des **stats** du joueur en fonction de ses actions.
+- un affichage du **score final** en fin de partie.
+- une sauvegarde du **score** et de **l'historique**.
+- une réalisation des **jeux de tests** plus poussées.
+- une vérification de la **couverture de code** avec Coverlet.
 
-Les données liées à une partie, joueurs et monstres sont stockés dans la base de données **SupaBase**.
+Les données liées à une partie, joueurs et monstres sont stockés dans la base de données **SupaBase**. Pour l'instant, sans keycloak, nous réalisons une vérification pour l'authentication rapide.
+
+Le jeu se déroule sur le port 5000 et les requêtes se font en démarrant le projet BlazorGameAPI.
