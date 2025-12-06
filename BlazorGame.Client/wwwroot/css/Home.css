@@ -72,7 +72,6 @@ html, body {
     margin-bottom: 2rem;
 }
 
-/* Logo qui flotte */
 .home-logo {
     width: 120px;
     height: auto;
@@ -86,7 +85,6 @@ html, body {
     50% { transform: translateY(-10px); }
 }
 
-/* Bouton start */
 .start-button {
     padding: 1rem 2rem;
     font-size: 0.65rem;

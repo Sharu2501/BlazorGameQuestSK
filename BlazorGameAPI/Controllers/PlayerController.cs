@@ -36,6 +36,17 @@ namespace BlazorGameAPI.Controllers {
         }
 
         /// <summary>
+        /// Retourne un joueur par son id.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPlayersById(int id)
+        {
+            var player = await _playerService.GetPlayerById(id);
+            return Ok(player);
+        }
+
+        /// <summary>
         /// Crée un nouveau joueur.
         /// </summary>
         /// <param name="player"></param>

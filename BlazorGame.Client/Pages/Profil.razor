@@ -1,0 +1,78 @@
+@page "/profil"
+@using SharedModels.Model
+@using BlazorGame.Client.Services
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
+
+<link rel="stylesheet" href="css/admin.css" />
+<link rel="stylesheet" href="css/profile.css" />
+
+@if (!AuthService.IsAuthenticated)
+{
+    <div class="admin-container">
+        <div class="main-content">
+            <p>Vous n'êtes pas connecté. <a href="/">Aller à la connexion</a></p>
+        </div>
+    </div>
+}
+else if (currentUser is null)
+{
+    <div class="admin-container">
+        <div class="main-content">
+            <p>Impossible de charger vos informations.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="admin-container">
+        <div class="main-content">
+
+            <div class="content-header">
+                <div class="header-left">
+                    <img src="images/logo.png" alt="Logo" class="logo-img" />
+                    <div class="header-text">
+                        <h1>Profil</h1>
+                        <p class="page-subtitle">Vue de votre compte</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card-bento">
+                <div class="section-header">
+                    <div class="header-title">
+                        <i class="bi bi-person-circle"></i>
+                        <h2>Mes informations</h2>
+                    </div>
+                </div>
+
+                <div class="profile-fields">
+                    <p><span class="field-label">Nom d'utilisateur :</span> @firstName</p>
+                    <p><span class="field-label">Email :</span> @currentUser.Email</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+@code {
+    private User? currentUser;
+    private string firstName = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        currentUser = await AuthService.GetCurrentUserAsync();
+
+        if (currentUser != null)
+        {
+            firstName = currentUser.Username;
+        }
+    }
+}

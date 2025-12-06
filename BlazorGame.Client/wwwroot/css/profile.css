@@ -1,0 +1,36 @@
+.profile-card-bento {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    padding: 2rem 2.5rem;
+    max-width: 600px;
+    margin: 2rem auto 3rem auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-fields p {
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    margin: 0.5rem 0;
+}
+
+.profile-fields .field-label {
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+}
+
+.home-logo {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(168,0,0,0.8));
+    animation: float 3s ease-in-out infinite;
+    margin-bottom: 2rem;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}

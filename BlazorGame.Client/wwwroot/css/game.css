@@ -95,12 +95,10 @@ html, body {
 
 .monster-stats-side h4 {
     color: var(--accent-red);
-    text-shadow: 0 0 10px #3207;
     text-align: right;
 }
 .player-stats-side h4 {
     color: var(--accent-green);
-    text-shadow: 0 0 10px #094;
     text-align: left;
 }
 

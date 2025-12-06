@@ -101,6 +101,7 @@ Le jeu se déroule sur le port 5000 et les requêtes se font en démarrant le pr
 ## Version 4 – V4
 Dans cette version, nous avons rapporté les modifications suivantes : 
 - La page historique personnel et classement général du joueur dans **Scores**.
+- Ajout d'une page **Profile**.
 - Le **tableau de bord** admin contenant la liste des joueurs (avec action désactivation), la liste des scores, le classement général, la liste des parties et l'export des joueurs accessible avec la **connexion** Admin et mdp Admin.
 - On peut visualiser dans **Swagger** la liste des salles, des évènements, la liste des
 joueurs, la liste des monstres, les scores, l'historique des parties et les donjons.
