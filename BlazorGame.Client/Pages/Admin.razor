@@ -126,6 +126,48 @@
                 </div>
             </section>
 
+            <section class="bento-box sessions-list">
+                <div class="section-header">
+                    <div class="header-title">
+                        <i class="bi bi-controller"></i>
+                        <h2>Liste des Parties</h2>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID Partie</th>
+                                <th>Joueur</th>
+                                <th>Date début</th>
+                                <th>Date fin</th>
+                                <th>Score</th>
+                                <th>Succès</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1001</td>
+                                <td>Joueur1</td>
+                                <td>13/10/2025 14:10</td>
+                                <td>13/10/2025 14:25</td>
+                                <td>980</td>
+                                <td>Oui</td>
+                            </tr>
+                            <tr>
+                                <td>1002</td>
+                                <td>Joueur2</td>
+                                <td>13/10/2025 15:00</td>
+                                <td>13/10/2025 15:30</td>
+                                <td>1500</td>
+                                <td>Oui</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
             <section class="bento-box players-list">
                  <div class="section-header">
                     <div class="header-title">
@@ -134,6 +176,9 @@
                     </div>
                     <button class="add-btn">
                         <i class="bi bi-plus-circle"></i> Ajouter
+                    </button>
+                    <button class="export-btn">
+                        <i class="bi bi-download"></i> Exporter les joueurs
                     </button>
                 </div>
                 <div class="table-wrapper">
@@ -157,7 +202,10 @@
                                 <td><span class="status-badge online">En ligne</span></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <label class="switch" title="Actif / Inactif">
+                                            <input type="checkbox" checked />
+                                            <span class="slider"></span>
+                                        </label>
                                         <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
                                     </div>
                                 </td>
@@ -170,7 +218,10 @@
                                 <td><span class="status-badge online">En ligne</span></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <label class="switch" title="Actif / Inactif">
+                                            <input type="checkbox" checked />
+                                            <span class="slider"></span>
+                                        </label>
                                         <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
                                     </div>
                                 </td>
@@ -183,7 +234,10 @@
                                 <td><span class="status-badge offline">Hors ligne</span></td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
+                                        <label class="switch" title="Actif / Inactif">
+                                            <input type="checkbox" checked />
+                                            <span class="slider"></span>
+                                        </label>
                                         <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
                                     </div>
                                 </td>

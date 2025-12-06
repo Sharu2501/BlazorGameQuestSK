@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css');
 
-/* Reset */
 * {
     margin: 0;
     padding: 0;
@@ -39,9 +38,9 @@ html, body {
     margin: 0 !important;
     padding: 0 !important;
     height: 100%;
+    overflow-y: auto;
 }
 
-/* Container */
 .admin-container {
     height: 100vh;
     background-image: url("../images/antre_donjon.png");
@@ -62,7 +61,6 @@ html, body {
     z-index: 0;
 }
 
-/* ===== MAIN CONTENT ===== */
 .main-content {
     height: 100vh;
     overflow-y: auto;
@@ -74,13 +72,11 @@ html, body {
     margin: 0 auto;
 }
 
-/* Custom Scrollbar */
 .main-content::-webkit-scrollbar { width: 8px; }
 .main-content::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
 .main-content::-webkit-scrollbar-thumb { background: rgba(168, 0, 0, 0.5); border-radius: 4px; }
 .main-content::-webkit-scrollbar-thumb:hover { background: rgba(168, 0, 0, 0.7); }
 
-/* ===== HEADER ===== */
 .content-header {
     display: flex;
     justify-content: space-between;
@@ -107,13 +103,15 @@ html, body {
 .logout-btn { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: rgba(255, 50, 50, 0.15); margin: 0; border: 1px solid rgba(255, 50, 50, 0.3); border-radius: 50%; color: #ff6b6b; cursor: pointer; transition: all 0.3s ease; font-size: 1.1rem; font-family: 'Press Start 2P', cursive; }
 .logout-btn:hover { background: rgba(255, 50, 50, 0.25); border-color: #ff6b6b; transform: translateY(-2px) scale(1.05); box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4); }
 
-
-/* ===== NOUVEAU : BENTO GRID SYSTEM ===== */
 .bento-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: minmax(180px, auto);
     gap: 1.5rem;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .bento-box {
@@ -133,7 +131,6 @@ html, body {
     border-color: rgba(168, 0, 0, 0.4);
 }
 
-/* Placement des éléments dans la grille */
 .bento-box.leaderboard {
     grid-column: 1 / 3;
     grid-row: 1 / 3;
@@ -157,12 +154,14 @@ html, body {
     grid-row: 2 / 3;
 }
 
-.bento-box.players-list {
-    grid-column: 1 / 5;
+.bento-box.sessions-list {
+    grid-column: 2 / 4;
     grid-row: 3 / 4;
-}
+    width: auto;
+    max-width: 150%;
+    margin: 0 auto; }
 
-/* Style spécifique pour les cartes de stats dans la bento */
+
 .stat-card-bento {
     align-items: flex-start;
     justify-content: space-between;
@@ -175,29 +174,25 @@ html, body {
     font-size: 2.2rem;
 }
 
-
-/* --- Styles des composants (majoritairement conservés) --- */
-
-/* Section Header (pour les boîtes avec titre) */
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
 .header-title { display: flex; align-items: center; gap: 0.75rem; }
 .header-title i { font-size: 1.3rem; color: var(--accent-red); }
 .header-title h2 { font-size: 0.9rem; color: var(--text-primary); margin: 0; }
 .add-btn { display: flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1.5rem; background: linear-gradient(135deg, rgba(168, 0, 0, 0.3), rgba(168, 0, 0, 0.2)); border: 1px solid var(--accent-red); border-radius: 12px; color: var(--text-primary); font-size: 0.65rem; cursor: pointer; transition: all 0.3s ease; font-family: 'Press Start 2P', cursive; }
 .add-btn:hover { background: linear-gradient(135deg, rgba(168, 0, 0, 0.5), rgba(168, 0, 0, 0.3)); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(168, 0, 0, 0.4); }
+.export-btn { display: flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1.5rem; background: linear-gradient(135deg, rgba(168, 0, 0, 0.3), rgba(168, 0, 0, 0.2)); border: 1px solid var(--accent-red); border-radius: 12px; color: var(--text-primary); font-size: 0.65rem; cursor: pointer; transition: all 0.3s ease; font-family: 'Press Start 2P', cursive; }
+.export-btn:hover { background: linear-gradient(135deg, rgba(168, 0, 0, 0.5), rgba(168, 0, 0, 0.3)); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(168, 0, 0, 0.4); }
 
-/* Wrapper de Table (pour le scroll interne) */
 .table-wrapper {
     overflow-y: auto;
-    flex-grow: 1; /* Permet au wrapper de remplir l'espace de la bento-box */
-    min-height: 0; /* Nécessaire pour que flex-grow fonctionne correctement */
+    flex-grow: 1;
+    min-height: 0;
 }
 .table-wrapper::-webkit-scrollbar { width: 6px; }
 .table-wrapper::-webkit-scrollbar-track { background: transparent; }
 .table-wrapper::-webkit-scrollbar-thumb { background: rgba(168, 0, 0, 0.4); border-radius: 3px; }
 .table-wrapper::-webkit-scrollbar-thumb:hover { background: rgba(168, 0, 0, 0.6); }
 
-/* Styles des tables (conservés) */
 .data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
 .data-table thead { background: rgba(168, 0, 0, 0.2); position: sticky; top: 0; z-index: 5; }
 .data-table th { padding: 1rem 1.25rem; text-align: left; font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-color); }
@@ -208,7 +203,6 @@ html, body {
 .data-table tbody tr.rank-3 { background: linear-gradient(90deg, rgba(205, 127, 50, 0.1), transparent); }
 .data-table td { padding: 1rem 1.25rem; color: var(--text-primary); font-size: 0.65rem; vertical-align: middle; }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 1200px) {
     .bento-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -226,10 +220,9 @@ html, body {
     .content-header { flex-direction: column; gap: 1rem; padding: 1.25rem; }
     
     .bento-grid {
-        grid-template-columns: 1fr; /* Une seule colonne sur mobile */
+        grid-template-columns: 1fr;
         grid-auto-rows: auto;
     }
-    /* On réinitialise le placement pour que tout s'empile naturellement */
     .bento-box.leaderboard,
     .bento-box.stat-card-bento:nth-of-type(2),
     .bento-box.stat-card-bento:nth-of-type(3),
@@ -248,7 +241,59 @@ html, body {
     }
 }
 
-/* ======== ACTION BUTTONS (Modifier / Supprimer) ======== */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: rgba(255,255,255,0.08);
+    border-radius: 34px;
+    border: 1px solid var(--border-color);
+    transition: .3s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--accent-red);
+    border-radius: 50%;
+    transition: .3s;
+    box-shadow: 0 0 10px rgba(168,0,0,0.7);
+}
+
+.switch input:checked + .slider {
+    background-color: rgba(16,185,129,0.25);
+    border-color: var(--accent-green);
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(20px);
+    background-color: var(--accent-green);
+    box-shadow: 0 0 10px rgba(16,185,129,0.8);
+}
+
 .action-buttons {
     display: flex;
     align-items: center;
@@ -272,12 +317,10 @@ html, body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* --- Effets généraux --- */
 .action-btn:hover {
     transform: translateY(-2px) scale(1.08);
 }
 
-/* --- Bouton MODIFIER --- */
 .action-btn.edit {
     border-color: rgba(255, 255, 255, 0.15);
     color: var(--text-primary);
@@ -290,7 +333,6 @@ html, body {
     box-shadow: 0 0 12px rgba(168, 0, 0, 0.5);
 }
 
-/* --- Bouton SUPPRIMER --- */
 .action-btn.delete {
     border-color: rgba(168, 0, 0, 0.4);
     color: #ff4d4d;
@@ -304,18 +346,15 @@ html, body {
     transform: translateY(-3px) scale(1.12);
 }
 
-/* --- Effet d'appui (clic) --- */
 .action-btn:active {
     transform: scale(0.95);
     box-shadow: 0 0 8px rgba(168, 0, 0, 0.5);
 }
 
-/* ===== ICONES ===== */
 .action-btn i {
     pointer-events: none;
 }
 
-/* === Petites animations de feedback === */
 @keyframes pulse-red {
     0%, 100% { box-shadow: 0 0 0 rgba(168, 0, 0, 0.4); }
     50% { box-shadow: 0 0 15px rgba(168, 0, 0, 0.8); }
