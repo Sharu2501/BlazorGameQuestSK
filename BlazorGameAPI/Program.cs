@@ -19,6 +19,7 @@ builder.Services.AddScoped<GameSessionService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<GameHistoryService>();
 builder.Services.AddScoped<HighScoreService>();
+builder.Services.AddScoped<GameSessionService>();
 
 // Add Controllers
 builder.Services.AddControllers();

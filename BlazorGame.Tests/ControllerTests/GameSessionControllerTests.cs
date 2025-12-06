@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SharedModels.Model;
 using BlazorGameAPI.Controllers;
+using BlazorGameAPI.Services;
 
 namespace BlazorGame.Tests.ControllersTests
 {
@@ -10,7 +11,8 @@ namespace BlazorGame.Tests.ControllersTests
     {
         private GameSessionController CreateController(ApplicationDbContext ctx)
         {
-            return new GameSessionController(ctx);
+            GameSessionService service = new GameSessionService(ctx);
+            return new GameSessionController(ctx, service);
         }
 
         [Fact]
@@ -21,7 +23,6 @@ namespace BlazorGame.Tests.ControllersTests
 
             var session = new GameSession
             {
-                // adapte les propriétés selon ton modèle
                 SessionId = 0,
                 IsActive = true
             };

@@ -21,5 +21,6 @@ builder.Services.AddOidcAuthentication(options =>
 
 builder.Services.AddScoped<GameService>();
 builder.Services.AddSingleton<AuthService>();
+builder.Services.AddScoped<GameSaveService>();
 
 await builder.Build().RunAsync();

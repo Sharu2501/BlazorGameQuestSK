@@ -6,16 +6,19 @@ using SharedModels.Model.DTOs;
 namespace BlazorGame.Client.Pages;
 public partial class Game : ComponentBase
 {
-        [SupplyParameterFromQuery]
-    public int Difficulty { get; set; } = 0;
-
+    [SupplyParameterFromQuery] public int Difficulty { get; set; } = 0;
+    [SupplyParameterFromQuery(Name = "sessionId")]
+    public int? QuerySessionId { get; set; }
     private GameState? gameState;
     private PlayerStatsDto? PlayerStats;
     private string message = "";
     private bool isLoading = true;
+    private bool isPaused = false;
+    private bool showPausePopup = false;
 
     [Inject] protected AuthService AuthService { get; set; }
     [Inject] protected GameService GameService { get; set; }
+    [Inject] protected GameSaveService GameSaveService { get; set; }
     [Inject] protected NavigationManager NavigationManager { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -26,7 +29,39 @@ public partial class Game : ComponentBase
             return;
         }
 
-        await InitializeGame();
+        if (QuerySessionId.HasValue)
+        {
+            await LoadExistingSession(QuerySessionId.Value);
+        }
+        else
+        {
+            await InitializeGame();
+        }
+    }
+
+    private async Task LoadExistingSession(int sessionId)
+    {
+        try
+        {
+            isLoading = true;
+            var state = await GameSaveService.LoadSessionAsync(sessionId);
+            if (state == null)
+            {
+                message = "Impossible de charger la session, une nouvelle partie va commencer.";
+                await InitializeGame();
+                return;
+            }
+
+            gameState = state;
+            isPaused = false;
+            message = "Partie reprise.";
+            isLoading = false;
+        }
+        catch (Exception ex)
+        {
+            message = $"Erreur lors du chargement de la session: {ex.Message}";
+            isLoading = false;
+        }
     }
 
     private async Task InitializeGame()
@@ -60,6 +95,63 @@ public partial class Game : ComponentBase
         {
             message = $"Erreur lors de l'initialisation: {ex.Message}";
             isLoading = false;
+        }
+    }
+
+    private async Task PauseGame()
+    {
+        if (gameState == null || !AuthService.CurrentPlayerId.HasValue)
+            return;
+
+        try
+        {
+            if (gameState.SessionId == 0)
+            {
+                var sessionId = await GameSaveService.CreateSessionAsync(
+                    AuthService.CurrentPlayerId.Value,
+                    gameState.CurrentDungeon?.Name ?? "Partie",
+                    gameState
+                );
+
+                gameState.SessionId = sessionId;
+            }
+            else
+            {
+                await GameSaveService.SaveSessionAsync(gameState.SessionId, gameState, true);
+            }
+
+            isPaused = true;
+            showPausePopup = true;
+        }
+        catch (Exception ex)
+        {
+            message = $"Erreur lors de la mise en pause: {ex.Message}";
+        }
+    }
+
+    private void ClosePausePopup()
+    {
+        showPausePopup = false;
+    }
+
+    private async Task ResumeGame()
+    {
+        if (gameState == null || gameState.SessionId == 0)
+            return;
+
+        try
+        {
+            var state = await GameSaveService.LoadSessionAsync(gameState.SessionId);
+            if (state != null)
+            {
+                gameState = state;
+                isPaused = false;
+                showPausePopup = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"Erreur lors de la reprise: {ex.Message}";
         }
     }
 
@@ -107,6 +199,12 @@ public partial class Game : ComponentBase
 
     private async Task ExecuteAction(string action)
     {
+        if (isPaused)
+        {
+            message = "La partie est en pause. Cliquez sur Reprendre pour continuer.";
+            return;
+        }
+
         if (gameState == null || gameState.CurrentRoom == null || !AuthService.CurrentPlayerId.HasValue)
             return;
 

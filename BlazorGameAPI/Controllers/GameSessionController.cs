@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BlazorGameAPI.Data;
 using SharedModels.Model;
+using SharedModels.Model.DTOs;
+using BlazorGameAPI.Services;
 
 namespace BlazorGameAPI.Controllers {
     [ApiController]
@@ -9,10 +11,12 @@ namespace BlazorGameAPI.Controllers {
     public class GameSessionController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly GameSessionService _svc;
 
-        public GameSessionController(ApplicationDbContext context)
+        public GameSessionController(ApplicationDbContext context, GameSessionService svc)
         {
             _context = context;
+            _svc = svc;
         }
 
         /// <summary>
@@ -55,5 +59,14 @@ namespace BlazorGameAPI.Controllers {
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Save(int id, [FromBody] SaveSessionDto dto)
+        {
+            var ok = await _svc.SaveSessionAsync(id, dto.StateJson, dto.IsPaused);
+            if (!ok) return NotFound();
+            return NoContent();
+        }
+
     }
 }
