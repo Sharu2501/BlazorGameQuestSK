@@ -97,3 +97,14 @@ Dans cette troisième version, nous avons mis en cohérence notre backend et fro
 Les données liées à une partie, joueurs et monstres sont stockés dans la base de données **SupaBase**. Pour l'instant, sans keycloak, nous réalisons une vérification pour l'authentication rapide.
 
 Le jeu se déroule sur le port 5000 et les requêtes se font en démarrant le projet BlazorGameAPI.
+
+## Version 4 – V4
+Dans cette version, nous avons rapporté les modifications suivantes : 
+- La page historique personnel et classement général du joueur dans **Scores**.
+- Le **tableau de bord** admin contenant la liste des joueurs (avec action désactivation), la liste des scores, le classement général, la liste des parties et l'export des joueurs accessible avec la **connexion** Admin et mdp Admin.
+- On peut visualiser dans **Swagger** la liste des salles, des évènements, la liste des
+joueurs, la liste des monstres, les scores, l'historique des parties et les donjons.
+
+Enfin, les interfaces blazor pour cette partie **admin** ont été réalisées.
+
+Nous en avons également profité pour mettre à jour les **tests automatiques** et vérifier la **couverture de code**.
