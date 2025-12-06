@@ -25,10 +25,15 @@ html, body {
     border-radius: 18px;
     box-shadow: 0 0 14px #2228;
     margin-top: 0.7rem;
-    background: rgba(34, 34, 54, 0.62);
     backdrop-filter: blur(4px);
     border: 2.5px solid var(--border-color);
     font-family: 'Press Start 2P', monospace;
+}
+
+.stat-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
 }
 
 .green-bg {
@@ -52,9 +57,8 @@ html, body {
 }
 
 .battle-message {
-    font-size: 1.4rem;
     font-family: 'Press Start 2P', monospace;
-    color: #d40000;
+    color: #ffffff;
     text-align: center;
     font-weight: 700;
     letter-spacing: 1px;
@@ -117,18 +121,16 @@ html, body {
     display: inline-block;
 }
 
+.potion-used,
 .potion-available {
-    margin: 0 0.2rem;
-    font-size: 1.5rem;
-    color: #20ff20;
-    text-shadow: 0 0 6px #b5ffb5;
+    width: 32px;
+    height: 32px;
+    margin: 0 0.25rem;
 }
 
 .potion-used {
-    margin: 0 0.2rem;
-    font-size: 1.5rem;
-    opacity: 0.26;
-    color: #888;
+    opacity: 0.3;
+    filter: grayscale(100%);
 }
 
 .salle-content {
