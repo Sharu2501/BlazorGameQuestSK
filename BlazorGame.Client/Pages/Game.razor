@@ -7,9 +7,13 @@
 @if (isLoading)
 {
     <div class="loading-container">
-        <p>Génération du donjon...</p>
+        <div class="loading-content">
+            <img src="images/logo.png" class="loading-logo" />
+            <p class="loading-text">Génération du donjon...</p>
+        </div>
     </div>
 }
+
 else if (gameState != null)
 {
     <div class="salle-container" style="background-image: url('@GetRoomImage()')">
@@ -25,12 +29,12 @@ else if (gameState != null)
 
             <div class="battle-container">
                 <div class="player-stats-side">
-                    <h4 style="color:rgb(4, 32, 55);"> @PlayerStats?.Username</h4>
+                    <h4 style="color:rgb(25, 90, 143);"> <img src="images/ninja.svg" class="stat-icon" /> @PlayerStats?.Username</h4>
                     <div class="stats-box green-bg">
-                        <div class="stat-item">❤️ PV: @PlayerStats?.Health / @PlayerStats?.MaxHealth</div>
-                        <div class="stat-item">⚔️ ATQ: @PlayerStats?.Attack</div>
-                        <div class="stat-item">🛡️ DEF: @PlayerStats?.Defense</div>
-                        <div class="stat-item">💰 Or: @PlayerStats?.Gold</div>
+                        <div class="stat-item"> <img src="images/coeur.svg" class="stat-icon" /> PV: @PlayerStats?.Health / @PlayerStats?.MaxHealth</div>
+                        <div class="stat-item"> <img src="images/epees.svg" class="stat-icon" /> ATQ: @PlayerStats?.Attack</div>
+                        <div class="stat-item"> <img src="images/bouclier.svg" class="stat-icon" /> DEF: @PlayerStats?.Defense</div>
+                        <div class="stat-item"> <img src="images/lingots-dor.svg" class="stat-icon" /> Or: @PlayerStats?.Gold</div>
                         <div class="stat-item"> <img src="images/niveau-superieur.svg" class="stat-icon" /> Niveau: @PlayerStats?.Level</div>
                     </div>
                 </div>
@@ -42,11 +46,11 @@ else if (gameState != null)
                 @if (gameState.CurrentRoom?.Monster != null)
                 {
                     <div class="monster-stats-side">
-                        <h4 style="color:#fc4343;">👾 @gameState.CurrentRoom.Monster.Name</h4>
+                        <h4 style="color:#fc4343;"> <img src="images/monstre.svg" class="stat-icon" /> @gameState.CurrentRoom.Monster.Name</h4>
                         <div class="stats-box red-bg">
-                            <div class="stat-item">❤️ PV: @gameState.CurrentRoom.Monster.Health</div>
-                            <div class="stat-item">⚔️ ATQ: @gameState.CurrentRoom.Monster.Attack</div>
-                            <div class="stat-item">🛡️ DEF: @gameState.CurrentRoom.Monster.Defense</div>
+                            <div class="stat-item"> <img src="images/coeur.svg" class="stat-icon" /> PV: @gameState.CurrentRoom.Monster.Health</div>
+                            <div class="stat-item"> <img src="images/epees.svg" class="stat-icon" /> ATQ: @gameState.CurrentRoom.Monster.Attack</div>
+                            <div class="stat-item"> <img src="images/bouclier.svg" class="stat-icon" /> DEF: @gameState.CurrentRoom.Monster.Defense</div>
                             <div class="stat-item"> <img src="images/niveau-superieur.svg" class="stat-icon" /> Niveau: @gameState.CurrentRoom.Monster.Level</div>
                         </div>
                     </div>
