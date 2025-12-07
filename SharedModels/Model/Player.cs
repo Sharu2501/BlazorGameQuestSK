@@ -20,6 +20,6 @@ namespace SharedModels.Model
         public int Defense { get; set; } = 5;
         public List<Artifact> Inventory { get; set; } = new List<Artifact>();   
         public List<GameHistory> GameHistories { get; set; } = new();
-        
+        public bool IsActive { get; set; } = true;
     }
 }

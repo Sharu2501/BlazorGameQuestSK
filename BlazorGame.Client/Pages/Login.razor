@@ -3,13 +3,15 @@
 @using System.IdentityModel.Tokens.Jwt;
 @using System.Net.Http.Headers;
 @using System.Text.Json;
+@using SharedModels.Model;
+@using SharedModels.Enum;
 
 @inject NavigationManager NavigationManager
 @inject IAccessTokenProvider TokenProvider
 @inject HttpClient Http
 @inject AuthService AuthService
 
-<link rel="stylesheet" href="css/login.css" />
+<link rel="stylesheet" href="css/Login.css" />
 <div class="login-page-container">
     <div class="login-overlay"></div>
     <div class="login-container">
@@ -30,9 +32,8 @@
                          aria-hidden="true">
                         <path d="M2 2l20 20" stroke="white" stroke-width="2" stroke-linecap="round"
                               stroke-linejoin="round" />
-                        <path
-                            d="M17.94 17.94C16.06 19.09 14.06 19.5 12 19.5 7 19.5 3.11 16.36 1.5 12c.83-2.02 2.12-3.77 3.77-5.14"
-                            stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M17.94 17.94C16.06 19.09 14.06 19.5 12 19.5 7 19.5 3.11 16.36 1.5 12c.83-2.02 2.12-3.77 3.77-5.14"
+                              stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         <path d="M9.88 9.88A3 3 0 0 0 14.12 14.12" stroke="white" stroke-width="2" stroke-linecap="round"
                               stroke-linejoin="round" />
                     </svg>
@@ -59,7 +60,6 @@
     </div>
 </div>
 
-
 @code {
     private string Username = "";
     private string Password = "";
@@ -84,12 +84,14 @@
         try
         {
             var client = new HttpClient();
+            // Assurez-vous que l'URL correspond à votre configuration Docker/Keycloak
             var url = "http://localhost:8080/realms/BlazorGame/protocol/openid-connect/token";
 
             var content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string,string>("grant_type", "password"),
                 new KeyValuePair<string,string>("client_id", "blazorgame-client"),
+                // Vérifiez que le client_secret est correct ou nécessaire selon votre config Keycloak
                 new KeyValuePair<string,string>("client_secret", "LLZ17mtIRlhtLdh3avIeY9zch4WjAxtF"),
                 new KeyValuePair<string,string>("username", Username),
                 new KeyValuePair<string,string>("password", Password),
@@ -106,11 +108,9 @@
             var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
             var accessToken = result!.access_token;
 
-            AuthService.LoginWithToken(accessToken);
-
+            // 1. Analyse du Token pour voir si c'est un Admin Keycloak
             var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(accessToken);
-
             var resourceAccessClaim = jwt.Claims.FirstOrDefault(c => c.Type == "resource_access")?.Value;
             var isAdmin = false;
 
@@ -131,25 +131,18 @@
                 }
             }
 
-            foreach (var c in jwt.Claims)
-            {
-                Console.WriteLine($"{c.Type} = {c.Value}");
-            }
-
             var keycloakId = jwt.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
-            var username = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value
-                           ?? Username;
-            var email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value
-                        ?? $"{username}@blazorgamesk.com";
-            
-            
-            Http.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
+            var username = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value ?? Username;
+            var email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value ?? $"{username}@blazorgamesk.com";
 
+            // 2. Récupération ou Création du joueur via l'API
+            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Player");
+            
             var player = players?.FirstOrDefault(p =>
                 p.ExternalId == keycloakId || p.Username.ToLower() == username.ToLower());
 
+            // Création si nouveau joueur
             if (player == null)
             {
                 player = new Player
@@ -158,7 +151,9 @@
                     Email = email,
                     ExternalId = keycloakId,
                     PasswordHash = Password,
-                    UserType = SharedModels.Enum.UserTypeEnum.PLAYER,
+                    // ICI : On assigne le rôle en fonction de Keycloak
+                    UserType = isAdmin ? UserTypeEnum.ADMIN : UserTypeEnum.PLAYER,
+                    IsActive = true, // Par défaut, un nouveau compte est actif
                     Level = 1,
                     Health = 100,
                     MaxHealth = 100,
@@ -170,25 +165,42 @@
                 };
 
                 var createResponse = await Http.PostAsJsonAsync("http://localhost:5240/api/Player", player);
-                player = await createResponse.Content.ReadFromJsonAsync<Player>();
+                if (createResponse.IsSuccessStatusCode)
+                {
+                    player = await createResponse.Content.ReadFromJsonAsync<Player>();
+                }
+                else
+                {
+                    ErrorMessage = "Erreur lors de la création du profil.";
+                    return;
+                }
             }
 
+            // 3. Vérification finale et Redirection
             if (player != null)
             {
+                if (!player.IsActive)
+                {
+                    ErrorMessage = "Votre compte a été désactivé. Veuillez contacter l'administrateur.";
+                    return; // On arrête tout, pas de login.
+                }
+                if(player.IsActive){
                 AuthService.Login(player.Id, player.Username, accessToken);
+
                 if (isAdmin)
                     NavigationManager.NavigateTo("/admin");
                 else
                     NavigationManager.NavigateTo("/home");
+                    }
             }
             else
             {
-                ErrorMessage = "Erreur lors de la connexion.";
+                ErrorMessage = "Erreur lors de la récupération du profil joueur.";
             }
         }
         catch (Exception ex)
         {
-            ErrorMessage = $"Erreur : {ex.Message}";
+            ErrorMessage = $"Erreur technique : {ex.Message}";
         }
     }
 
