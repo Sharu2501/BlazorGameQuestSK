@@ -252,6 +252,11 @@ else
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         }
 
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
         players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Admin/players")
                   ?? new List<Player>();
 

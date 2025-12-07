@@ -37,6 +37,11 @@
 
     protected override void OnInitialized()
     {
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        
         var uri = new Uri(NavigationManager.Uri);
         var query = uri.Query;
         
