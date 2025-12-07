@@ -29,10 +29,20 @@ public class GameSaveService
     {
         var res = await _http.GetAsync($"http://localhost:5240/api/GameSession/{sessionId}");
         if (!res.IsSuccessStatusCode) return null;
+
         var s = await res.Content.ReadFromJsonAsync<GameSession>();
+        if (s == null || string.IsNullOrWhiteSpace(s.StateJson))
+            return null;
+
         return JsonSerializer.Deserialize<GameState>(s.StateJson);
     }
 
+    public async Task<GameSession?> GetActiveSessionAsync(int playerId)
+    {
+        return await _http.GetFromJsonAsync<GameSession>(
+            $"http://localhost:5240/api/GameSession/Player/{playerId}/active");
+    }
+
     public async Task<List<GameSession>> ListSessionsAsync(int playerId)
-        => await _http.GetFromJsonAsync<List<GameSession>>($"http://localhost:5240/api/GameSession/player/{playerId}");
+        => await _http.GetFromJsonAsync<List<GameSession>>($"http://localhost:5240/api/GameSession/Player/{playerId}");
 }

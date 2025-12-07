@@ -18,6 +18,7 @@ namespace SharedModels.Model
         public int Attack { get; set; } = 10;
         public int Defense { get; set; } = 5;
         public List<Artifact> Inventory { get; set; } = new List<Artifact>();   
+        public List<GameHistory> GameHistories { get; set; } = new();
         
     }
 }

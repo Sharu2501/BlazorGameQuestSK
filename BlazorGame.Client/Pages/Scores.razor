@@ -65,6 +65,8 @@
                                     }
                                 </ul>
                             }
+                            <p><strong>Score :</strong> @history.Score</p>
+                        
                         </div>
                     }
                 }
@@ -113,11 +115,7 @@
                 };
             }
 
-            var allHistories = await Http.GetFromJsonAsync<List<GameHistory>>("http://localhost:5240/api/GameHistory");
-            gameHistories = allHistories?
-                .Where(h => h.Player?.Id == playerId)
-                .OrderByDescending(h => h.DatePlayed)
-                .ToList() ?? new List<GameHistory>();
+            gameHistories = await Http.GetFromJsonAsync<List<GameHistory>>($"http://localhost:5240/api/GameHistory/Player/{playerId}") ?? new List<GameHistory>();
 
             isLoading = false;
         }

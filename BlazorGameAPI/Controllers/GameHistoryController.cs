@@ -58,6 +58,7 @@ namespace BlazorGameAPI.Controllers {
                 .ToListAsync();
             return Ok(histories);
         }
+
         /// <summary>
         /// Crée un nouvel historique de jeu pour un joueur avec des donjons complétés optionnels.
         /// </summary>
@@ -67,13 +68,16 @@ namespace BlazorGameAPI.Controllers {
         public async Task<IActionResult> CreateGameHistory([FromBody] CreateGameHistoryRequest request)
         {
             var player = await _context.Players.FindAsync(request.PlayerId);
+            
             if (player == null) return NotFound();
 
             var history = new GameHistory
             {
                 Player = player,
                 DatePlayed = DateTime.UtcNow,
+                Score = request.Score,
                 CompletedDungeons = new List<Dungeon>()
+            
             };
 
             if (request.DungeonIds != null && request.DungeonIds.Any())
@@ -98,5 +102,6 @@ namespace BlazorGameAPI.Controllers {
     {
         public int PlayerId { get; set; }
         public List<int>? DungeonIds { get; set; }
+        public int Score { get; set; }
     }
 } 

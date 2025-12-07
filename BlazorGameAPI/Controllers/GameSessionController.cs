@@ -45,6 +45,17 @@ namespace BlazorGameAPI.Controllers {
             return Ok(session);
         }
 
+        [HttpGet("Player/{playerId}/active")]
+        public async Task<ActionResult<GameSession?>> GetActiveSession(int playerId)
+        {
+            var session = await _context.GameSessions.
+                Where(s => s.PlayerId == playerId && s.IsActive)
+                .OrderByDescending(s => s.StartTime)
+                .FirstOrDefaultAsync();
+            if (session == null) return NotFound();
+            return Ok(session);
+        }
+
         /// <summary>
         /// Permet de terminer une session.
         /// </summary>

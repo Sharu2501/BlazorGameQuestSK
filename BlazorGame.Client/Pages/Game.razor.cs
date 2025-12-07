@@ -4,6 +4,7 @@ using SharedModels.Enum;
 using SharedModels.Model;
 using SharedModels.Model.DTOs;
 namespace BlazorGame.Client.Pages;
+
 public partial class Game : ComponentBase
 {
     [SupplyParameterFromQuery] public int Difficulty { get; set; } = 0;
@@ -29,14 +30,22 @@ public partial class Game : ComponentBase
             return;
         }
 
+        var playerId = AuthService.CurrentPlayerId.Value;
+
         if (QuerySessionId.HasValue)
         {
             await LoadExistingSession(QuerySessionId.Value);
+            return;
         }
-        else
+
+        var activeSession = await GameSaveService.GetActiveSessionAsync(playerId);
+        if (activeSession != null)
         {
-            await InitializeGame();
+            await LoadExistingSession(activeSession.SessionId);
+            return;
         }
+
+        await InitializeGame();
     }
 
     private async Task LoadExistingSession(int sessionId)
@@ -55,7 +64,10 @@ public partial class Game : ComponentBase
             gameState = state;
             isPaused = false;
             message = "Partie reprise.";
+            PlayerStats = await GameService.GetPlayerStats();
+
             isLoading = false;
+            StateHasChanged();
         }
         catch (Exception ex)
         {
@@ -72,8 +84,11 @@ public partial class Game : ComponentBase
             var difficultyLevel = (DifficultyLevelEnum)Difficulty;
 
             var dungeon = await GameService.GenerateDungeon(5, PlayerStats.Level, Difficulty);
-            var session = await GameService.StartSession(AuthService.CurrentPlayerId.Value, dungeon.IdDungeon);
-
+            
+            var session = await GameService.StartSession(
+                AuthService.CurrentPlayerId.Value,
+                dungeon.IdDungeon);
+            
             gameState = new GameState
             {
                 CurrentDungeon = dungeon,
@@ -88,12 +103,22 @@ public partial class Game : ComponentBase
                 DifficultyLevel = difficultyLevel
             };
 
+            session = await GameService.StartSession(
+                AuthService.CurrentPlayerId.Value,
+                dungeon.IdDungeon);
+            gameState.SessionId = session.SessionId;
+
             message = "Vous entrez dans le donjon...";
+            isLoading = false;
+        }
+        catch (HttpRequestException httpEx)
+        {
+            message = $"Une erreur est survenue: {httpEx.Message}";
             isLoading = false;
         }
         catch (Exception ex)
         {
-            message = $"Erreur lors de l'initialisation: {ex.Message}";
+            message = $"Une erreur est survenue: {ex.Message}";
             isLoading = false;
         }
     }
@@ -244,6 +269,14 @@ public partial class Game : ComponentBase
                 await GameOver();
             }
 
+            if (gameState != null && gameState.SessionId != 0)
+            {
+                await GameSaveService.SaveSessionAsync(
+                    gameState.SessionId,
+                    gameState,
+                    isPaused: isPaused);
+            }
+
             StateHasChanged();
         }
         catch (Exception ex)
@@ -389,7 +422,7 @@ public partial class Game : ComponentBase
         gameState.Score += completionBonus;
 
         await GameService.UpdateHighScore(playerId, gameState.Score);
-        await GameService.AddGameHistory(playerId, gameState.CurrentDungeon?.IdDungeon ?? 0);
+        await GameService.AddGameHistory(playerId, gameState.CurrentDungeon?.IdDungeon ?? 0, gameState.Score);
         await GameService.EndSession(gameState.SessionId);
 
         NavigationManager.NavigateTo($"/game-over?score={gameState.Score}&success=true");
@@ -409,14 +442,14 @@ public partial class Game : ComponentBase
     private int CalculateRoomScore()
     {
         int baseScore = 100;
-        int difficultyMultiplier = ((int)gameState.DifficultyLevel + 1);
+        int difficultyMultiplier = (int)gameState.DifficultyLevel + 1;
         return baseScore * difficultyMultiplier;
     }
 
     private int CalculateDungeonBonus()
     {
         int baseBonus = 500;
-        int difficultyMultiplier = ((int)gameState.DifficultyLevel + 1);
+        int difficultyMultiplier = (int)gameState.DifficultyLevel + 1;
         return baseBonus * difficultyMultiplier;
     }
 
