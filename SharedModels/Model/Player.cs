@@ -7,6 +7,7 @@ namespace SharedModels.Model
     /// </summary>
     public class Player : User
     {
+        public string ExternalId { get; set; } = "";
         public int Level { get; set; } = 0;
         public HighScore HighScore { get; set; } = new HighScore();
         public int ExperiencePoints { get; set; } = 0;

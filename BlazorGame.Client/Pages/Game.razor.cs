@@ -24,9 +24,15 @@ public partial class Game : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        if (!AuthService.IsAuthenticated || !AuthService.CurrentPlayerId.HasValue)
+        if (!AuthService.IsAuthenticated)
         {
             NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        if (!AuthService.CurrentPlayerId.HasValue)
+        {
+            NavigationManager.NavigateTo("/home");
             return;
         }
 
