@@ -39,6 +39,9 @@ public class GameSaveService
 
     public async Task<GameSession?> GetActiveSessionAsync(int playerId)
     {
+        var res = await _http.GetAsync($"http://localhost:5240/api/GameSession/Player/{playerId}/active");
+        if (!res.IsSuccessStatusCode) return null;
+        
         return await _http.GetFromJsonAsync<GameSession>(
             $"http://localhost:5240/api/GameSession/Player/{playerId}/active");
     }
