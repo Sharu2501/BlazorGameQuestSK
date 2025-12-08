@@ -12,6 +12,7 @@
 
 <link rel="stylesheet" href="css/admin.css" />
 
+
 @if (!isLoaded)
 {
     <div class="loading-container">
@@ -66,7 +67,8 @@ else
                             <tbody>
                                 @{
                                     var rank = 1;
-                                    var rows = showAllLeaderboard ? leaderboard.Where(p => p.UserType == UserTypeEnum.PLAYER) : leaderboard.Where(p => p.UserType == UserTypeEnum.PLAYER).Take(5);
+                                    var rows = showAllLeaderboard ? leaderboard.Where(p => p.UserType == UserTypeEnum.PLAYER) :
+                                    leaderboard.Where(p => p.UserType == UserTypeEnum.PLAYER).Take(5);
                                 }
                                 @foreach (var p in rows)
                                 {
@@ -178,6 +180,11 @@ else
                                 @(showAllPlayers ? "Réduire" : "Voir plus")
                             </button>
 
+                            <button class="add-btn" @onclick="OpenAddModal"
+                                style="display:flex; align-items:center; gap:0.5rem; background: linear-gradient(135deg, rgba(168, 0, 0, 0.3), rgba(168, 0, 0, 0.2)); border: 1px solid #a80000; color: white; padding: 0.4rem 0.9rem; border-radius: 999px; font-family: inherit; font-size: 0.55rem; cursor: pointer;">
+                                <i class="bi bi-person-plus-fill"></i> Ajouter
+                            </button>
+
                             <button class="export-btn" @onclick="ExportPlayers">
                                 <i class="bi bi-download"></i> Exporter
                             </button>
@@ -196,7 +203,8 @@ else
                             </thead>
                             <tbody>
                                 @{
-                                    var playersList = showAllPlayers ? players : players.Take(5);
+                                    var playersList = showAllPlayers ? players.Where(p => p.UserType == UserTypeEnum.PLAYER) :
+                                    players.Where(p => p.UserType == UserTypeEnum.PLAYER).Take(5);
                                 }
                                 @if (players != null)
                                 {
@@ -209,11 +217,13 @@ else
                                             <td>
                                                 <div class="action-buttons">
                                                     <label class="switch" title="@(p.IsActive ? "Désactiver" : "Activer")">
-                                                        <input type="checkbox" checked="@p.IsActive" @onchange="@(e => UpdateStatus(p, (bool)e.Value))" />
+                                                        <input type="checkbox" checked="@p.IsActive"
+                                                            @onchange="@(e => UpdateStatus(p, (bool)e.Value))" />
                                                         <span class="slider"></span>
                                                     </label>
 
-                                                    <button class="action-btn delete" title="Supprimer" @onclick="() => DeletePlayer(p.Id)">
+                                                    <button class="action-btn delete" title="Supprimer"
+                                                        @onclick="() => DeletePlayer(p.Id)">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
@@ -225,8 +235,98 @@ else
                         </table>
                     </div>
                 </section>
+
+                <section class="bento-box admin-list">
+                    <div class="section-header">
+                        <div class="header-title">
+                            <i class="bi bi-shield-lock"></i>
+                            <h2>Administrateurs</h2>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Admin</th>
+                                    <th>Email</th>
+                                    <th>Actif</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var admins = (players ?? new List<Player>())
+                                    .Where(p => p.UserType == UserTypeEnum.ADMIN)
+                                    .ToList();
+                                }
+                                @if (admins.Any())
+                                {
+                                    foreach (var a in admins)
+                                    {
+                                        <tr>
+                                            <td>@a.Id</td>
+                                            <td>@a.Username</td>
+                                            <td>@a.Email</td>
+                                            <td>
+                                                <label class="switch" title="@(a.IsActive ? "Désactiver" : "Activer")">
+                                                    <input type="checkbox" checked="@a.IsActive"
+                                                        @onchange="@(e => UpdateStatus(a, (bool)e.Value))" />
+                                                    <span class="slider"></span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
         </main>
+
+        @if (showAddModal)
+        {
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Nouveau Héros</h3>
+                        <button class="close-btn" @onclick="CloseAddModal"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Nom d'utilisateur</label>
+                            <input type="text" @bind="newPlayer.Username" class="form-control" placeholder="Pseudo du héros" />
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Prénom</label>
+                                <input type="text" @bind="newPlayer.FirstName" class="form-control" placeholder="Jean" />
+                            </div>
+                            <div class="form-group">
+                                <label>Nom</label>
+                                <input type="text" @bind="newPlayer.LastName" class="form-control" placeholder="Dupont" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" @bind="newPlayer.Email" class="form-control" placeholder="email@exemple.com" />
+                        </div>
+                        <div class="form-group">
+                            <label>Mot de passe</label>
+                            <input type="password" @bind="newPlayer.Password" class="form-control" placeholder="********" />
+                        </div>
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="error-message">@errorMessage</div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-cancel" @onclick="CloseAddModal">Annuler</button>
+                        <button class="btn-confirm" @onclick="CreatePlayer">Créer le joueur</button>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 }
 
@@ -241,9 +341,70 @@ else
     private bool showAllHistories = false;
     private bool showAllPlayers = false;
 
+    // --- Variables pour la Modale ---
+    private bool showAddModal = false;
+    private string errorMessage = "";
+    private CreatePlayerRequest newPlayer = new();
+
+    public class CreatePlayerRequest
+    {
+        public string Username { get; set; } = "";
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+    // -------------------------------
+
     private void ToggleLeaderboard() => showAllLeaderboard = !showAllLeaderboard;
     private void ToggleHistories() => showAllHistories = !showAllHistories;
     private void TogglePlayers() => showAllPlayers = !showAllPlayers;
+
+    // --- Méthodes pour la Modale ---
+    private void OpenAddModal()
+    {
+        newPlayer = new CreatePlayerRequest();
+        errorMessage = "";
+        showAddModal = true;
+    }
+
+    private void CloseAddModal()
+    {
+        showAddModal = false;
+    }
+
+    private async Task CreatePlayer()
+    {
+        if (string.IsNullOrWhiteSpace(newPlayer.Username) || string.IsNullOrWhiteSpace(newPlayer.Password) ||
+        string.IsNullOrWhiteSpace(newPlayer.Email))
+        {
+            errorMessage = "Tous les champs (Pseudo, Email, MdP) sont obligatoires.";
+            return;
+        }
+
+        try
+        {
+            // Appel à l'API Admin pour créer le joueur
+            var response = await Http.PostAsJsonAsync("http://localhost:5240/api/Admin/players", newPlayer);
+
+            if (response.IsSuccessStatusCode)
+            {
+                showAddModal = false;
+                await LoadData(); // Rafraîchir la liste
+                StateHasChanged();
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Erreur : {errorContent}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Erreur technique : {ex.Message}";
+        }
+    }
+    // -------------------------------
 
     protected override async Task OnInitializedAsync()
     {
@@ -251,7 +412,7 @@ else
         if (!string.IsNullOrEmpty(token))
         {
             Http.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
         }
 
         if (!AuthService.IsAuthenticated)
@@ -266,17 +427,25 @@ else
 
     private async Task LoadData()
     {
-        players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:7000/game/Admin/players") ?? new List<Player>();
-        highScores = await Http.GetFromJsonAsync<List<HighScore>>("http://localhost:7000/game/HighScore") ?? new List<HighScore>();
-        gameHistories = await Http.GetFromJsonAsync<List<GameHistory>>("http://localhost:7000/game/GameHistory") ?? new List<GameHistory>();
-        leaderboard = await Http.GetFromJsonAsync<List<Player>>("http://localhost:7000/game/Admin/leaderboard") ?? new();
-
-        highScores = highScores.OrderByDescending(h => h.Score).ToList();
+        try
+        {
+            players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:7000/game/Admin/players") ?? new List<Player>();
+            highScores = await Http.GetFromJsonAsync<List<HighScore>>("http://localhost:7000/game/HighScore") ?? new
+            List<HighScore>();
+            gameHistories = await Http.GetFromJsonAsync<List<GameHistory>>("http://localhost:7000/game/GameHistory") ?? new
+            List<GameHistory>();
+            leaderboard = await Http.GetFromJsonAsync<List<Player>>("http://localhost:7000/game/Admin/leaderboard") ?? new();
+            highScores = highScores.OrderByDescending(h => h.Score).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erreur chargement: {ex.Message}");
+        }
     }
 
     private async Task ExportPlayers()
     {
-        try 
+        try
         {
             var response = await Http.GetAsync("http://localhost:7000/game/Admin/players/export");
             if (response.IsSuccessStatusCode)
