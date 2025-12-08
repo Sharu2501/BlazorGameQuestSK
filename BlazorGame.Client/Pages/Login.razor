@@ -11,7 +11,7 @@
 @inject HttpClient Http
 @inject AuthService AuthService
 
-<link rel="stylesheet" href="css/Login.css" />
+<link rel="stylesheet" href="css/login.css" />
 <div class="login-page-container">
     <div class="login-overlay"></div>
     <div class="login-container">
@@ -91,7 +91,6 @@
             {
                 new KeyValuePair<string,string>("grant_type", "password"),
                 new KeyValuePair<string,string>("client_id", "blazorgame-client"),
-                // Vérifiez que le client_secret est correct ou nécessaire selon votre config Keycloak
                 new KeyValuePair<string,string>("client_secret", "LLZ17mtIRlhtLdh3avIeY9zch4WjAxtF"),
                 new KeyValuePair<string,string>("username", Username),
                 new KeyValuePair<string,string>("password", Password),
@@ -108,7 +107,6 @@
             var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
             var accessToken = result!.access_token;
 
-            // 1. Analyse du Token pour voir si c'est un Admin Keycloak
             var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(accessToken);
             var resourceAccessClaim = jwt.Claims.FirstOrDefault(c => c.Type == "resource_access")?.Value;
@@ -135,14 +133,12 @@
             var username = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value ?? Username;
             var email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value ?? $"{username}@blazorgamesk.com";
 
-            // 2. Récupération ou Création du joueur via l'API
             Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Player");
             
             var player = players?.FirstOrDefault(p =>
                 p.ExternalId == keycloakId || p.Username.ToLower() == username.ToLower());
 
-            // Création si nouveau joueur
             if (player == null)
             {
                 player = new Player
@@ -151,9 +147,8 @@
                     Email = email,
                     ExternalId = keycloakId,
                     PasswordHash = Password,
-                    // ICI : On assigne le rôle en fonction de Keycloak
                     UserType = isAdmin ? UserTypeEnum.ADMIN : UserTypeEnum.PLAYER,
-                    IsActive = true, // Par défaut, un nouveau compte est actif
+                    IsActive = true,
                     Level = 1,
                     Health = 100,
                     MaxHealth = 100,
@@ -176,27 +171,27 @@
                 }
             }
 
-            // 3. Vérification finale et Redirection
-            if (player != null)
+            if (isAdmin)
             {
-                if (!player.IsActive)
-                {
-                    ErrorMessage = "Votre compte a été désactivé. Veuillez contacter l'administrateur.";
-                    return; // On arrête tout, pas de login.
-                }
-                if(player.IsActive){
-                AuthService.Login(player.Id, player.Username, accessToken);
-
-                if (isAdmin)
-                    NavigationManager.NavigateTo("/admin");
-                else
-                    NavigationManager.NavigateTo("/home");
-                    }
+                AuthService.Login(player?.Id ?? 0, username, accessToken);
+                NavigationManager.NavigateTo("/admin");
+                return;
             }
-            else
+
+            if (player == null)
             {
                 ErrorMessage = "Erreur lors de la récupération du profil joueur.";
+                return;
             }
+
+            if (!player.IsActive)
+            {
+                ErrorMessage = "Votre compte a été désactivé. Veuillez contacter l'administrateur.";
+                return;
+            }
+
+            AuthService.Login(player.Id, player.Username, accessToken);
+            NavigationManager.NavigateTo("/home");
         }
         catch (Exception ex)
         {

@@ -17,11 +17,10 @@ services:
       dockerfile: ./AuthenticationServices/Dockerfile
     container_name: authenticationservices
     environment:
-      ConnectionStrings__DefaultConnection: "Host=db.olsqkanxporoingmpgfq.supabase.co;Database=postgres;Username=postgres;Password=postgreSql"
+      ConnectionStrings__DefaultConnection: "Host=aws-1-eu-west-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.olsqkanxporoingmpgfq;Password=postgreSql;Pooling=false"
       Keycloak__Authority: "http://keycloak:8080/realms/BlazorGame"
       Keycloak__Audience: "authenticationservices-api"
     depends_on:
-      - postgres
       - keycloak
     ports:
       - "5001:80"
@@ -42,10 +41,10 @@ services:
       dockerfile: ./BlazorGameAPI/Dockerfile
     container_name: gameapi
     environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Database=postgres;Username=postgres;Password=postgreSql"
+      ConnectionStrings__DefaultConnection: "Host=aws-1-eu-west-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.olsqkanxporoingmpgfq;Password=postgreSql;Pooling=false"
       ASPNETCORE_ENVIRONMENT: "Development"
     depends_on:
-      - postgres
+      - keycloak
     ports:
       - "5240:8080"
 
