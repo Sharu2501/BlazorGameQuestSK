@@ -113,7 +113,7 @@ Nous en avons également profité pour mettre à jour les **tests automatiques**
 ## Version 5 – V5
 Dans cette dernière version, nous avons réalisé l'intégration de **Keycloak** avec notamment :
 - une authentification OpenID Connect.
-- l'ttribution des **rôles** joueur et admin.
+- l'attribution des **rôles** joueur et admin.
 - la sécurisation des API.
 - la modification de la page de **connexion** dans le projet Blazor pour faire en sorte que seul les utilisateurs dans Keycloak puissent se connecter.
 - Et l'accès à toutes les pages du projet web à un utilisateur authentifié uniquement.

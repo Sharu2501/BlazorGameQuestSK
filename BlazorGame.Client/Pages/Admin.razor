@@ -12,7 +12,6 @@
 
 <link rel="stylesheet" href="css/admin.css" />
 
-
 @if (!isLoaded)
 {
     <div class="loading-container">
@@ -203,8 +202,7 @@ else
                             </thead>
                             <tbody>
                                 @{
-                                    var playersList = showAllPlayers ? players.Where(p => p.UserType == UserTypeEnum.PLAYER) :
-                                    players.Where(p => p.UserType == UserTypeEnum.PLAYER).Take(5);
+                                    var playersList = showAllPlayers ? players : players.Take(5);
                                 }
                                 @if (players != null)
                                 {
@@ -227,52 +225,6 @@ else
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section class="bento-box admin-list">
-                    <div class="section-header">
-                        <div class="header-title">
-                            <i class="bi bi-shield-lock"></i>
-                            <h2>Administrateurs</h2>
-                        </div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Admin</th>
-                                    <th>Email</th>
-                                    <th>Actif</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @{
-                                    var admins = (players ?? new List<Player>())
-                                    .Where(p => p.UserType == UserTypeEnum.ADMIN)
-                                    .ToList();
-                                }
-                                @if (admins.Any())
-                                {
-                                    foreach (var a in admins)
-                                    {
-                                        <tr>
-                                            <td>@a.Id</td>
-                                            <td>@a.Username</td>
-                                            <td>@a.Email</td>
-                                            <td>
-                                                <label class="switch" title="@(a.IsActive ? "Désactiver" : "Activer")">
-                                                    <input type="checkbox" checked="@a.IsActive"
-                                                        @onchange="@(e => UpdateStatus(a, (bool)e.Value))" />
-                                                    <span class="slider"></span>
-                                                </label>
                                             </td>
                                         </tr>
                                     }
@@ -340,8 +292,6 @@ else
     private bool showAllLeaderboard = false;
     private bool showAllHistories = false;
     private bool showAllPlayers = false;
-
-    // --- Variables pour la Modale ---
     private bool showAddModal = false;
     private string errorMessage = "";
     private CreatePlayerRequest newPlayer = new();
@@ -354,13 +304,10 @@ else
         public string Email { get; set; } = "";
         public string Password { get; set; } = "";
     }
-    // -------------------------------
 
     private void ToggleLeaderboard() => showAllLeaderboard = !showAllLeaderboard;
     private void ToggleHistories() => showAllHistories = !showAllHistories;
     private void TogglePlayers() => showAllPlayers = !showAllPlayers;
-
-    // --- Méthodes pour la Modale ---
     private void OpenAddModal()
     {
         newPlayer = new CreatePlayerRequest();
@@ -384,13 +331,12 @@ else
 
         try
         {
-            // Appel à l'API Admin pour créer le joueur
-            var response = await Http.PostAsJsonAsync("http://localhost:5240/api/Admin/players", newPlayer);
+            var response = await Http.PostAsJsonAsync("http://localhost:7000/game/Admin/players", newPlayer);
 
             if (response.IsSuccessStatusCode)
             {
                 showAddModal = false;
-                await LoadData(); // Rafraîchir la liste
+                await LoadData();
                 StateHasChanged();
             }
             else
@@ -404,7 +350,6 @@ else
             errorMessage = $"Erreur technique : {ex.Message}";
         }
     }
-    // -------------------------------
 
     protected override async Task OnInitializedAsync()
     {

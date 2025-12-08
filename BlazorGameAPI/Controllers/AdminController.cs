@@ -14,15 +14,12 @@ namespace BlazorGameAPI.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
-
-        // Injection de IConfiguration pour accéder aux réglages Keycloak
         public AdminController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
 
-        // --- DTO pour la création ---
         public class CreatePlayerDto
         {
             public string Username { get; set; }
@@ -41,7 +38,6 @@ namespace BlazorGameAPI.Controllers
             if (string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
                 return BadRequest("Nom d'utilisateur et mot de passe requis.");
 
-            // 1. Création dans Keycloak
             string keycloakId = "";
             try 
             {
@@ -54,18 +50,14 @@ namespace BlazorGameAPI.Controllers
                 return StatusCode(500, $"Erreur Keycloak : {ex.Message}");
             }
 
-            // 2. Création dans la base de données locale
             var newPlayer = new Player
             {
                 Username = request.Username,
                 Email = request.Email,
-                // On ne stocke pas le mot de passe hashé ici car géré par Keycloak
-                // On peut mettre une valeur placeholder ou laisser vide
                 PasswordHash = "MANAGED_BY_KEYCLOAK", 
                 ExternalId = keycloakId,
                 UserType = SharedModels.Enum.UserTypeEnum.PLAYER,
                 
-                // Stats par défaut
                 Level = 1,
                 Health = 100,
                 MaxHealth = 100,
@@ -85,20 +77,13 @@ namespace BlazorGameAPI.Controllers
 
         private async Task<string> CreateUserInKeycloak(CreatePlayerDto user)
         {
-            // Récupération configuration
-            var authority = _configuration["Keycloak:Authority"]; // ex: http://localhost:8080/realms/MyRealm
-            // ATTENTION : Pour l'API Admin, il faut souvent utiliser l'URL de base sans /realms/... ou construire l'url admin
-            // Supposons ici que 'authority' est l'issuer complet.
-            
-            // Configuration client admin (à mettre dans appsettings)
+            var authority = _configuration["Keycloak:Authority"];
             var clientId = "admin-cli"; 
-            var adminUsername = "admin"; // ou via config
-            var adminPassword = "admin"; // ou via config
+            var adminUsername = "admin";
+            var adminPassword = "admin";
             
             using var httpClient = new HttpClient();
 
-            // A. Obtenir le token Admin
-            // URL Token : {authority}/protocol/openid-connect/token
             var tokenUrl = $"{authority}/protocol/openid-connect/token";
             
             var tokenRequest = new FormUrlEncodedContent(new[]
@@ -116,9 +101,6 @@ namespace BlazorGameAPI.Controllers
             var tokenContent = await tokenResponse.Content.ReadFromJsonAsync<JsonElement>();
             var accessToken = tokenContent.GetProperty("access_token").GetString();
 
-            // B. Créer l'utilisateur
-            // URL Admin Users : souvent {BaseUrl}/admin/realms/{RealmName}/users
-            // Astuce : on remplace /realms/ par /admin/realms/ dans l'URL d'autorité
             var adminUsersUrl = authority.Replace("/realms/", "/admin/realms/") + "/users";
 
             var newUserPayload = new
@@ -144,17 +126,13 @@ namespace BlazorGameAPI.Controllers
                 throw new Exception($"Erreur création user Keycloak: {createUserResponse.StatusCode} - {error}");
             }
 
-            // C. Récupérer l'ID du user créé (via Location header ou recherche)
             if (createUserResponse.Headers.Location != null)
             {
-                // L'ID est souvent à la fin de l'URL Location
                 return createUserResponse.Headers.Location.Segments.Last();
             }
             
-            return "UNKNOWN_ID"; // Fallback si l'ID n'est pas récupérable immédiatement
+            return "UNKNOWN_ID";
         }
-
-        // --- Méthodes existantes ---
 
         /// <summary>
         /// Permet d'obtenir tous les joueurs.
@@ -189,7 +167,6 @@ namespace BlazorGameAPI.Controllers
             var players = await _context.Players.ToListAsync();
             var builder = new StringBuilder();
             
-            // En-tête du CSV
             builder.AppendLine("Id,Username,Email,Level,Gold,IsActive");
 
             foreach (var player in players)
