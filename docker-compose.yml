@@ -1,27 +1,14 @@
 services:
-  postgres:
-    image: postgres:15
-    container_name: blazorgame-postgres
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgreSql
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   authenticationservices:
     build:
       context: .
       dockerfile: ./AuthenticationServices/Dockerfile
     container_name: authenticationservices
     environment:
-      ConnectionStrings__DefaultConnection: "Host=db.olsqkanxporoingmpgfq.supabase.co;Database=postgres;Username=postgres;Password=postgreSql"
+      ConnectionStrings__DefaultConnection: "Host=aws-1-eu-west-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.olsqkanxporoingmpgfq;Password=postgreSql;Pooling=false"
       Keycloak__Authority: "http://keycloak:8080/realms/BlazorGame"
       Keycloak__Audience: "authenticationservices-api"
     depends_on:
-      - postgres
       - keycloak
     ports:
       - "5001:80"
@@ -42,10 +29,14 @@ services:
       dockerfile: ./BlazorGameAPI/Dockerfile
     container_name: gameapi
     environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Database=postgres;Username=postgres;Password=postgreSql"
+      ConnectionStrings__DefaultConnection: "Host=aws-1-eu-west-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.olsqkanxporoingmpgfq;Password=postgreSql;Pooling=false"
       ASPNETCORE_ENVIRONMENT: "Development"
+      Keycloak__Authority: "http://keycloak:8080/realms/BlazorGame"
+      Keycloak__AdminClientId: "admin-cli"
+      Keycloak__AdminUsername: "admin"
+      Keycloak__AdminPassword: "admin"
     depends_on:
-      - postgres
+      - keycloak
     ports:
       - "5240:8080"
 
@@ -59,7 +50,19 @@ services:
     ports:
       - "8080:8080"
     volumes:
-    - keycloak_data:/opt/keycloak/data
+      - keycloak_data:/opt/keycloak/data
+
+  gateway:
+    build:
+      context: ./ApiGateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    depends_on:
+      - gameapi
+      - authenticationservices
+    ports:
+      - "7000:8080"
+
 
 volumes:
   pgdata:

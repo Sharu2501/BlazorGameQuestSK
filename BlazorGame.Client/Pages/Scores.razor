@@ -101,7 +101,7 @@
         {
             var playerId = AuthService.CurrentPlayerId.Value;
 
-            var playerStats = await Http.GetFromJsonAsync<PlayerStatsDto>($"http://localhost:5240/api/Player/{playerId}/stats");
+            var playerStats = await Http.GetFromJsonAsync<PlayerStatsDto>($"http://localhost:7000/game/Player/{playerId}/stats");
             
             if (playerStats != null && playerStats.HighestScore > 0)
             {
@@ -115,7 +115,7 @@
                 };
             }
 
-            gameHistories = await Http.GetFromJsonAsync<List<GameHistory>>($"http://localhost:5240/api/GameHistory/Player/{playerId}") ?? new List<GameHistory>();
+            gameHistories = await Http.GetFromJsonAsync<List<GameHistory>>($"http://localhost:7000/game/GameHistory/Player/{playerId}") ?? new List<GameHistory>();
 
             isLoading = false;
         }

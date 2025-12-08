@@ -81,7 +81,7 @@ namespace BlazorGame.Client.Services
             try
             {
                 var player = await _http.GetFromJsonAsync<Player>(
-                    $"http://localhost:5240/api/Player/{_currentPlayerId.Value}");
+                    $"http://localhost:7000/game/Player/{_currentPlayerId.Value}");
 
                 return player;
             }

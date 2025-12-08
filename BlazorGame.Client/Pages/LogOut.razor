@@ -19,6 +19,11 @@
 @code {
     protected override void OnInitialized()
     {
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        
         AuthService.Logout();
     }
 

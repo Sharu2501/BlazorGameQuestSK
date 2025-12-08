@@ -1,4 +1,8 @@
 @page "/game-rules"
+@using BlazorGame.Client.Services
+@inject NavigationManager NavigationManager
+@inject AuthService AuthService
+
 <link href="css/game-rules.css" rel="stylesheet" />
 
 <div class="game-rules-container">
@@ -47,5 +51,13 @@
     private void StartFloating(Rule rule)
     {
         rule.IsFloating = true;
+    }
+
+   protected override void OnInitialized()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/");
+        }
     }
 }

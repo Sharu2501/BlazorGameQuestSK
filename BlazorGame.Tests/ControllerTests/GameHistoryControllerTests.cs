@@ -90,7 +90,7 @@ namespace BlazorGame.Tests.ControllersTests
 
             var ok = Assert.IsType<OkObjectResult>(result);
             var list = Assert.IsType<List<GameHistory>>(ok.Value);
-            Assert.Equal(1, list.Count);
+            Assert.Equal(2, list.Count);
             Assert.All(list, gh => Assert.Equal(p1.Id, gh.Player.Id));
         }
 

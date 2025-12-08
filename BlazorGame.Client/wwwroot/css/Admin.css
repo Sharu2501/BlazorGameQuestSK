@@ -524,3 +524,44 @@ html, body {
         font-size: 0.55rem;
     }
 }
+.modal-overlay {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex; justify-content: center; align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+    }
+    .modal-content {
+        width: 100%; max-width: 500px;
+        background: var(--bg-card);
+        border: 1px solid var(--accent-red);
+        box-shadow: 0 0 20px rgba(168, 0, 0, 0.5);
+    }
+    .modal-header {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;
+    }
+    .form-group { margin-bottom: 1rem; text-align: left; }
+    .form-row { display: flex; gap: 1rem; }
+    .form-row .form-group { flex: 1; }
+    .form-control {
+        width: 100%; padding: 0.8rem;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-color);
+        color: white; border-radius: 8px;
+        font-family: 'Press Start 2P', cursive; font-size: 0.6rem;
+    }
+    .form-control:focus { border-color: var(--accent-red); outline: none; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem; }
+    .btn-confirm {
+        background: var(--accent-red); color: white; border: none;
+        padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer;
+        font-family: 'Press Start 2P', cursive; font-size: 0.6rem;
+    }
+    .btn-cancel {
+        background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color);
+        padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer;
+        font-family: 'Press Start 2P', cursive; font-size: 0.6rem;
+    }
+    .error-message { color: #ff4d4d; font-size: 0.6rem; margin-top: 1rem; }

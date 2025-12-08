@@ -19,79 +19,79 @@ namespace BlazorGame.Client.Services
         {
             if (_authService.CurrentPlayerId == null) return null;
             return await _http.GetFromJsonAsync<PlayerStatsDto>(
-                $"http://localhost:5240/api/Player/{_authService.CurrentPlayerId.Value}/stats");
+                $"http://localhost:7000/game/Player/{_authService.CurrentPlayerId.Value}/stats");
         }
 
         public async Task<Dungeon?> GenerateDungeon(int rooms, int level, int difficulty)
         {
-            var resp = await _http.PostAsJsonAsync("http://localhost:5240/api/Dungeon/generate",
+            var resp = await _http.PostAsJsonAsync("http://localhost:7000/game/Dungeon/generate",
                 new { numberOfRooms = rooms, level, difficulty });
             return await resp.Content.ReadFromJsonAsync<Dungeon>();
         }
 
         public async Task<GameSession?> StartSession(int playerId, int dungeonId)
         {
-            var resp = await _http.PostAsJsonAsync("http://localhost:5240/api/GameSession/start",
+            var resp = await _http.PostAsJsonAsync("http://localhost:7000/game/GameSession/start",
                 new { PlayerId = playerId, DungeonId = dungeonId });
             return await resp.Content.ReadFromJsonAsync<GameSession>();
         }
 
         public async Task<Monster?> GetMonster(int monsterId)
         {
-            return await _http.GetFromJsonAsync<Monster>($"http://localhost:5240/api/Monster/{monsterId}");
+            return await _http.GetFromJsonAsync<Monster>($"http://localhost:7000/game/Monster/{monsterId}");
         }
 
         public async Task<AttackResult?> AttackMonster(int playerId, int monsterId)
         {
-            var resp = await _http.PostAsJsonAsync("http://localhost:5240/api/Combat/attack", new { playerId, monsterId });
+            var resp = await _http.PostAsJsonAsync("http://localhost:7000/game/Combat/attack", new { playerId, monsterId });
             return await resp.Content.ReadFromJsonAsync<AttackResult>();
         }
 
         public async Task<AttackResult?> MonsterAttack(int monsterId, int playerId)
         {
-            var resp = await _http.PostAsJsonAsync("http://localhost:5240/api/Combat/monster-attack", new { monsterId, playerId });
+            var resp = await _http.PostAsJsonAsync("http://localhost:7000/game/Combat/monster-attack", new { monsterId, playerId });
             return await resp.Content.ReadFromJsonAsync<AttackResult>();
         }
 
         public async Task Defend(int playerId)
         {
-            await _http.PostAsJsonAsync("http://localhost:5240/api/Combat/defend", new { playerId });
+            await _http.PostAsJsonAsync("http://localhost:7000/game/Combat/defend", new { playerId });
         }
 
         public async Task Heal(int playerId, int amount)
         {
-            await _http.PostAsJsonAsync($"http://localhost:5240/api/Player/{playerId}/heal", amount);
+            await _http.PostAsJsonAsync($"http://localhost:7000/game/Player/{playerId}/heal", amount);
         }
 
         public async Task<bool> Flee(int playerId)
         {
-            var resp = await _http.PostAsJsonAsync("http://localhost:5240/api/Combat/flee", new { playerId });
+            var resp = await _http.PostAsJsonAsync("http://localhost:7000/game/Combat/flee", new { playerId });
             return await resp.Content.ReadFromJsonAsync<bool>();
         }
 
         public async Task AddGold(int playerId, int amount)
         {
-            await _http.PostAsJsonAsync($"http://localhost:5240/api/Player/{playerId}/add-gold", amount);
+            await _http.PostAsJsonAsync($"http://localhost:7000/game/Player/{playerId}/add-gold", amount);
         }
 
         public async Task PostVictory(int playerId, int roomId)
         {
-            await _http.PostAsJsonAsync($"http://localhost:5240/api/Combat/victory", new { playerId, roomId });
+            await _http.PostAsJsonAsync($"http://localhost:7000/game/Combat/victory", new { playerId, roomId });
         }
 
         public async Task UpdateHighScore(int playerId, int score)
         {
-            await _http.PostAsJsonAsync("http://localhost:5240/api/HighScore/update", new { playerId, score });
+            await _http.PostAsJsonAsync("http://localhost:7000/game/HighScore/update", new { playerId, score });
         }
 
         public async Task AddGameHistory(int playerId, int dungeonId, int score)
         {
-            await _http.PostAsJsonAsync("http://localhost:5240/api/GameHistory", new { playerId, dungeonIds = new[] { dungeonId }, score });
+            await _http.PostAsJsonAsync("http://localhost:7000/game/GameHistory", new { playerId, dungeonIds = new[] { dungeonId }, score });
         }
 
         public async Task EndSession(int sessionId)
         {
-            await _http.PostAsJsonAsync($"http://localhost:5240/api/GameSession/end/{sessionId}", new { });
+            await _http.PostAsJsonAsync($"http://localhost:7000/game/GameSession/end/{sessionId}", new { });
         }
     }
 }
