@@ -104,6 +104,18 @@ namespace BlazorGameAPI.Services
 
             return true;
         }
+
+        public async Task<bool> SaveSessionAsync(int sessionId, string stateJson, bool isPaused)
+        {
+            var s = await _context.GameSessions.FindAsync(sessionId);
+            if (s == null) return false;
+            s.StateJson = stateJson;
+            s.IsPaused = isPaused;
+            s.LastSaved = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        
         /// <summary>
         /// Vérifie si une session de jeu est active.
         /// </summary>

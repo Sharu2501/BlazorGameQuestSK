@@ -7,6 +7,7 @@ namespace SharedModels.Model
     /// </summary>
     public class Player : User
     {
+        public string ExternalId { get; set; } = "";
         public int Level { get; set; } = 0;
         public HighScore HighScore { get; set; } = new HighScore();
         public int ExperiencePoints { get; set; } = 0;
@@ -18,6 +19,7 @@ namespace SharedModels.Model
         public int Attack { get; set; } = 10;
         public int Defense { get; set; } = 5;
         public List<Artifact> Inventory { get; set; } = new List<Artifact>();   
+        public List<GameHistory> GameHistories { get; set; } = new();
         
     }
 }

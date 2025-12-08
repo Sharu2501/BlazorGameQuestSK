@@ -3,6 +3,7 @@ using System;
 using BlazorGameAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlazorGameAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251206223124_GameHistoryManyPerPlayer")]
+    partial class GameHistoryManyPerPlayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,9 +113,6 @@ namespace BlazorGameAPI.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("PlayerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Score")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -343,10 +343,6 @@ namespace BlazorGameAPI.Migrations
 
                     b.Property<int>("ExperiencePoints")
                         .HasColumnType("integer");
-
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<int>("Gold")
                         .HasColumnType("integer");

@@ -73,8 +73,8 @@ namespace BlazorGameAPI.Data
 
             modelBuilder.Entity<GameHistory>()
                 .HasOne(gh => gh.Player)
-                .WithOne()
-                .HasForeignKey<GameHistory>("PlayerId")
+                .WithMany(p => p.GameHistories)
+                .HasForeignKey("PlayerId")
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<GameHistory>()

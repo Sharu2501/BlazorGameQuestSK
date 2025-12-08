@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SharedModels.Model
 {
     /// <summary>
@@ -6,7 +8,9 @@ namespace SharedModels.Model
     public class GameHistory
     {
         public int Id { get; set; }
+        [JsonIgnore]  
         public Player Player { get; set; } = null!;
+        public int Score { get; set; } = 0;
         public List<Dungeon> CompletedDungeons { get; set; } = new List<Dungeon>();
         public DateTime DatePlayed { get; set; } = DateTime.UtcNow;
 

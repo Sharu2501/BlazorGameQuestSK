@@ -4,29 +4,82 @@ using SharedModels.Enum;
 using SharedModels.Model;
 using SharedModels.Model.DTOs;
 namespace BlazorGame.Client.Pages;
+
 public partial class Game : ComponentBase
 {
-        [SupplyParameterFromQuery]
-    public int Difficulty { get; set; } = 0;
-
+    [SupplyParameterFromQuery] public int Difficulty { get; set; } = 0;
+    [SupplyParameterFromQuery(Name = "sessionId")]
+    public int? QuerySessionId { get; set; }
     private GameState? gameState;
     private PlayerStatsDto? PlayerStats;
     private string message = "";
     private bool isLoading = true;
+    private bool isPaused = false;
+    private bool showPausePopup = false;
 
     [Inject] protected AuthService AuthService { get; set; }
     [Inject] protected GameService GameService { get; set; }
+    [Inject] protected GameSaveService GameSaveService { get; set; }
     [Inject] protected NavigationManager NavigationManager { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        if (!AuthService.IsAuthenticated || !AuthService.CurrentPlayerId.HasValue)
+        if (!AuthService.IsAuthenticated)
         {
             NavigationManager.NavigateTo("/");
             return;
         }
 
+        if (!AuthService.CurrentPlayerId.HasValue)
+        {
+            NavigationManager.NavigateTo("/home");
+            return;
+        }
+
+        var playerId = AuthService.CurrentPlayerId.Value;
+
+        if (QuerySessionId.HasValue)
+        {
+            await LoadExistingSession(QuerySessionId.Value);
+            return;
+        }
+
+        var activeSession = await GameSaveService.GetActiveSessionAsync(playerId);
+        if (activeSession != null)
+        {
+            await LoadExistingSession(activeSession.SessionId);
+            return;
+        }
+
         await InitializeGame();
+    }
+
+    private async Task LoadExistingSession(int sessionId)
+    {
+        try
+        {
+            isLoading = true;
+            var state = await GameSaveService.LoadSessionAsync(sessionId);
+            if (state == null)
+            {
+                message = "Impossible de charger la session, une nouvelle partie va commencer.";
+                await InitializeGame();
+                return;
+            }
+
+            gameState = state;
+            isPaused = false;
+            message = "Partie reprise.";
+            PlayerStats = await GameService.GetPlayerStats();
+
+            isLoading = false;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            message = $"Erreur lors du chargement de la session: {ex.Message}";
+            isLoading = false;
+        }
     }
 
     private async Task InitializeGame()
@@ -37,8 +90,11 @@ public partial class Game : ComponentBase
             var difficultyLevel = (DifficultyLevelEnum)Difficulty;
 
             var dungeon = await GameService.GenerateDungeon(5, PlayerStats.Level, Difficulty);
-            var session = await GameService.StartSession(AuthService.CurrentPlayerId.Value, dungeon.IdDungeon);
-
+            
+            var session = await GameService.StartSession(
+                AuthService.CurrentPlayerId.Value,
+                dungeon.IdDungeon);
+            
             gameState = new GameState
             {
                 CurrentDungeon = dungeon,
@@ -53,13 +109,80 @@ public partial class Game : ComponentBase
                 DifficultyLevel = difficultyLevel
             };
 
+            session = await GameService.StartSession(
+                AuthService.CurrentPlayerId.Value,
+                dungeon.IdDungeon);
+            gameState.SessionId = session.SessionId;
+
             message = "Vous entrez dans le donjon...";
+            isLoading = false;
+        }
+        catch (HttpRequestException httpEx)
+        {
+            message = $"Une erreur est survenue: {httpEx.Message}";
             isLoading = false;
         }
         catch (Exception ex)
         {
-            message = $"Erreur lors de l'initialisation: {ex.Message}";
+            message = $"Une erreur est survenue: {ex.Message}";
             isLoading = false;
+        }
+    }
+
+    private async Task PauseGame()
+    {
+        if (gameState == null || !AuthService.CurrentPlayerId.HasValue)
+            return;
+
+        try
+        {
+            if (gameState.SessionId == 0)
+            {
+                var sessionId = await GameSaveService.CreateSessionAsync(
+                    AuthService.CurrentPlayerId.Value,
+                    gameState.CurrentDungeon?.Name ?? "Partie",
+                    gameState
+                );
+
+                gameState.SessionId = sessionId;
+            }
+            else
+            {
+                await GameSaveService.SaveSessionAsync(gameState.SessionId, gameState, true);
+            }
+
+            isPaused = true;
+            showPausePopup = true;
+        }
+        catch (Exception ex)
+        {
+            message = $"Erreur lors de la mise en pause: {ex.Message}";
+        }
+    }
+
+    private void ClosePausePopup()
+    {
+        showPausePopup = false;
+    }
+
+    private async Task ResumeGame()
+    {
+        if (gameState == null || gameState.SessionId == 0)
+            return;
+
+        try
+        {
+            var state = await GameSaveService.LoadSessionAsync(gameState.SessionId);
+            if (state != null)
+            {
+                gameState = state;
+                isPaused = false;
+                showPausePopup = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            message = $"Erreur lors de la reprise: {ex.Message}";
         }
     }
 
@@ -107,6 +230,12 @@ public partial class Game : ComponentBase
 
     private async Task ExecuteAction(string action)
     {
+        if (isPaused)
+        {
+            message = "La partie est en pause. Cliquez sur Reprendre pour continuer.";
+            return;
+        }
+
         if (gameState == null || gameState.CurrentRoom == null || !AuthService.CurrentPlayerId.HasValue)
             return;
 
@@ -144,6 +273,14 @@ public partial class Game : ComponentBase
             if (PlayerStats?.Health <= 0)
             {
                 await GameOver();
+            }
+
+            if (gameState != null && gameState.SessionId != 0)
+            {
+                await GameSaveService.SaveSessionAsync(
+                    gameState.SessionId,
+                    gameState,
+                    isPaused: isPaused);
             }
 
             StateHasChanged();
@@ -291,7 +428,7 @@ public partial class Game : ComponentBase
         gameState.Score += completionBonus;
 
         await GameService.UpdateHighScore(playerId, gameState.Score);
-        await GameService.AddGameHistory(playerId, gameState.CurrentDungeon?.IdDungeon ?? 0);
+        await GameService.AddGameHistory(playerId, gameState.CurrentDungeon?.IdDungeon ?? 0, gameState.Score);
         await GameService.EndSession(gameState.SessionId);
 
         NavigationManager.NavigateTo($"/game-over?score={gameState.Score}&success=true");
@@ -311,14 +448,14 @@ public partial class Game : ComponentBase
     private int CalculateRoomScore()
     {
         int baseScore = 100;
-        int difficultyMultiplier = ((int)gameState.DifficultyLevel + 1);
+        int difficultyMultiplier = (int)gameState.DifficultyLevel + 1;
         return baseScore * difficultyMultiplier;
     }
 
     private int CalculateDungeonBonus()
     {
         int baseBonus = 500;
-        int difficultyMultiplier = ((int)gameState.DifficultyLevel + 1);
+        int difficultyMultiplier = (int)gameState.DifficultyLevel + 1;
         return baseBonus * difficultyMultiplier;
     }
 

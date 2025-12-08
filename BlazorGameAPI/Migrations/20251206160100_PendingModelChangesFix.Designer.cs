@@ -3,6 +3,7 @@ using System;
 using BlazorGameAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BlazorGameAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251206160100_PendingModelChangesFix")]
+    partial class PendingModelChangesFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,12 +115,10 @@ namespace BlazorGameAPI.Migrations
                     b.Property<int>("PlayerId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Score")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerId");
+                    b.HasIndex("PlayerId")
+                        .IsUnique();
 
                     b.ToTable("GameHistories");
                 });
@@ -344,10 +345,6 @@ namespace BlazorGameAPI.Migrations
                     b.Property<int>("ExperiencePoints")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("Gold")
                         .HasColumnType("integer");
 
@@ -402,8 +399,8 @@ namespace BlazorGameAPI.Migrations
             modelBuilder.Entity("SharedModels.Model.GameHistory", b =>
                 {
                     b.HasOne("SharedModels.Model.Player", "Player")
-                        .WithMany("GameHistories")
-                        .HasForeignKey("PlayerId")
+                        .WithOne()
+                        .HasForeignKey("SharedModels.Model.GameHistory", "PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -440,8 +437,6 @@ namespace BlazorGameAPI.Migrations
 
             modelBuilder.Entity("SharedModels.Model.Player", b =>
                 {
-                    b.Navigation("GameHistories");
-
                     b.Navigation("HighScore")
                         .IsRequired();
 

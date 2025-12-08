@@ -15,34 +15,31 @@ html, body {
 
 .battle-container {
     display: flex;
-    gap: 2rem;
     justify-content: space-between;
     align-items: flex-start;
     margin: 2rem 0 1.5rem 0;
 }
-.player-stats-side, .monster-stats-side {
-    width: 240px;
-}
+
 .stats-box {
     padding: 1.1rem 1.2rem;
     border-radius: 18px;
     box-shadow: 0 0 14px #2228;
     margin-top: 0.7rem;
-    background: rgba(34, 34, 54, 0.62);
     backdrop-filter: blur(4px);
     border: 2.5px solid var(--border-color);
     font-family: 'Press Start 2P', monospace;
 }
+
+.stat-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
 .green-bg {
-    background: linear-gradient(135deg, #17e57d20 10%, #33ffb320 90%);
-    border-left: 3.5px solid var(--accent-green);
     color: var(--accent-green);
 }
-.red-bg {
-    background: linear-gradient(135deg, #ffe5e520 10%, #fc434320 90%);
-    border-right: 3.5px solid var(--accent-red);
-    color: var(--accent-red);
-}
+
 .stats-box .stat-item {
     margin-bottom: 0.65rem;
     font-size: 1.01rem;
@@ -58,10 +55,10 @@ html, body {
     flex: 1;
     margin-top: 30px;
 }
+
 .battle-message {
-    font-size: 1.4rem;
     font-family: 'Press Start 2P', monospace;
-    color: #d40000;
+    color: #ffffff;
     text-align: center;
     font-weight: 700;
     letter-spacing: 1px;
@@ -98,12 +95,10 @@ html, body {
 
 .monster-stats-side h4 {
     color: var(--accent-red);
-    text-shadow: 0 0 10px #3207;
     text-align: right;
 }
 .player-stats-side h4 {
     color: var(--accent-green);
-    text-shadow: 0 0 10px #094;
     text-align: left;
 }
 
@@ -124,27 +119,92 @@ html, body {
     display: inline-block;
 }
 
+.potion-used,
 .potion-available {
-    margin: 0 0.2rem;
-    font-size: 1.5rem;
-    color: #20ff20;
-    text-shadow: 0 0 6px #b5ffb5;
+    width: 32px;
+    height: 32px;
+    margin: 0 0.25rem;
 }
+
 .potion-used {
-    margin: 0 0.2rem;
-    font-size: 1.5rem;
-    opacity: 0.26;
-    color: #888;
+    opacity: 0.3;
+    filter: grayscale(100%);
 }
 
 .salle-content {
-    backdrop-filter: blur(16px) saturate(160%);
-    background: rgba(28,19,34,0.58);
     border-radius: 20px;
     padding: 2.5rem 3rem;
     max-width: 1000px;
     margin: auto;
     box-shadow: var(--shadow-lg);
+}
+
+.pause-container {
+    color: var(--text-primary);
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-family: 'Press Start 2P', cursive;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1500;
+}
+
+.pause-container:hover {
+    color: var(--accent-red);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 10px 30px rgba(168,0,0,0.5);
+    background-color: none;
+}
+
+.pause-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.pause-modal {
+    background: var(--bg-card);
+    padding: 1.8rem 2.2rem;
+    border-radius: 18px;
+    border: 2px solid var(--accent-red);
+    box-shadow: 0 0 25px rgba(0,0,0,0.9);
+    text-align: center;
+    max-width: 420px;
+}
+
+.pause-modal h3 {
+    font-size: 1rem;
+    color: var(--accent-red);
+    margin-bottom: 1.2rem;
+    text-shadow: 0 0 12px rgba(168,0,0,0.7);
+}
+
+button {
+    padding: 1rem 2rem;
+    border-radius: 18px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    font-family: 'Press Start 2P', cursive;
+    margin: 0.5rem;
+}
+
+
+.pause-modal-buttons:hover {
+    background: rgba(168,0,0,0.2);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 30px rgba(168,0,0,0.5);
 }
 
 .dungeon-info {
@@ -162,4 +222,68 @@ html, body {
     font-style: italic;
     opacity: 0.93;
     color: var(--accent-purple);
+}
+
+.loading-container {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background-image: url("../images/aventure.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+}
+
+.loading-content {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 3rem;
+    border-radius: 18px;
+    background: rgba(10,10,20,0.75);
+    border: 2px solid var(--accent-red);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+.loading-logo {
+    width: 100px;
+    height: auto;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 20px rgba(168,0,0,0.8));
+}
+
+.loading-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255,255,255,0.4);
+    animation: loading-blink 1.4s infinite ease-in-out;
+}
+
+.loading-text::after {
+    content: "...";
+    animation: loading-dots 1.4s infinite steps(3, end);
+}
+
+@keyframes loading-blink {
+    0%, 100% { opacity: 0.4; transform: scale(0.98); }
+    50%      { opacity: 1;   transform: scale(1.02); }
+}
+
+@keyframes loading-dots {
+    0%   { content: ""; }
+    33%  { content: "."; }
+    66%  { content: ".."; }
+    100% { content: "..."; }
 }

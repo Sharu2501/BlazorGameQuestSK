@@ -1,9 +1,14 @@
 @page "/"
 @using BlazorGame.Client.Services
+@using System.IdentityModel.Tokens.Jwt;
+@using System.Net.Http.Headers;
+@using System.Text.Json;
+
 @inject NavigationManager NavigationManager
 @inject IAccessTokenProvider TokenProvider
 @inject HttpClient Http
 @inject AuthService AuthService
+
 <link rel="stylesheet" href="css/login.css" />
 <div class="login-page-container">
     <div class="login-overlay"></div>
@@ -70,59 +75,128 @@
 
     private async Task DoLogin()
     {
-        if (Username.ToLower() == "admin" && Password == "admin")
+        if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
         {
-            NavigationManager.NavigateTo("/admin");
+            ErrorMessage = "Veuillez remplir tous les champs.";
             return;
         }
 
-        if (!string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password))
+        try
         {
-            try
-            {
-                var players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Player");
-                var player = players?.FirstOrDefault(p => p.Username.ToLower() == Username.ToLower());
+            var client = new HttpClient();
+            var url = "http://localhost:8080/realms/BlazorGame/protocol/openid-connect/token";
 
-                if (player == null)
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string,string>("grant_type", "password"),
+                new KeyValuePair<string,string>("client_id", "blazorgame-client"),
+                new KeyValuePair<string,string>("client_secret", "LLZ17mtIRlhtLdh3avIeY9zch4WjAxtF"),
+                new KeyValuePair<string,string>("username", Username),
+                new KeyValuePair<string,string>("password", Password),
+            });
+
+            var response = await client.PostAsync(url, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                ErrorMessage = "Nom d'utilisateur ou mot de passe incorrect.";
+                return;
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<TokenResponse>();
+            var accessToken = result!.access_token;
+
+            AuthService.LoginWithToken(accessToken);
+
+            var handler = new JwtSecurityTokenHandler();
+            var jwt = handler.ReadJwtToken(accessToken);
+
+            var resourceAccessClaim = jwt.Claims.FirstOrDefault(c => c.Type == "resource_access")?.Value;
+            var isAdmin = false;
+
+            if (!string.IsNullOrEmpty(resourceAccessClaim))
+            {
+                using var doc = JsonDocument.Parse(resourceAccessClaim);
+                if (doc.RootElement.TryGetProperty("blazorgame-client", out var clientObj) &&
+                    clientObj.TryGetProperty("roles", out var rolesArray))
                 {
-                    player = new Player
+                    foreach (var r in rolesArray.EnumerateArray())
                     {
-                        Username = Username,
-                        Email = $"{Username}@game.com",
-                        PasswordHash = Password,
-                        UserType = SharedModels.Enum.UserTypeEnum.PLAYER,
-                        Level = 1,
-                        Health = 100,
-                        MaxHealth = 100,
-                        Attack = 10,
-                        Defense = 5,
-                        Gold = 0,
-                        ExperiencePoints = 0,
-                        LevelCap = 100
-                    };
-
-                    var response = await Http.PostAsJsonAsync("http://localhost:5240/api/Player", player);
-                    player = await response.Content.ReadFromJsonAsync<Player>();
-                }
-
-                if (player != null)
-                {
-                    AuthService.Login(player.Id, player.Username);
-                    NavigationManager.NavigateTo("/home");
-                }
-                else
-                {
-                    ErrorMessage = "Erreur lors de la connexion.";
+                        if (string.Equals(r.GetString(), "Administrateur", StringComparison.OrdinalIgnoreCase))
+                        {
+                            isAdmin = true;
+                            break;
+                        }
+                    }
                 }
             }
-            catch (Exception ex)
+
+            foreach (var c in jwt.Claims)
             {
-                ErrorMessage = $"Erreur : {ex.Message}";
+                Console.WriteLine($"{c.Type} = {c.Value}");
+            }
+
+            var keycloakId = jwt.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+            var username = jwt.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value
+                           ?? Username;
+            var email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value
+                        ?? $"{username}@blazorgamesk.com";
+            
+            
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Player");
+            var player = players?.FirstOrDefault(p =>
+                p.ExternalId == keycloakId || p.Username.ToLower() == username.ToLower());
+
+            if (player == null)
+            {
+                player = new Player
+                {
+                    Username = username,
+                    Email = email,
+                    ExternalId = keycloakId,
+                    PasswordHash = Password,
+                    UserType = SharedModels.Enum.UserTypeEnum.PLAYER,
+                    Level = 1,
+                    Health = 100,
+                    MaxHealth = 100,
+                    Attack = 10,
+                    Defense = 5,
+                    Gold = 0,
+                    ExperiencePoints = 0,
+                    LevelCap = 100
+                };
+
+                var createResponse = await Http.PostAsJsonAsync("http://localhost:5240/api/Player", player);
+                player = await createResponse.Content.ReadFromJsonAsync<Player>();
+            }
+
+            if (player != null)
+            {
+                AuthService.Login(player.Id, player.Username, accessToken);
+                if (isAdmin)
+                    NavigationManager.NavigateTo("/admin");
+                else
+                    NavigationManager.NavigateTo("/home");
+            }
+            else
+            {
+                ErrorMessage = "Erreur lors de la connexion.";
             }
         }
-        else
+        catch (Exception ex)
         {
-            ErrorMessage = "Veuillez remplir tous les champs.";
+            ErrorMessage = $"Erreur : {ex.Message}";
         }
+    }
+
+    private class TokenResponse
+    {
+        public string access_token { get; set; } = "";
+        public string refresh_token { get; set; } = "";
+        public string token_type { get; set; } = "";
+        public int expires_in { get; set; }
     }
 }

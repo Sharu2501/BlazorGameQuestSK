@@ -97,6 +97,7 @@ namespace BlazorGameAPI.Services
                 LastPlayed = history?.DatePlayed
             };
         }
+        
         /// <summary>
         /// Récupère toutes les sessions de jeu actives.
         /// </summary>

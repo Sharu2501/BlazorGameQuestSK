@@ -97,3 +97,32 @@ Dans cette troisième version, nous avons mis en cohérence notre backend et fro
 Les données liées à une partie, joueurs et monstres sont stockés dans la base de données **SupaBase**. Pour l'instant, sans keycloak, nous réalisons une vérification pour l'authentication rapide.
 
 Le jeu se déroule sur le port 5000 et les requêtes se font en démarrant le projet BlazorGameAPI.
+
+## Version 4 – V4
+Dans cette version, nous avons rapporté les modifications suivantes : 
+- La page historique personnel et classement général du joueur dans **Scores**.
+- Ajout d'une page **Profile**.
+- Le **tableau de bord** admin contenant la liste des joueurs (avec action désactivation), la liste des scores, le classement général, la liste des parties et l'export des joueurs accessible avec la **connexion** Admin et mdp Admin.
+- On peut visualiser dans **Swagger** la liste des salles, des évènements, la liste des
+joueurs, la liste des monstres, les scores, l'historique des parties et les donjons.
+
+Enfin, les interfaces blazor pour cette partie **admin** ont été réalisées.
+
+Nous en avons également profité pour mettre à jour les **tests automatiques** et vérifier la **couverture de code**.
+
+## Version 5 – V5
+Dans cette dernière version, nous avons réalisé l'intégration de **Keycloak** avec notamment :
+- une authentification OpenID Connect.
+- l'ttribution des **rôles** joueur et admin.
+- la sécurisation des API.
+- la modification de la page de **connexion** dans le projet Blazor pour faire en sorte que seul les utilisateurs dans Keycloak puissent se connecter.
+- Et l'accès à toutes les pages du projet web à un utilisateur authentifié uniquement.
+
+D'autre part, nous avons eu l'occasion de réaliser d'autres modifications : 
+- l'enrichissement de la documentation **Swagger**.
+- un **déploiement sous Docker**.
+- une configuration de la **Gateway** comme seul point d’entrée d’appel vers les APIs.
+- Un **test** pour vérifier le bon déroulement d’une partie.
+
+Et enfin la mise à jour des **tests automatiques** et la vérification de la **couverture de code**.
+

@@ -1,12 +1,23 @@
 @page "/admin"
+@using BlazorGame.Client.Services;
 @layout EmptyLayout
+@inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject AuthService AuthService
 
 <link rel="stylesheet" href="css/admin.css" />
 
-<div class="admin-container">
-    <main class="main-content">
-        <header class="content-header">
+@if (!isLoaded)
+{
+    <div class="loading-container">
+        <p>Chargement des données...</p>
+    </div>
+}
+else
+{
+    <div class="admin-container">
+        <main class="main-content">
+            <header class="content-header">
             <div class="header-left">
                 <img src="images/logo.png" alt="Logo" class="logo-img" />
                 <div class="header-text">
@@ -25,72 +36,52 @@
             </div>
         </header>
 
-        <div class="bento-grid">
+            <div class="bento-grid">
+                <section class="bento-box leaderboard">
+                    <div class="section-header">
+                        <div class="header-title">
+                            <i class="bi bi-trophy"></i>
+                            <h2>Classement des Scores</h2>
+                        </div>
+                        <button class="toggle-btn" @onclick="ToggleLeaderboard">
+                            <i class="bi @(showAllLeaderboard ? "bi-chevron-up" : "bi-chevron-down")"></i>
+                            @(showAllLeaderboard ? "Réduire" : "Voir plus")
+                        </button>
 
-            <section class="bento-box leaderboard">
-                <div class="section-header">
-                    <div class="header-title">
-                        <i class="bi bi-trophy"></i>
-                        <h2>Classement des Scores</h2>
                     </div>
-                    <button class="add-btn">
-                        <i class="bi bi-plus-circle"></i> Ajouter
-                    </button>
-                </div>
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Rang</th>
-                                <th>Joueur</th>
-                                <th>Score</th>
-                                <th>Date</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="rank-1">
-                                <td><span class="rank-badge gold">🥇</span></td>
-                                <td><div class="player-info"><div class="avatar">J2</div><span>Joueur2</span></div></td>
-                                <td><span class="score-badge high">1500</span></td>
-                                <td>11/10/2025</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
-                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                             <tr class="rank-2">
-                                <td><span class="rank-badge silver">🥈</span></td>
-                                <td><div class="player-info"><div class="avatar">J1</div><span>Joueur1</span></div></td>
-                                <td><span class="score-badge high">1200</span></td>
-                                <td>08/10/2025</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
-                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                             <tr class="rank-3">
-                                <td><span class="rank-badge bronze">🥉</span></td>
-                                <td><div class="player-info"><div class="avatar">J3</div><span>Joueur3</span></div></td>
-                                <td><span class="score-badge medium">1100</span></td>
-                                <td>13/10/2025</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
-                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Rang</th>
+                                    <th>Joueur</th>
+                                    <th>Score</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var rank = 1;
+                                    var rows = showAllLeaderboard
+                                        ? leaderboard
+                                        : leaderboard.Take(5);
+                                }
+                                @foreach (var p in rows)
+                                {
+                                    <tr>
+                                        <td>@rank</td>
+                                        <td>@p.Username</td>
+                                        <td>@(p.HighScore?.Score ?? 0)</td>
+                                        <td>@(p.HighScore?.DateAchieved.ToLocalTime().ToString("g") ?? "-")</td>
+                                    </tr>
+                                    rank++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
 
-            <section class="bento-box stat-card-bento">
+                <section class="bento-box stat-card-bento">
                  <div class="stat-icon-wrapper purple"><i class="bi bi-people"></i></div>
                  <div class="stat-info">
                      <p class="stat-label">Joueurs actifs</p>
@@ -126,77 +117,160 @@
                 </div>
             </section>
 
-            <section class="bento-box players-list">
-                 <div class="section-header">
-                    <div class="header-title">
-                        <i class="bi bi-people"></i>
-                        <h2>Liste des Joueurs</h2>
+                <section class="bento-box sessions-list">
+                    <div class="section-header">
+                        <div class="header-title">
+                            <i class="bi bi-controller"></i>
+                            <h2>Liste des Parties</h2>
+                        </div>
+
+                        <button class="toggle-btn" @onclick="ToggleHistories">
+                            <i class="bi @(showAllHistories ? "bi-chevron-up" : "bi-chevron-down")"></i>
+                            @(showAllHistories ? "Réduire" : "Voir plus")
+                        </button>
                     </div>
-                    <button class="add-btn">
-                        <i class="bi bi-plus-circle"></i> Ajouter
-                    </button>
-                </div>
-                <div class="table-wrapper">
-                     <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Joueur</th>
-                                <th>Créé le</th>
-                                <th>Dernière connexion</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span class="id-badge">001</span></td>
-                                <td><div class="player-info"><div class="avatar">J1</div><span>Joueur1</span></div></td>
-                                <td>03/10/2025</td>
-                                <td>13/10/2025</td>
-                                <td><span class="status-badge online">En ligne</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
-                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="id-badge">002</span></td>
-                                <td><div class="player-info"><div class="avatar">J2</div><span>Joueur2</span></div></td>
-                                <td>05/10/2025</td>
-                                <td>13/10/2025</td>
-                                <td><span class="status-badge online">En ligne</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
-                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="id-badge">003</span></td>
-                                <td><div class="player-info"><div class="avatar">J3</div><span>Joueur3</span></div></td>
-                                <td>08/10/2025</td>
-                                <td>12/10/2025</td>
-                                <td><span class="status-badge offline">Hors ligne</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="action-btn edit" title="Modifier"><i class="bi bi-pencil"></i></button>
-                                        <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-    </main>
-</div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Parties</th>
+                                    <th>Joueur</th>
+                                    <th>Date</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var histories = showAllHistories
+                                        ? gameHistories
+                                        : gameHistories.Take(5);
+                                }
+                                @if (gameHistories != null)
+                                {
+                                    foreach (var gh in histories)
+                                    {
+                                        <tr>
+                                            <td>@gh.Id</td>
+                                            <td>@gh.Player?.Username</td>
+                                            <td>@gh.DatePlayed.ToLocalTime().ToString("g")</td>
+                                            <td>@gh.Score</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="bento-box players-list">
+                    <div class="section-header">
+                        <div class="header-title">
+                            <i class="bi bi-people"></i>
+                            <h2>Liste des Joueurs</h2>
+                        </div>
+
+                        <button class="toggle-btn" @onclick="TogglePlayers">
+                            <i class="bi @(showAllPlayers ? "bi-chevron-up" : "bi-chevron-down")"></i>
+                            @(showAllPlayers ? "Réduire" : "Voir plus")
+                        </button>
+
+                        <button class="add-btn">
+                            <i class="bi bi-plus-circle"></i> Ajouter
+                        </button>
+                        <button class="export-btn">
+                            <i class="bi bi-download"></i> Exporter les joueurs
+                        </button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Joueur</th>
+                                    <th>Email</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var playersList = showAllPlayers
+                                        ? players
+                                        : players.Take(5);
+                                }
+                                @if (players != null)
+                                {
+                                    foreach (var p in playersList)
+                                    {
+                                        <tr>
+                                            <td>@p.Id</td>
+                                            <td>@p.Username</td>
+                                            <td>@p.Email</td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <label class="switch" title="Actif / Inactif">
+                                                        <input type="checkbox" checked />
+                                                        <span class="slider"></span>
+                                                    </label>
+                                                    <button class="action-btn delete" title="Supprimer"><i class="bi bi-trash"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+}
 
 @code {
+    private List<Player> players = new();
+    private List<HighScore> highScores = new();
+    private List<GameHistory> gameHistories = new();
+    private List<Player> leaderboard = new();
+
+    private bool isLoaded = false;
+
+    private bool showAllLeaderboard = false;
+    private bool showAllHistories = false;
+    private bool showAllPlayers = false;
+
+    private void ToggleLeaderboard() => showAllLeaderboard = !showAllLeaderboard;
+    private void ToggleHistories() => showAllHistories = !showAllHistories;
+    private void TogglePlayers() => showAllPlayers = !showAllPlayers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var token = AuthService.GetAccessToken();
+        if (!string.IsNullOrEmpty(token))
+        {
+            Http.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+        }
+
+        players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Admin/players")
+                  ?? new List<Player>();
+
+        highScores = await Http.GetFromJsonAsync<List<HighScore>>("http://localhost:5240/api/HighScore")
+                     ?? new List<HighScore>();
+
+        gameHistories = await Http.GetFromJsonAsync<List<GameHistory>>("http://localhost:5240/api/GameHistory")
+                        ?? new List<GameHistory>();
+
+        leaderboard = await Http.GetFromJsonAsync<List<Player>>(
+                "http://localhost:5240/api/Admin/leaderboard") ?? new();
+
+        highScores = highScores
+            .OrderByDescending(h => h.Score)
+            .ToList();
+
+        isLoaded = true;
+    }
+
     private void Logout()
     {
         NavigationManager.NavigateTo("/logout");

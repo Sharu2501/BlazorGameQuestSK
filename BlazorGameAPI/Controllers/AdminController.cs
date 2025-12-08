@@ -26,6 +26,17 @@ namespace BlazorGameAPI.Controllers {
             return Ok(players);
         }
 
+        [HttpGet("leaderboard")]
+        public async Task<IActionResult> GetLeaderboard()
+        {
+            var players = await _context.Players
+                .Include(p => p.HighScore)
+                .OrderByDescending(p => p.HighScore.Score)
+                .ToListAsync();
+
+            return Ok(players);
+        }
+
         /// <summary>
         /// Permet de supprimer le joueur à partir de son id.
         /// </summary>

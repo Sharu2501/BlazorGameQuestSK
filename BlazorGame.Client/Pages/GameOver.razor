@@ -12,13 +12,13 @@
         
         @if (success)
         {
-            <h3>🎉 Victoire !</h3>
+            <h3> <img src="images/trophee.svg" class="icon" /> Victoire !</h3>
             <p>Félicitations @AuthService.CurrentUsername !</p>
             <p>Vous avez terminé le donjon avec succès !</p>
         }
         else
         {
-            <h3>💀 Défaite</h3>
+            <h3> <img src="images/jeu.svg" class="icon" /> Défaite</h3>
             <p>Vous avez été vaincu...</p>
         }
         

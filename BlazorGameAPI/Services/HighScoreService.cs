@@ -97,17 +97,6 @@ namespace BlazorGameAPI.Services
                 .Take(count)
                 .ToListAsync();
         }
-
-        /// <summary>
-        /// Récupère le classement général.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<HighScore>> GetLeaderboard()
-        {
-            return await _context.HighScores
-                .OrderByDescending(hs => hs.Score)
-                .ToListAsync();
-        }
         
         /// <summary>
         /// Récupère le rang d'un joueur.

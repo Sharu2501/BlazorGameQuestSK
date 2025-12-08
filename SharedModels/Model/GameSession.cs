@@ -10,7 +10,10 @@ namespace SharedModels.Model
         public int CurrentRoomId { get; set; } = 0;
         public int CurrentDungeonId { get; set; } = 0;
         public bool IsActive { get; set; } = true;
-       public DateTime StartTime { get; set; } = DateTime.UtcNow;
+        public DateTime StartTime { get; set; } = DateTime.UtcNow;
+        public string StateJson { get; set; } = string.Empty;
+        public bool IsPaused { get; set; } = true;
+        public DateTime LastSaved { get; set; } = DateTime.UtcNow;
 
         public override string ToString()
         {

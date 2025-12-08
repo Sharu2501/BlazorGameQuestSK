@@ -84,9 +84,9 @@ namespace BlazorGame.Client.Services
             await _http.PostAsJsonAsync("http://localhost:5240/api/HighScore/update", new { playerId, score });
         }
 
-        public async Task AddGameHistory(int playerId, int dungeonId)
+        public async Task AddGameHistory(int playerId, int dungeonId, int score)
         {
-            await _http.PostAsJsonAsync("http://localhost:5240/api/GameHistory", new { playerId, dungeonIds = new[] { dungeonId } });
+            await _http.PostAsJsonAsync("http://localhost:5240/api/GameHistory", new { playerId, dungeonIds = new[] { dungeonId }, score });
         }
 
         public async Task EndSession(int sessionId)
