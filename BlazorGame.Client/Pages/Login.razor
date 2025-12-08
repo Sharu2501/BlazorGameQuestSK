@@ -133,7 +133,7 @@
             var email = jwt.Claims.FirstOrDefault(c => c.Type == "email")?.Value ?? $"{username}@blazorgamesk.com";
 
             Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Player");
+            var players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:7000/game/Player");
             
             var player = players?.FirstOrDefault(p =>
                 p.ExternalId == keycloakId || p.Username.ToLower() == username.ToLower());
@@ -158,7 +158,7 @@
                     LevelCap = 100
                 };
 
-                var createResponse = await Http.PostAsJsonAsync("http://localhost:5240/api/Player", player);
+                var createResponse = await Http.PostAsJsonAsync("http://localhost:7000/game/Player", player);
                 if (createResponse.IsSuccessStatusCode)
                 {
                     player = await createResponse.Content.ReadFromJsonAsync<Player>();

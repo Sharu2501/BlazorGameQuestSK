@@ -266,10 +266,10 @@ else
 
     private async Task LoadData()
     {
-        players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Admin/players") ?? new List<Player>();
-        highScores = await Http.GetFromJsonAsync<List<HighScore>>("http://localhost:5240/api/HighScore") ?? new List<HighScore>();
-        gameHistories = await Http.GetFromJsonAsync<List<GameHistory>>("http://localhost:5240/api/GameHistory") ?? new List<GameHistory>();
-        leaderboard = await Http.GetFromJsonAsync<List<Player>>("http://localhost:5240/api/Admin/leaderboard") ?? new();
+        players = await Http.GetFromJsonAsync<List<Player>>("http://localhost:7000/game/Admin/players") ?? new List<Player>();
+        highScores = await Http.GetFromJsonAsync<List<HighScore>>("http://localhost:7000/game/HighScore") ?? new List<HighScore>();
+        gameHistories = await Http.GetFromJsonAsync<List<GameHistory>>("http://localhost:7000/game/GameHistory") ?? new List<GameHistory>();
+        leaderboard = await Http.GetFromJsonAsync<List<Player>>("http://localhost:7000/game/Admin/leaderboard") ?? new();
 
         highScores = highScores.OrderByDescending(h => h.Score).ToList();
     }
@@ -278,7 +278,7 @@ else
     {
         try 
         {
-            var response = await Http.GetAsync("http://localhost:5240/api/Admin/players/export");
+            var response = await Http.GetAsync("http://localhost:7000/game/Admin/players/export");
             if (response.IsSuccessStatusCode)
             {
                 var fileStream = await response.Content.ReadAsStreamAsync();
@@ -299,7 +299,7 @@ else
 
         try
         {
-            var response = await Http.PutAsJsonAsync($"http://localhost:5240/api/Admin/players/{player.Id}/status", newStatus);
+            var response = await Http.PutAsJsonAsync($"http://localhost:7000/game/Admin/players/{player.Id}/status", newStatus);
             if (!response.IsSuccessStatusCode)
             {
                 player.IsActive = oldStatus;
@@ -317,7 +317,7 @@ else
         bool confirmed = await JS.InvokeAsync<bool>("confirm", "Êtes-vous sûr de vouloir supprimer ce joueur ?");
         if (confirmed)
         {
-            var response = await Http.DeleteAsync($"http://localhost:5240/api/Admin/players/{id}");
+            var response = await Http.DeleteAsync($"http://localhost:7000/game/Admin/players/{id}");
             if (response.IsSuccessStatusCode)
             {
                 await LoadData();

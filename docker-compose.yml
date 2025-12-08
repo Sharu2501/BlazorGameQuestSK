@@ -46,7 +46,19 @@ services:
     ports:
       - "8080:8080"
     volumes:
-    - keycloak_data:/opt/keycloak/data
+      - keycloak_data:/opt/keycloak/data
+
+  gateway:
+    build:
+      context: ./ApiGateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    depends_on:
+      - gameapi
+      - authenticationservices
+    ports:
+      - "7000:8080"
+
 
 volumes:
   pgdata:

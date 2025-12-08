@@ -12,7 +12,7 @@ public class GameSaveService
     public async Task<int> CreateSessionAsync(int playerId, string name, GameState state)
     {
         var dto = new { PlayerId = playerId, Name = name, StateJson = JsonSerializer.Serialize(state), IsPaused = true };
-        var res = await _http.PostAsJsonAsync("http://localhost:5240/api/GameSession", dto);
+        var res = await _http.PostAsJsonAsync("http://localhost:7000/game/GameSession", dto);
         res.EnsureSuccessStatusCode();
         var created = await res.Content.ReadFromJsonAsync<GameSession>();
         return created.SessionId;
@@ -21,13 +21,13 @@ public class GameSaveService
     public async Task SaveSessionAsync(int sessionId, GameState state, bool isPaused)
     {
         var dto = new { StateJson = JsonSerializer.Serialize(state), IsPaused = isPaused };
-        var res = await _http.PutAsJsonAsync($"http://localhost:5240/api/GameSession/{sessionId}", dto);
+        var res = await _http.PutAsJsonAsync($"http://localhost:7000/game/GameSession/{sessionId}", dto);
         res.EnsureSuccessStatusCode();
     }
 
     public async Task<GameState?> LoadSessionAsync(int sessionId)
     {
-        var res = await _http.GetAsync($"http://localhost:5240/api/GameSession/{sessionId}");
+        var res = await _http.GetAsync($"http://localhost:7000/game/GameSession/{sessionId}");
         if (!res.IsSuccessStatusCode) return null;
 
         var s = await res.Content.ReadFromJsonAsync<GameSession>();
@@ -39,13 +39,13 @@ public class GameSaveService
 
     public async Task<GameSession?> GetActiveSessionAsync(int playerId)
     {
-        var res = await _http.GetAsync($"http://localhost:5240/api/GameSession/Player/{playerId}/active");
+        var res = await _http.GetAsync($"http://localhost:7000/game/GameSession/Player/{playerId}/active");
         if (!res.IsSuccessStatusCode) return null;
         
         return await _http.GetFromJsonAsync<GameSession>(
-            $"http://localhost:5240/api/GameSession/Player/{playerId}/active");
+            $"http://localhost:7000/game/GameSession/Player/{playerId}/active");
     }
 
     public async Task<List<GameSession>> ListSessionsAsync(int playerId)
-        => await _http.GetFromJsonAsync<List<GameSession>>($"http://localhost:5240/api/GameSession/Player/{playerId}");
+        => await _http.GetFromJsonAsync<List<GameSession>>($"http://localhost:7000/game/GameSession/Player/{playerId}");
 }
