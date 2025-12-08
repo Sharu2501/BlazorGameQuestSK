@@ -84,7 +84,6 @@
         try
         {
             var client = new HttpClient();
-            // Assurez-vous que l'URL correspond à votre configuration Docker/Keycloak
             var url = "http://localhost:8080/realms/BlazorGame/protocol/openid-connect/token";
 
             var content = new FormUrlEncodedContent(new[]
@@ -171,27 +170,28 @@
                 }
             }
 
-            if (isAdmin)
+            if (player != null)
             {
-                AuthService.Login(player?.Id ?? 0, username, accessToken);
-                NavigationManager.NavigateTo("/admin");
-                return;
-            }
+                if (!player.IsActive)
+                {
+                    ErrorMessage = "Votre compte a été désactivé. Veuillez contacter l'administrateur.";
+                    return;
+                }
 
-            if (player == null)
+                if (player.IsActive) 
+                {
+                    AuthService.Login(player.Id, player.Username, accessToken);
+
+                    if (isAdmin)
+                        NavigationManager.NavigateTo("/admin");
+                    else
+                        NavigationManager.NavigateTo("/home");
+                }
+            }
+            else
             {
                 ErrorMessage = "Erreur lors de la récupération du profil joueur.";
-                return;
             }
-
-            if (!player.IsActive)
-            {
-                ErrorMessage = "Votre compte a été désactivé. Veuillez contacter l'administrateur.";
-                return;
-            }
-
-            AuthService.Login(player.Id, player.Username, accessToken);
-            NavigationManager.NavigateTo("/home");
         }
         catch (Exception ex)
         {

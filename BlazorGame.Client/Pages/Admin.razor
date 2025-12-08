@@ -87,7 +87,7 @@ else
                     <div class="stat-icon-wrapper purple"><i class="bi bi-people"></i></div>
                     <div class="stat-info">
                         <p class="stat-label">Joueurs actifs</p>
-                        <h3 class="stat-value">@players.Count(p => p.IsActive && p.UserType == UserTypeEnum.PLAYER)</h3>
+                        <h3 class="stat-value">@players.Count(p => p.IsActive)</h3>
                         <span class="stat-change positive">+12% ce mois</span>
                     </div>
                 </section>
@@ -196,10 +196,6 @@ else
                             </thead>
                             <tbody>
                                 @{
-                                    var playerOnlyList = players
-                                        .Where(p => p.UserType == UserTypeEnum.PLAYER)
-                                        .ToList();
-
                                     var playersList = showAllPlayers ? players : players.Take(5);
                                 }
                                 @if (players != null)
@@ -221,53 +217,6 @@ else
                                                         <i class="bi bi-trash"></i>
                                                     </button>
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
-
-                <section class="bento-box admin-list">
-                    <div class="section-header">
-                        <div class="header-title">
-                            <i class="bi bi-shield-lock"></i>
-                            <h2>Administrateurs</h2>
-                        </div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Admin</th>
-                                    <th>Email</th>
-                                    <th>Actif</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @{
-                                    var admins = (players ?? new List<Player>())
-                                        .Where(p => p.UserType == UserTypeEnum.ADMIN)
-                                        .ToList();
-                                }
-                                @if (admins.Any())
-                                {
-                                    foreach (var a in admins)
-                                    {
-                                        <tr>
-                                            <td>@a.Id</td>
-                                            <td>@a.Username</td>
-                                            <td>@a.Email</td>
-                                            <td>
-                                                <label class="switch" title="@(a.IsActive ? "Désactiver" : "Activer")">
-                                                    <input type="checkbox"
-                                                        checked="@a.IsActive"
-                                                        @onchange="@(e => UpdateStatus(a, (bool)e.Value))" />
-                                                    <span class="slider"></span>
-                                                </label>
                                             </td>
                                         </tr>
                                     }
