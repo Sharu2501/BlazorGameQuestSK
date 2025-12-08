@@ -31,6 +31,10 @@ services:
     environment:
       ConnectionStrings__DefaultConnection: "Host=aws-1-eu-west-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.olsqkanxporoingmpgfq;Password=postgreSql;Pooling=false"
       ASPNETCORE_ENVIRONMENT: "Development"
+      Keycloak__Authority: "http://keycloak:8080/realms/BlazorGame"
+      Keycloak__AdminClientId: "admin-cli"
+      Keycloak__AdminUsername: "admin"
+      Keycloak__AdminPassword: "admin"
     depends_on:
       - keycloak
     ports:
